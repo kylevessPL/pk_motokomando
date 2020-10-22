@@ -1,0 +1,215 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.0.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+
+    <changeSet author="geekon" id="1.0-1">
+        <createSequence sequenceName="seq_appointments" cycle="false" minValue="1" maxValue="9223372036854775807" startValue="1" incrementBy="1"/>
+        <createSequence sequenceName="seq_bills" cycle="false" minValue="1" maxValue="9223372036854775807" startValue="1" incrementBy="1"/>
+        <createSequence sequenceName="seq_doctors" cycle="false" minValue="1" maxValue="9223372036854775807" startValue="1" incrementBy="1"/>
+        <createSequence sequenceName="seq_prescriptions" cycle="false" minValue="1" maxValue="9223372036854775807" startValue="1" incrementBy="1"/>
+        <createSequence sequenceName="seq_patient_records" cycle="false" minValue="1" maxValue="9223372036854775807" startValue="1" incrementBy="1"/>
+        <createSequence sequenceName="seq_medicines" cycle="false" minValue="1" maxValue="9223372036854775807" startValue="1" incrementBy="1"/>
+        <createSequence sequenceName="seq_patients" cycle="false" minValue="1" maxValue="9223372036854775807" startValue="1" incrementBy="1"/>
+        <createSequence sequenceName="seq_patients_appointments" cycle="false" minValue="1" maxValue="9223372036854775807" startValue="1" incrementBy="1"/>
+        <createSequence sequenceName="seq_prescriptions_medicines" cycle="false" minValue="1" maxValue="9223372036854775807" startValue="1" incrementBy="1"/>
+    </changeSet>
+    <changeSet author="geekon" id="1.0-2">
+        <createTable tableName="appointments">
+            <column name="id" type="INTEGER" defaultValueComputed="nextval('seq_appointments')">
+                <constraints nullable="false" unique="true" primaryKey="true" primaryKeyName="appointments_pk"/>
+            </column>
+            <column name="schedule_date" type="TIMESTAMP WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="appointment_date" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bill_id" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="doctor_id" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="prescription_id" type="INTEGER"/>
+            <column name="giagnosis" type="VARCHAR(200)"/>
+            <column defaultValue="SCHEDULED" name="appointment_status" type="VARCHAR(10)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="geekon" id="1.0-3">
+        <createTable tableName="bills">
+            <column name="id" type="INTEGER" defaultValueComputed="nextval('seq_bills')">
+                <constraints nullable="false" unique="true" primaryKey="true" primaryKeyName="bills_pk"/>
+            </column>
+            <column name="issue_date" type="TIMESTAMP WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="amount" type="DECIMAL(10, 2)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="geekon" id="1.0-4">
+        <createTable tableName="doctors">
+            <column name="id" type="INTEGER" defaultValueComputed="nextval('seq_doctors')">
+                <constraints nullable="false" unique="true" primaryKey="true" primaryKeyName="doctors_pk"/>
+            </column>
+            <column name="first_name" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="phone_number" type="VARCHAR(15)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="specialty" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="geekon" id="1.0-5">
+        <createTable tableName="prescriptions">
+            <column name="id" type="INTEGER" defaultValueComputed="nextval('seq_prescriptions')">
+                <constraints nullable="false" unique="true" primaryKey="true" primaryKeyName="prescriptions_pk"/>
+            </column>
+            <column name="issue_date" type="TIMESTAMP WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="expiration_date" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="notes" type="VARCHAR(100)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="geekon" id="1.0-6">
+        <createTable tableName="patient_records">
+            <column name="id" type="INTEGER" defaultValueComputed="nextval('seq_patient_records')">
+                <constraints nullable="false" unique="true" primaryKey="true" primaryKeyName="patient_records_pk"/>
+            </column>
+            <column name="patient_id" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="HEALTHY" name="health_status" type="VARCHAR(15)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="notes" type="VARCHAR(100)"/>
+            <column name="registration_date" type="TIMESTAMP WITHOUT TIME ZONE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="geekon" id="1.0-7">
+        <createTable tableName="medicines">
+            <column name="id" type="INTEGER" defaultValueComputed="nextval('seq_medicines')">
+                <constraints nullable="false" unique="true" primaryKey="true" primaryKeyName="medicines_pk"/>
+            </column>
+            <column name="company" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="notes" type="VARCHAR(100)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="geekon" id="1.0-8">
+        <createTable tableName="patients">
+            <column name="id" type="INTEGER" defaultValueComputed="nextval('seq_patients')">
+                <constraints nullable="false" unique="true" primaryKey="true" primaryKeyName="patients_pk"/>
+            </column>
+            <column name="first_name" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="birth_date" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sex" type="VARCHAR(6)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="blood_type" type="VARCHAR(5)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="street_name" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="house_number" type="VARCHAR(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="zip_code" type="VARCHAR(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="city" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="document_type" type="VARCHAR(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="document_id" type="VARCHAR(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="phone_number" type="VARCHAR(15)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="geekon" id="1.0-9">
+        <createTable tableName="patients_appointments">
+            <column name="id" type="INTEGER" defaultValueComputed="nextval('seq_patients_appointments')">
+                <constraints nullable="false" unique="true" primaryKey="true" primaryKeyName="patients_appointments_pk"/>
+            </column>
+            <column name="patient_id" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="appointment_id" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="geekon" id="1.0-10">
+        <createTable tableName="prescriptions_medicines">
+            <column name="id" type="INTEGER" defaultValueComputed="nextval('seq_prescriptions_medicines')">
+                <constraints nullable="false" unique="true" primaryKey="true" primaryKeyName="prescriptions_medicines_pk"/>
+            </column>
+            <column name="prescription_id" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="medicine_id" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="geekon" id="1.0-11">
+        <addForeignKeyConstraint baseColumnNames="appointment_id" baseTableName="patients_appointments" constraintName="patients_appointments_fk1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="appointments" validate="true"/>
+    </changeSet>
+    <changeSet author="geekon" id="1.0-12">
+        <addForeignKeyConstraint baseColumnNames="medicine_id" baseTableName="prescriptions_medicines" constraintName="prescriptions_medicines_fk1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="medicines" validate="true"/>
+    </changeSet>
+    <changeSet author="geekon" id="1.0-13">
+        <addForeignKeyConstraint baseColumnNames="patient_id" baseTableName="patients_appointments" constraintName="patients_appointments_fk0" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="patients" validate="true"/>
+    </changeSet>
+    <changeSet author="geekon" id="1.0-14">
+        <addForeignKeyConstraint baseColumnNames="prescription_id" baseTableName="prescriptions_medicines" constraintName="prescriptions_medicines_fk0" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="prescriptions" validate="true"/>
+    </changeSet>
+    <changeSet author="geekon" id="1.0-15">
+        <addForeignKeyConstraint baseColumnNames="bill_id" baseTableName="appointments" constraintName="appointments_fk0" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="bills" validate="true"/>
+    </changeSet>
+    <changeSet author="geekon" id="1.0-16">
+        <addForeignKeyConstraint baseColumnNames="doctor_id" baseTableName="appointments" constraintName="appointments_fk1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="doctors" validate="true"/>
+    </changeSet>
+    <changeSet author="geekon" id="1.0-17">
+        <addForeignKeyConstraint baseColumnNames="prescription_id" baseTableName="appointments" constraintName="appointments_fk2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="prescriptions" validate="true"/>
+    </changeSet>
+    <changeSet author="geekon" id="1.0-18">
+        <addForeignKeyConstraint baseColumnNames="patient_id" baseTableName="patient_records" constraintName="patient_records_fk0" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="patients" validate="true"/>
+    </changeSet>
+
+</databaseChangeLog>
