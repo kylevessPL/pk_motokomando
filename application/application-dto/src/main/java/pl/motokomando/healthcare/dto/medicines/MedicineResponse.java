@@ -5,8 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import pl.motokomando.healthcare.dto.medicines.utils.ActiveIngredients;
-import pl.motokomando.healthcare.dto.medicines.utils.Packaging;
+import pl.motokomando.healthcare.dto.medicines.utils.ActiveIngredient;
 import pl.motokomando.healthcare.dto.medicines.utils.ProductType;
 
 import java.util.List;
@@ -28,12 +27,12 @@ public class MedicineResponse {
     @ApiModelProperty(value = "Prescription drug or OTC", example = "OTC")
     private ProductType productType;
     @ApiModelProperty(value = "Active ingredients")
-    private List<ActiveIngredients> activeIngredients;
+    private List<ActiveIngredient> activeIngredients;
     @ApiModelProperty(value = "Administration route", example = "[\"ORAL\"]")
     private String[] administrationRoute;
     @ApiModelProperty(value = "Dosage form", example = "TABLET")
     private String dosageForm;
     @ApiModelProperty(value = "Packaging variants")
-    private List<Packaging> packaging;
+    private String[] packagingVariants;
 
 }

@@ -10,7 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ActiveIngredients {
+public class ActiveIngredient {
 
     @ApiModelProperty(value = "Ingredient name", example = "FOSINOPRIL SODIUM")
     private String name;

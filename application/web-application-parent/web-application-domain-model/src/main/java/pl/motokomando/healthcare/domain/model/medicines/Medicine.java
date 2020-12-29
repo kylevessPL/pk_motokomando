@@ -2,16 +2,19 @@ package pl.motokomando.healthcare.domain.model.medicines;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import pl.motokomando.healthcare.domain.model.medicines.utils.ActiveIngredients;
-import pl.motokomando.healthcare.domain.model.medicines.utils.Packaging;
+import pl.motokomando.healthcare.domain.model.medicines.utils.ActiveIngredient;
+import pl.motokomando.healthcare.domain.model.medicines.utils.PackagingDeserializer;
 import pl.motokomando.healthcare.domain.model.medicines.utils.ProductType;
 
 import java.io.Serializable;
 import java.util.List;
 
 @NoArgsConstructor
+@Getter
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Medicine implements Serializable {
@@ -27,12 +30,13 @@ public class Medicine implements Serializable {
     @JsonProperty("product_type")
     private ProductType productType;
     @JsonProperty("active_ingredients")
-    private List<ActiveIngredients> activeIngredients;
+    private List<ActiveIngredient> activeIngredients;
     @JsonProperty("route")
     private String[] administrationRoute;
     @JsonProperty("dosage_form")
     private String dosageForm;
     @JsonProperty("packaging")
-    private List<Packaging> packaging;
+    @JsonDeserialize(using = PackagingDeserializer.class)
+    private String[] packagingVariants;
 
 }
