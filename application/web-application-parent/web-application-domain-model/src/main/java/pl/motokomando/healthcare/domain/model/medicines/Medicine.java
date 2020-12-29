@@ -13,7 +13,7 @@ import java.util.List;
 
 @NoArgsConstructor
 @Setter
-@JsonIgnoreProperties(value = { "finished", "listing_expiration_date", "openfda", "marketing_category", "spl_id", "marketing_start_date", "product_id", "application_number", "brand_name_base" })
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Medicine implements Serializable {
 
     @JsonProperty("product_ndc")

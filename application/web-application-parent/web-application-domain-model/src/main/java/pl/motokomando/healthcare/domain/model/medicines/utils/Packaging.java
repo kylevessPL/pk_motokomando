@@ -9,7 +9,7 @@ import java.io.Serializable;
 
 @NoArgsConstructor
 @Setter
-@JsonIgnoreProperties(value = { "marketing_end_date", "marketing_start_date", "package_ndc", "sample" })
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Packaging implements Serializable {
 
     @JsonProperty("description")

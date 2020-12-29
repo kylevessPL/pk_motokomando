@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-@JsonIgnoreProperties(value = { "meta" })
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class OpenFDAResponse implements Serializable {
 
     @JsonProperty("results")

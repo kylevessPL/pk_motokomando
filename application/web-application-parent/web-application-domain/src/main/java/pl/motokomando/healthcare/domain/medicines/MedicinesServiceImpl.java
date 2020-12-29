@@ -1,7 +1,7 @@
 package pl.motokomando.healthcare.domain.medicines;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import pl.motokomando.healthcare.domain.model.medicines.Medicine;
@@ -14,7 +14,10 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+
 @Service
+@Slf4j
 public class MedicinesServiceImpl implements MedicinesService {
 
     private static final Duration REQUEST_TIMEOUT = Duration.ofSeconds(3);
@@ -31,11 +34,10 @@ public class MedicinesServiceImpl implements MedicinesService {
         Optional<OpenFDAResponse> response = openFDAClient
                 .get()
                 .uri(uriBuilder -> uriBuilder
-                        .queryParam("search=product.product_ndc", "{query}")
-                        .queryParam("product.product_type", "HUMAN")
-                        .build(productNDC))
+                        .queryParam("search", "(product_type=HUMAN+DRUG)+AND+product_ndc=" + productNDC)
+                        .build())
                 .retrieve()
-                .onStatus(HttpStatus::is4xxClientError, clientResponse ->
+                .onStatus(NOT_FOUND::equals, clientResponse ->
                         Mono.error(new NoMedicinesFoundException()))
                 .bodyToMono(OpenFDAResponse.class)
                 .blockOptional(REQUEST_TIMEOUT);
@@ -47,12 +49,11 @@ public class MedicinesServiceImpl implements MedicinesService {
         Optional<OpenFDAResponse> response = openFDAClient
                 .get()
                 .uri(uriBuilder -> uriBuilder
-                        .queryParam("search", "{search}")
-                        .queryParam("product.product_type", "HUMAN")
-                        .queryParamIfPresent("limit", Optional.of(medicineCommand.getLimit()))
-                        .build(medicineCommand.getQuery()))
+                        .queryParam("search", "(product_type=HUMAN+DRUG)+AND+" + medicineCommand.getQuery())
+                        .queryParamIfPresent("limit", Optional.ofNullable(medicineCommand.getLimit()))
+                        .build())
                 .retrieve()
-                .onStatus(HttpStatus::is4xxClientError, clientResponse ->
+                .onStatus(NOT_FOUND::equals, clientResponse ->
                         Mono.error(new NoMedicinesFoundException()))
                 .bodyToMono(OpenFDAResponse.class)
                 .blockOptional(REQUEST_TIMEOUT);
