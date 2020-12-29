@@ -91,11 +91,14 @@ public class MedicinesServiceImpl implements MedicinesService {
     private String textToReadable(String text, boolean ucFirst) {
         String[] words = text.trim().replaceAll(" +", " ").split(" ");
         Arrays.setAll(words, i -> {
-            String result = words[i].toLowerCase();
-            if (ucFirst) {
-                result = result.substring(0, 1).toUpperCase() + result.substring(1);
+            if (words[i].length() > 2) {
+                String result = words[i].toLowerCase();
+                if (ucFirst) {
+                    result = result.substring(0, 1).toUpperCase() + result.substring(1);
+                }
+                return result;
             }
-            return result;
+            return words[i];
         });
         return String.join(" ", words);
     }
