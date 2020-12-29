@@ -109,13 +109,9 @@
             <column name="id" type="INTEGER" defaultValueComputed="nextval('seq_medicines')">
                 <constraints nullable="false" unique="true" primaryKey="true" primaryKeyName="medicines_pk"/>
             </column>
-            <column name="company" type="VARCHAR(50)">
+            <column name="product_ndc" type="VARCHAR(10)">
                 <constraints nullable="false"/>
             </column>
-            <column name="name" type="VARCHAR(100)">
-                <constraints nullable="false"/>
-            </column>
-            <column name="notes" type="VARCHAR(100)"/>
         </createTable>
     </changeSet>
     <changeSet author="geekon" id="1.0-8">
@@ -188,28 +184,28 @@
         </createTable>
     </changeSet>
     <changeSet author="geekon" id="1.0-11">
-        <addForeignKeyConstraint baseColumnNames="appointment_id" baseTableName="patients_appointments" constraintName="patients_appointments_fk1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="appointments" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="appointment_id" baseTableName="patients_appointments" constraintName="patients_appointments_fk1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="appointments"/>
     </changeSet>
     <changeSet author="geekon" id="1.0-12">
-        <addForeignKeyConstraint baseColumnNames="medicine_id" baseTableName="prescriptions_medicines" constraintName="prescriptions_medicines_fk1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="medicines" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="medicine_id" baseTableName="prescriptions_medicines" constraintName="prescriptions_medicines_fk1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="medicines"/>
     </changeSet>
     <changeSet author="geekon" id="1.0-13">
-        <addForeignKeyConstraint baseColumnNames="patient_id" baseTableName="patients_appointments" constraintName="patients_appointments_fk0" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="patients" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="patient_id" baseTableName="patients_appointments" constraintName="patients_appointments_fk0" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="patients"/>
     </changeSet>
     <changeSet author="geekon" id="1.0-14">
-        <addForeignKeyConstraint baseColumnNames="prescription_id" baseTableName="prescriptions_medicines" constraintName="prescriptions_medicines_fk0" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="prescriptions" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="prescription_id" baseTableName="prescriptions_medicines" constraintName="prescriptions_medicines_fk0" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="prescriptions"/>
     </changeSet>
     <changeSet author="geekon" id="1.0-15">
-        <addForeignKeyConstraint baseColumnNames="bill_id" baseTableName="appointments" constraintName="appointments_fk0" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="bills" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="bill_id" baseTableName="appointments" constraintName="appointments_fk0" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="bills"/>
     </changeSet>
     <changeSet author="geekon" id="1.0-16">
-        <addForeignKeyConstraint baseColumnNames="doctor_id" baseTableName="appointments" constraintName="appointments_fk1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="doctors" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="doctor_id" baseTableName="appointments" constraintName="appointments_fk1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="doctors"/>
     </changeSet>
     <changeSet author="geekon" id="1.0-17">
-        <addForeignKeyConstraint baseColumnNames="prescription_id" baseTableName="appointments" constraintName="appointments_fk2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="prescriptions" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="prescription_id" baseTableName="appointments" constraintName="appointments_fk2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="prescriptions"/>
     </changeSet>
     <changeSet author="geekon" id="1.0-18">
-        <addForeignKeyConstraint baseColumnNames="patient_id" baseTableName="patient_records" constraintName="patient_records_fk0" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="patients" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="patient_id" baseTableName="patient_records" constraintName="patient_records_fk0" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="patients"/>
     </changeSet>
 
 </databaseChangeLog>
