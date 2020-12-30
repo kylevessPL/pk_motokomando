@@ -9,15 +9,12 @@ import pl.motokomando.healthcare.domain.model.medicines.utils.ActiveIngredient;
 import pl.motokomando.healthcare.domain.model.medicines.utils.MedicineCommand;
 import pl.motokomando.healthcare.domain.model.medicines.utils.OpenFDAResponse;
 import pl.motokomando.healthcare.domain.model.utils.NoMedicinesFoundException;
-import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
 public class MedicinesServiceImpl implements MedicinesService {
@@ -39,10 +36,8 @@ public class MedicinesServiceImpl implements MedicinesService {
                         .queryParam("search", "(product_type:HUMAN+DRUG)+AND+product_ndc:\"" + productNDC + "\"")
                         .build())
                 .retrieve()
-                .onStatus(NOT_FOUND::equals, clientResponse ->
-                        Mono.error(new NoMedicinesFoundException()))
                 .bodyToMono(OpenFDAResponse.class)
-                .onErrorResume(WebClientResponseException.NotFound.class, notFound -> Mono.empty())
+                .onErrorMap(WebClientResponseException.NotFound.class, e -> new NoMedicinesFoundException())
                 .blockOptional(REQUEST_TIMEOUT);
         return response.map(e ->
                 medicineToReadable(e.getMedicines().get(0))
@@ -59,10 +54,8 @@ public class MedicinesServiceImpl implements MedicinesService {
                         .queryParamIfPresent("limit", Optional.ofNullable(medicineCommand.getLimit()))
                         .build())
                 .retrieve()
-                .onStatus(NOT_FOUND::equals, clientResponse ->
-                        Mono.error(new NoMedicinesFoundException()))
                 .bodyToMono(OpenFDAResponse.class)
-                .onErrorResume(WebClientResponseException.NotFound.class, notFound -> Mono.empty())
+                .onErrorMap(WebClientResponseException.NotFound.class, e -> new NoMedicinesFoundException())
                 .blockOptional(REQUEST_TIMEOUT);
         return response.map(e -> e.getMedicines()
                 .stream()

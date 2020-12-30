@@ -24,9 +24,10 @@ import static pl.motokomando.healthcare.domain.model.utils.ErrorCode.VALIDATION_
 public final class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = NoMedicinesFoundException.class)
-    protected ResponseEntity<Object> handleCustomError(NoMedicinesFoundException ex) {
+    protected ResponseEntity<Object> handleNoMedicinesFound(NoMedicinesFoundException ex) {
         HttpStatus status = NOT_FOUND;
-        logger.warn(status.toString(), ex);
+        logger.info(status.toString());
+        logger.info(ex.getMessage());
         ErrorResponse errorResponse = new ErrorResponse(
                 status.value(),
                 ex.getErrorCode().getCode(),
