@@ -1,9 +1,9 @@
 package pl.motokomando.healthcare.domain.medicines;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import pl.motokomando.healthcare.domain.model.medicines.Medicine;
 import pl.motokomando.healthcare.domain.model.medicines.utils.ActiveIngredient;
 import pl.motokomando.healthcare.domain.model.medicines.utils.MedicineCommand;
@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
-@Slf4j
 public class MedicinesServiceImpl implements MedicinesService {
 
     private static final Duration REQUEST_TIMEOUT = Duration.ofSeconds(10);
@@ -37,12 +36,13 @@ public class MedicinesServiceImpl implements MedicinesService {
         Optional<OpenFDAResponse> response = openFDAClient
                 .get()
                 .uri(uriBuilder -> uriBuilder
-                        .queryParam("search", "(product_type=HUMAN+DRUG)+AND+product_ndc=" + productNDC)
+                        .queryParam("search", "(product_type:HUMAN+DRUG)+AND+product_ndc:\"" + productNDC + "\"")
                         .build())
                 .retrieve()
                 .onStatus(NOT_FOUND::equals, clientResponse ->
                         Mono.error(new NoMedicinesFoundException()))
                 .bodyToMono(OpenFDAResponse.class)
+                .onErrorResume(WebClientResponseException.NotFound.class, notFound -> Mono.empty())
                 .blockOptional(REQUEST_TIMEOUT);
         return response.map(e ->
                 medicineToReadable(e.getMedicines().get(0))
@@ -51,16 +51,18 @@ public class MedicinesServiceImpl implements MedicinesService {
 
     @Override
     public List<Medicine> searchMedicine(MedicineCommand medicineCommand) {
+        String query = medicineCommand.getQuery().trim().replaceAll(" ", "+");
         Optional<OpenFDAResponse> response = openFDAClient
                 .get()
                 .uri(uriBuilder -> uriBuilder
-                        .queryParam("search", "(product_type=HUMAN+DRUG)+AND+" + medicineCommand.getQuery())
+                        .queryParam("search", "(product_type:HUMAN+DRUG)+AND+" + query)
                         .queryParamIfPresent("limit", Optional.ofNullable(medicineCommand.getLimit()))
                         .build())
                 .retrieve()
                 .onStatus(NOT_FOUND::equals, clientResponse ->
                         Mono.error(new NoMedicinesFoundException()))
                 .bodyToMono(OpenFDAResponse.class)
+                .onErrorResume(WebClientResponseException.NotFound.class, notFound -> Mono.empty())
                 .blockOptional(REQUEST_TIMEOUT);
         return response.map(e -> e.getMedicines()
                 .stream()
