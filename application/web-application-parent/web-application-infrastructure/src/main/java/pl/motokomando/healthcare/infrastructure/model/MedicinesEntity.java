@@ -22,11 +22,7 @@ public class MedicinesEntity {
     @GeneratedValue(strategy = SEQUENCE, generator = "medicines_generator")
     @SequenceGenerator(name="medicines_generator", sequenceName = "seq_medicines", allocationSize = 1)
     private Integer id;
-    @Column(name = "company", nullable = false, length = 50)
-    private String company;
-    @Column(name = "name", nullable = false, length = 100)
-    private String name;
-    @Column(name = "notes", length = 100)
-    private String notes;
+    @Column(name = "product_ndc", nullable = false, length = 10)
+    private String productNDC;
 
 }
