@@ -8,19 +8,17 @@ import lombok.Setter;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 
-
-
 @NoArgsConstructor
 @Getter
 @Setter
 public class MedicineQuery {
 
     @ApiParam(value = "Query string", example = "Vicks VapoRub")
-    @NotBlank
+    @NotBlank(message = "Query string not supplied")
     private String query;
 
     @ApiParam(value = "Results limit", example = "5")
-    @Min(1)
+    @Min(value = 1, message = "Limit must be a positive integer value")
     private Integer limit;
 
 }
