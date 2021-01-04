@@ -9,7 +9,7 @@ import pl.motokomando.healthcare.dto.patients.utils.BloodType;
 import pl.motokomando.healthcare.dto.patients.utils.DocumentType;
 import pl.motokomando.healthcare.dto.patients.utils.Sex;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 @ApiModel
 @NoArgsConstructor
@@ -22,7 +22,7 @@ public class PatientResponse {
     @ApiModelProperty(value = "Patient last name", example = "Smith")
     private String lastName;
     @ApiModelProperty(value = "Patient birth date", example = "01-01-1985")
-    private Date birthDate;
+    private LocalDate birthDate;
     @ApiModelProperty(value = "Patient sex", allowableValues = "MALE, FEMALE")
     private Sex sex;
     @ApiModelProperty(value = "Patient blood type", allowableValues = "0+, 0-, A+, A-, B+, B-, AB+, AB-")

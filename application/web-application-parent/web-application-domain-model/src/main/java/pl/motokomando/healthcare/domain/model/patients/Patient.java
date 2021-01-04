@@ -6,7 +6,7 @@ import pl.motokomando.healthcare.domain.model.patients.utils.BloodType;
 import pl.motokomando.healthcare.domain.model.patients.utils.DocumentType;
 import pl.motokomando.healthcare.domain.model.patients.utils.Sex;
 
-import java.sql.Date;
+import java.time.LocalDate;
 
 @RequiredArgsConstructor
 @Getter
@@ -14,7 +14,7 @@ public final class Patient {
 
     private final String firstName;
     private final String lastName;
-    private final Date birthDate;
+    private final LocalDate birthDate;
     private final Sex sex;
     private final BloodType bloodType;
     private final String streetName;
