@@ -13,7 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import java.sql.Date;
+import java.time.LocalDate;
 
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.GenerationType.SEQUENCE;
@@ -32,8 +32,8 @@ public class PatientsEntity {
     private String firstName;
     @Column(name = "last_name", nullable = false, length = 30)
     private String lastName;
-    @Column(name = "birth_date", nullable = false)
-    private Date birthDate;
+    @Column(name = "birth_date", nullable = false, columnDefinition = "DATE")
+    private LocalDate birthDate;
     @Column(name = "sex", nullable = false, length = 6)
     @Enumerated(STRING)
     private Sex sex;

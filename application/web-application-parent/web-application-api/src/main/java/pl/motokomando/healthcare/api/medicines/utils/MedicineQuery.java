@@ -17,7 +17,7 @@ public class MedicineQuery {
     @NotBlank(message = "Query string not supplied")
     private String query;
 
-    @ApiParam(value = "Results limit", example = "5")
+    @ApiParam(value = "Results limit", defaultValue = "1", example = "5")
     @Min(value = 1, message = "Limit must be a positive integer value")
     private Integer limit;
 

@@ -1,6 +1,7 @@
 package pl.motokomando.healthcare.api.patients.utils;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.sun.istack.internal.Nullable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -12,6 +13,7 @@ import pl.motokomando.healthcare.dto.patients.utils.DocumentType;
 import pl.motokomando.healthcare.dto.patients.utils.Sex;
 
 import javax.validation.constraints.Future;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -25,6 +27,10 @@ import java.time.LocalDate;
 @Setter
 public class PatientRequest implements Serializable {
 
+    @ApiModelProperty(value = "Patient ID for edit details purpose", example = "1")
+    @Min(value = 1, message = "Patient ID must be a positive integer value")
+    @Nullable
+    private Integer id;
     @ApiModelProperty(value = "Patient first name", example = "James")
     @NotBlank(message = "First name is mandatory")
     @Size(min = 2, max = 30, message = "First name must be between 2 and 30 characters long")
