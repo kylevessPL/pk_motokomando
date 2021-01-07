@@ -23,7 +23,7 @@ public class PatientQuery {
     @Min(value = 1, message = "Page size must be a positive integer value")
     private Integer size = 10;
     @ApiParam(value = "Value to sort room by", defaultValue = "id", allowableValues = "id, firstName, lastName, sex, bloodType", example = "lastName")
-    @ValidateString(acceptedValues = {"id", "firstName", "lastName", "sex", "bloodType"})
+    @ValidateString(acceptedValues = {"id", "firstName", "lastName", "sex", "bloodType"}, message = "Sort by property not valid")
     private String sortBy = "id";
     @ApiParam(value = "Sort direction", defaultValue = "ASC", allowableValues = "ASC, DESC")
     private SortDirection sortDir = ASC;

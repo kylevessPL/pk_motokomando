@@ -17,7 +17,7 @@ public @interface ValidateString {
 
     String[] acceptedValues();
 
-    String message() default "{Not a valid parameter}";
+    String message() default "Not a valid parameter";
 
     Class<?>[] groups() default { };
 

@@ -5,21 +5,26 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import pl.motokomando.healthcare.api.patients.mapper.PatientsMapper;
 import pl.motokomando.healthcare.api.patients.utils.PatientQuery;
 import pl.motokomando.healthcare.api.patients.utils.PatientRequest;
+import pl.motokomando.healthcare.api.utils.PageMeta;
+import pl.motokomando.healthcare.api.utils.PageResponse;
 import pl.motokomando.healthcare.domain.patients.PatientsService;
 import pl.motokomando.healthcare.dto.patients.PatientBasicResponse;
 import pl.motokomando.healthcare.dto.patients.PatientResponse;
+import pl.motokomando.healthcare.dto.patients.utils.PatientBasic;
 
 import javax.validation.Valid;
-import java.util.List;
+import javax.validation.constraints.Min;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -27,6 +32,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Api
 @RestController
 @RequestMapping("/api/v1/patients")
+@Validated
 @RequiredArgsConstructor
 public class PatientsServiceController {
 
@@ -44,8 +50,13 @@ public class PatientsServiceController {
             @ApiResponse(code = 500, message = "Internal server error")
     })
     @GetMapping(value = "/get", produces = APPLICATION_JSON_VALUE)
-    public List<PatientBasicResponse> getAll(@Valid PatientQuery query) {
-        return patientsMapper.mapToResponse(patientsService.getAllPatients(patientsMapper.mapToCommand(query)));
+    public PageResponse<PatientBasic> getAll(@Valid PatientQuery query) {
+        PatientBasicResponse response = patientsMapper.mapToResponse(patientsService.getAllPatients(patientsMapper.mapToCommand(query)));
+        PageMeta meta = new PageMeta(
+                query.getPage(),
+                query.getSize(),
+                response.getTotalPage());
+        return new PageResponse<>(meta, response.getContent());
     }
 
     @ApiOperation(
@@ -59,7 +70,7 @@ public class PatientsServiceController {
             @ApiResponse(code = 500, message = "Internal server error")
     })
     @GetMapping(value = "/id/{id}", produces = APPLICATION_JSON_VALUE)
-    public PatientResponse getById(@PathVariable Integer id) {
+    public PatientResponse getById(@PathVariable @Min(value = 1, message = "Patient ID must be a positive integer value") Integer id) {
         return patientsMapper.mapToResponse(patientsService.getPatientById(id));
     }
 
@@ -75,7 +86,7 @@ public class PatientsServiceController {
     })
     @ResponseStatus(CREATED)
     @PostMapping(value = "/save", produces = APPLICATION_JSON_VALUE)
-    public void save(PatientRequest request) {
+    public void save(@RequestBody @Valid PatientRequest request) {
         patientsService.savePatient(patientsMapper.mapToCommand(request));
     }
 

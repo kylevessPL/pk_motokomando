@@ -7,7 +7,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.motokomando.healthcare.domain.model.patients.Patient;
-import pl.motokomando.healthcare.domain.model.patients.PatientBasic;
+import pl.motokomando.healthcare.domain.model.patients.PatientBasicPage;
 import pl.motokomando.healthcare.domain.model.patients.utils.PatientRequestCommand;
 import pl.motokomando.healthcare.domain.model.utils.PageProperties;
 import pl.motokomando.healthcare.domain.model.utils.SortProperties;
@@ -30,21 +30,26 @@ public class PatientsRepositoryImpl implements PatientsRepository {
 
     @Override
     @Transactional(readOnly = true)
-    public List<PatientBasic> getAllPatients(PageProperties pageProperties, SortProperties sortProperties) {
+    public PatientBasicPage getAllPatients(PageProperties pageProperties, SortProperties sortProperties) {
         Integer page = pageProperties.getPage();
         Integer size = pageProperties.getSize();
         Sort sort = createSortProperty(sortProperties);
         Page<PatientsEntity> result = dao.findAll(PageRequest.of(page, size, sort));
         if (result.hasContent()) {
-            return mapper.mapToPatientBasicList(result.getContent());
+            return mapper.mapToPatientBasicPage(result.getContent(), result.getTotalPages());
         }
-        return mapper.mapToPatientBasicList(Collections.emptyList());
+        return mapper.mapToPatientBasicPage(Collections.emptyList(), 0);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Optional<Patient> getPatientById(Integer id) {
         return mapper.mapToPatient(dao.findById(id));
+    }
+
+    @Override
+    public boolean patientExists(Integer id) {
+        return dao.existsById(id);
     }
 
     @Override
@@ -67,7 +72,7 @@ public class PatientsRepositoryImpl implements PatientsRepository {
 
     private PatientsEntity createEntity(PatientRequestCommand data) {
         PatientsEntity patientsEntity = new PatientsEntity();
-        Optional.ofNullable(data.getId()).ifPresent(patientsEntity::setId);
+        patientsEntity.setId(data.getId());
         patientsEntity.setFirstName(data.getFirstName());
         patientsEntity.setLastName(data.getLastName());
         patientsEntity.setBirthDate(data.getBirthDate());
