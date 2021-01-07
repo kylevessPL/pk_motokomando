@@ -9,8 +9,6 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
-import java.util.Objects;
-
 @ControllerAdvice
 public class PageResponseAdvice implements ResponseBodyAdvice<Object> {
 
@@ -21,17 +19,16 @@ public class PageResponseAdvice implements ResponseBodyAdvice<Object> {
 
     @Override
     public Object beforeBodyWrite(
-            @Nullable Object body,
+            Object body,
             @Nullable MethodParameter returnType,
             @Nullable MediaType selectedContentType,
             @Nullable Class<? extends HttpMessageConverter<?>> selectedConverterType,
             @Nullable ServerHttpRequest request,
             ServerHttpResponse response) {
         PageResponse<?> pageResponse = (PageResponse<?>) body;
-        PageMeta meta = Objects.requireNonNull(pageResponse).getMeta();
-        response.getHeaders().add("X-Paging-Page", String.valueOf(meta.getPage()));
-        response.getHeaders().add("X-Paging-Page-Size", String.valueOf(meta.getPageSize()));
-        response.getHeaders().add("X-Paging-Total-Page", String.valueOf(meta.getTotalPage()));
+        response.getHeaders().add("X-Paging-Page", String.valueOf(pageResponse.getPage()));
+        response.getHeaders().add("X-Paging-Page-Size", String.valueOf(pageResponse.getPageSize()));
+        response.getHeaders().add("X-Paging-Total-Page", String.valueOf(pageResponse.getTotalPage()));
         return pageResponse.getContent();
     }
 

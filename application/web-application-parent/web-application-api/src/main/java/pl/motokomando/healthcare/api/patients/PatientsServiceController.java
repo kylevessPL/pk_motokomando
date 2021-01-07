@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.motokomando.healthcare.api.patients.mapper.PatientsMapper;
 import pl.motokomando.healthcare.api.patients.utils.PatientQuery;
 import pl.motokomando.healthcare.api.patients.utils.PatientRequest;
-import pl.motokomando.healthcare.api.utils.PageMeta;
 import pl.motokomando.healthcare.api.utils.PageResponse;
 import pl.motokomando.healthcare.domain.patients.PatientsService;
 import pl.motokomando.healthcare.dto.patients.PatientBasicResponse;
@@ -52,11 +51,11 @@ public class PatientsServiceController {
     @GetMapping(value = "/get", produces = APPLICATION_JSON_VALUE)
     public PageResponse<PatientBasic> getAll(@Valid PatientQuery query) {
         PatientBasicResponse response = patientsMapper.mapToResponse(patientsService.getAllPatients(patientsMapper.mapToCommand(query)));
-        PageMeta meta = new PageMeta(
+        return new PageResponse<>(
                 query.getPage(),
                 query.getSize(),
-                response.getTotalPage());
-        return new PageResponse<>(meta, response.getContent());
+                response.getTotalPage(),
+                response.getContent());
     }
 
     @ApiOperation(
