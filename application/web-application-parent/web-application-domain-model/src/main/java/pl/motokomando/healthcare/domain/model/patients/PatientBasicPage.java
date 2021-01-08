@@ -10,6 +10,7 @@ import java.util.List;
 public final class PatientBasicPage {
 
     private final Integer totalPage;
+    private final Long totalCount;
     private final List<PatientBasic> content;
 
 }

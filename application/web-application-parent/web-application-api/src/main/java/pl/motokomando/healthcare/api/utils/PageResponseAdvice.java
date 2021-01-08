@@ -26,9 +26,10 @@ public class PageResponseAdvice implements ResponseBodyAdvice<Object> {
             @Nullable ServerHttpRequest request,
             ServerHttpResponse response) {
         PageResponse<?> pageResponse = (PageResponse<?>) body;
-        response.getHeaders().add("X-Paging-Page", String.valueOf(pageResponse.getPage()));
-        response.getHeaders().add("X-Paging-Page-Size", String.valueOf(pageResponse.getPageSize()));
-        response.getHeaders().add("X-Paging-Total-Page", String.valueOf(pageResponse.getTotalPage()));
+        response.getHeaders().add("X-Count-Per-Page", String.valueOf(pageResponse.getPageSize()));
+        response.getHeaders().add("X-Current-Page", String.valueOf(pageResponse.getPage()));
+        response.getHeaders().add("X-Total-Count", String.valueOf(pageResponse.getTotalCount()));
+        response.getHeaders().add("X-Total-Pages", String.valueOf(pageResponse.getTotalPage()));
         return pageResponse.getContent();
     }
 

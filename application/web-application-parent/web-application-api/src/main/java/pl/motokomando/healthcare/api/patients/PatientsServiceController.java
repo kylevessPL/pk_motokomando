@@ -55,6 +55,7 @@ public class PatientsServiceController {
                 query.getPage(),
                 query.getSize(),
                 response.getTotalPage(),
+                response.getTotalCount(),
                 response.getContent());
     }
 

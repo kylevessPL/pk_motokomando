@@ -17,12 +17,12 @@ public class PatientsEntityMapper {
         return patientsEntity.map(this::createPatient);
     }
 
-    public PatientBasicPage mapToPatientBasicPage(List<PatientsEntity> patientsEntityList, Integer totalPage) {
+    public PatientBasicPage mapToPatientBasicPage(List<PatientsEntity> patientsEntityList, Integer totalPage, Long totalCount) {
         List<PatientBasic> patientBasicList = patientsEntityList
                 .stream()
                 .map(this::createPatientBasic)
                 .collect(Collectors.toList());
-        return new PatientBasicPage(totalPage, patientBasicList);
+        return new PatientBasicPage(totalPage, totalCount, patientBasicList);
     }
 
     private PatientBasic createPatientBasic(PatientsEntity patientsEntity) {

@@ -16,6 +16,7 @@ import pl.motokomando.healthcare.infrastructure.dao.PatientsEntityDao;
 import pl.motokomando.healthcare.infrastructure.mapper.PatientsEntityMapper;
 import pl.motokomando.healthcare.infrastructure.model.PatientsEntity;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -34,11 +35,12 @@ public class PatientsRepositoryImpl implements PatientsRepository {
         Integer page = pageProperties.getPage();
         Integer size = pageProperties.getSize();
         Sort sort = createSortProperty(sortProperties);
-        Page<PatientsEntity> result = dao.findAll(PageRequest.of(page, size, sort));
+        Page<PatientsEntity> result = dao.findAll(PageRequest.of(page - 1, size, sort));
+        List<PatientsEntity> content = Collections.emptyList();
         if (result.hasContent()) {
-            return mapper.mapToPatientBasicPage(result.getContent(), result.getTotalPages());
+            content = result.getContent();
         }
-        return mapper.mapToPatientBasicPage(Collections.emptyList(), 0);
+        return mapper.mapToPatientBasicPage(content,  result.getTotalPages(), result.getTotalElements());
     }
 
     @Override
@@ -63,7 +65,7 @@ public class PatientsRepositoryImpl implements PatientsRepository {
         String sortBy = sortProperties.getSortBy();
         Sort.Direction sortDir = Sort.Direction.valueOf(sortProperties.getSortDir().name());
         if (sortProperties.getSortBy().matches("firstName|lastName")) {
-            List<String> values = Arrays.asList("firstName", "lastName");
+            List<String> values = new ArrayList<>(Arrays.asList("firstName", "lastName"));
             return Sort.by(sortDir, values.remove(values.indexOf(sortBy)))
                     .and(Sort.by(sortDir, values.get(0)));
         }

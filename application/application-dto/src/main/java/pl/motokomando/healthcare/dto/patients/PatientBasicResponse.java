@@ -13,6 +13,7 @@ import java.util.List;
 public class PatientBasicResponse {
 
     private Integer totalPage;
+    private Long totalCount;
     private List<PatientBasic> content;
 
 }

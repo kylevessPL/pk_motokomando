@@ -19,9 +19,9 @@ public class PatientQuery {
     @ApiParam(value = "Page number", defaultValue = "1", example = "5")
     @Min(value = 1, message = "Page number must be a positive integer value")
     private Integer page = 1;
-    @ApiParam(value = "Page size", defaultValue = "10", example = "20")
+    @ApiParam(value = "Page size", defaultValue = "10", example = "50")
     @Min(value = 1, message = "Page size must be a positive integer value")
-    private Integer size = 10;
+    private Integer size = 20;
     @ApiParam(value = "Value to sort room by", defaultValue = "id", allowableValues = "id, firstName, lastName, sex, bloodType", example = "lastName")
     @ValidateString(acceptedValues = {"id", "firstName", "lastName", "sex", "bloodType"}, message = "Sort by property not valid")
     private String sortBy = "id";
