@@ -34,8 +34,10 @@ public class PageResponseAdvice implements ResponseBodyAdvice<Object> {
             @Nullable ServerHttpRequest request,
             @NonNull ServerHttpResponse response) {
         PageResponse<?> pageResponse = (PageResponse<?>) body;
-        setPaginationLinks(response, pageResponse.getPageMeta());
-        setPaginationData(response, pageResponse);
+        if (!pageResponse.getContent().isEmpty()) {
+            setPaginationLinks(response, pageResponse.getPageMeta());
+            setPaginationData(response, pageResponse);
+        }
         return pageResponse.getContent();
     }
 

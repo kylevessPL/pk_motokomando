@@ -78,9 +78,8 @@ public class PatientsRepositoryImpl implements PatientsRepository {
 
     private Page<PatientsEntity> getAllPaged(Integer page, Integer size, Sort sort) {
         Page<PatientsEntity> result = dao.findAll(PageRequest.of(page - 1, size, sort));
-        if (!result.hasContent()) {
-            int pageNumber = result.getTotalPages() > 0 ? result.getTotalPages() - 1 : 0;
-            result = dao.findAll(PageRequest.of(pageNumber, size, sort));
+        if (!result.hasContent() && result.getTotalPages() > 0) {
+            result = dao.findAll(PageRequest.of(result.getTotalPages() - 1, size, sort));
         }
         return result;
     }
