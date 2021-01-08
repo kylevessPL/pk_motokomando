@@ -12,7 +12,6 @@ import pl.motokomando.healthcare.dto.patients.utils.BloodType;
 import pl.motokomando.healthcare.dto.patients.utils.DocumentType;
 import pl.motokomando.healthcare.dto.patients.utils.Sex;
 
-import javax.validation.constraints.Future;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -41,7 +40,6 @@ public class PatientRequest implements Serializable {
     private String lastName;
     @ApiModelProperty(value = "Patient birth date", example = "01-01-1985")
     @NotNull(message = "Birth date is mandatory")
-    @Future(message = "Birth date must be in the future")
     @DateTimeFormat(pattern = "dd-MM-yyyy")
     @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate birthDate;

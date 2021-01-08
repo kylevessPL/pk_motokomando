@@ -1,6 +1,5 @@
 package pl.motokomando.healthcare.domain.model.patients.utils;
 
-import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -17,7 +16,6 @@ public enum BloodType {
     AB_POS("AB+"),
     AB_NEG("AB-");
 
-    @JsonValue
     private final String bloodType;
 
 }
