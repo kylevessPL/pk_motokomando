@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,6 +15,8 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import pl.motokomando.healthcare.domain.model.utils.MyException;
 import pl.motokomando.healthcare.domain.model.utils.NoMedicinesFoundException;
+
+import javax.validation.ConstraintViolationException;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
@@ -26,8 +29,7 @@ public final class GlobalExceptionHandler extends ResponseEntityExceptionHandler
     @ExceptionHandler(value = NoMedicinesFoundException.class)
     protected ResponseEntity<Object> handleNoMedicinesFound(NoMedicinesFoundException ex) {
         HttpStatus status = NOT_FOUND;
-        logger.info(status.toString());
-        logger.info(ex.getMessage());
+        logger.info(status.toString(), ex);
         ErrorResponse errorResponse = new ErrorResponse(
                 status.value(),
                 ex.getErrorCode().getCode(),
@@ -48,6 +50,7 @@ public final class GlobalExceptionHandler extends ResponseEntityExceptionHandler
 
     @ExceptionHandler(value = {
             MethodArgumentTypeMismatchException.class,
+            ConstraintViolationException.class,
             IllegalArgumentException.class
     })
     protected ResponseEntity<Object> handleValidationError(Exception ex) {
@@ -76,6 +79,11 @@ public final class GlobalExceptionHandler extends ResponseEntityExceptionHandler
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(@NonNull MethodArgumentNotValidException ex, @NonNull HttpHeaders headers, @NonNull HttpStatus status, @NonNull WebRequest request) {
+        return handleValidationError(ex);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleBindException(@NonNull BindException ex, @NonNull HttpHeaders headers, @NonNull HttpStatus status, @NonNull WebRequest request) {
         return handleValidationError(ex);
     }
 

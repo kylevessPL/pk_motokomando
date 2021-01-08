@@ -35,7 +35,7 @@ public class MedicinesServiceController {
             nickname = "searchMedicines"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 200, message = "Successfully fetched medicines"),
             @ApiResponse(code = 400, message = "Parameters not valid"),
             @ApiResponse(code = 404, message = "No medicines found"),
             @ApiResponse(code = 500, message = "Internal server error")
@@ -51,7 +51,7 @@ public class MedicinesServiceController {
             nickname = "getMedicineByProductNDC"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 200, message = "Successfully fecthed medicine details"),
             @ApiResponse(code = 400, message = "Parameter not valid"),
             @ApiResponse(code = 404, message = "Medicine not found"),
             @ApiResponse(code = 500, message = "Internal server error")
