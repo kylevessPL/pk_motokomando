@@ -2,6 +2,7 @@ package pl.motokomando.healthcare.api.utils;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import pl.motokomando.healthcare.dto.utils.PageMetaResponse;
 
 import java.util.List;
 
@@ -9,10 +10,8 @@ import java.util.List;
 @Getter
 public final class PageResponse<T> {
 
-    private final Integer page;
-    private final Integer pageSize;
-    private final Integer totalPage;
-    private final Long totalCount;
+    private final int pageSize;
+    private final PageMetaResponse pageMeta;
     private final List<T> content;
 
 }

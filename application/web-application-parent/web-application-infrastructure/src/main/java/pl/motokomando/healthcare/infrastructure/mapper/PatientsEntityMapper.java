@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 import pl.motokomando.healthcare.domain.model.patients.Patient;
 import pl.motokomando.healthcare.domain.model.patients.PatientBasic;
 import pl.motokomando.healthcare.domain.model.patients.PatientBasicPage;
+import pl.motokomando.healthcare.domain.model.utils.PageMeta;
 import pl.motokomando.healthcare.infrastructure.model.PatientsEntity;
 
 import java.util.List;
@@ -17,12 +18,14 @@ public class PatientsEntityMapper {
         return patientsEntity.map(this::createPatient);
     }
 
-    public PatientBasicPage mapToPatientBasicPage(List<PatientsEntity> patientsEntityList, Integer totalPage, Long totalCount) {
+    public PatientBasicPage mapToPatientBasicPage(List<PatientsEntity> patientsEntityList, boolean isFirst, boolean isLast, boolean hasPrev, boolean hasNext, Integer currentPage, Integer totalPage, Long totalCount) {
         List<PatientBasic> patientBasicList = patientsEntityList
                 .stream()
                 .map(this::createPatientBasic)
                 .collect(Collectors.toList());
-        return new PatientBasicPage(totalPage, totalCount, patientBasicList);
+        return new PatientBasicPage(
+                new PageMeta(isFirst, isLast, hasPrev, hasNext, currentPage, totalPage, totalCount),
+                patientBasicList);
     }
 
     private PatientBasic createPatientBasic(PatientsEntity patientsEntity) {

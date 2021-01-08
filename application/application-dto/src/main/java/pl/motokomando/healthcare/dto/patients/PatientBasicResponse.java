@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pl.motokomando.healthcare.dto.patients.utils.PatientBasic;
+import pl.motokomando.healthcare.dto.utils.PageMetaResponse;
 
 import java.util.List;
 
@@ -12,8 +13,7 @@ import java.util.List;
 @Setter
 public class PatientBasicResponse {
 
-    private Integer totalPage;
-    private Long totalCount;
+    private PageMetaResponse meta;
     private List<PatientBasic> content;
 
 }

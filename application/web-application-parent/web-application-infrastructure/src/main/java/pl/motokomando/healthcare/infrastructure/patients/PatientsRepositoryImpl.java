@@ -35,12 +35,16 @@ public class PatientsRepositoryImpl implements PatientsRepository {
         Integer page = pageProperties.getPage();
         Integer size = pageProperties.getSize();
         Sort sort = createSortProperty(sortProperties);
-        Page<PatientsEntity> result = dao.findAll(PageRequest.of(page - 1, size, sort));
-        List<PatientsEntity> content = Collections.emptyList();
-        if (result.hasContent()) {
-            content = result.getContent();
-        }
-        return mapper.mapToPatientBasicPage(content,  result.getTotalPages(), result.getTotalElements());
+        Page<PatientsEntity> result = getAllPaged(page, size, sort);
+        return mapper.mapToPatientBasicPage(
+                result.hasContent() ? result.getContent() : Collections.emptyList(),
+                result.isFirst(),
+                result.isLast(),
+                result.hasPrevious(),
+                result.hasNext(),
+                result.getNumber() + 1,
+                result.getTotalPages(),
+                result.getTotalElements());
     }
 
     @Override
@@ -70,6 +74,15 @@ public class PatientsRepositoryImpl implements PatientsRepository {
                     .and(Sort.by(sortDir, values.get(0)));
         }
         return Sort.by(sortDir, sortBy);
+    }
+
+    private Page<PatientsEntity> getAllPaged(Integer page, Integer size, Sort sort) {
+        Page<PatientsEntity> result = dao.findAll(PageRequest.of(page - 1, size, sort));
+        if (!result.hasContent()) {
+            int pageNumber = result.getTotalPages() > 0 ? result.getTotalPages() - 1 : 0;
+            result = dao.findAll(PageRequest.of(pageNumber, size, sort));
+        }
+        return result;
     }
 
     private PatientsEntity createEntity(PatientRequestCommand data) {

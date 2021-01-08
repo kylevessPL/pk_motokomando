@@ -52,10 +52,8 @@ public class PatientsServiceController {
     public PageResponse<PatientBasic> getAll(@Valid PatientQuery query) {
         PatientBasicResponse response = patientsMapper.mapToResponse(patientsService.getAllPatients(patientsMapper.mapToCommand(query)));
         return new PageResponse<>(
-                query.getPage(),
                 query.getSize(),
-                response.getTotalPage(),
-                response.getTotalCount(),
+                response.getMeta(),
                 response.getContent());
     }
 
