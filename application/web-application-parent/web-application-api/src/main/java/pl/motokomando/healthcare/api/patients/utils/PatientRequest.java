@@ -8,9 +8,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
-import pl.motokomando.healthcare.dto.patients.utils.BloodType;
-import pl.motokomando.healthcare.dto.patients.utils.DocumentType;
-import pl.motokomando.healthcare.dto.patients.utils.Sex;
+import pl.motokomando.healthcare.domain.model.patients.utils.BloodType;
+import pl.motokomando.healthcare.domain.model.patients.utils.DocumentType;
+import pl.motokomando.healthcare.domain.model.patients.utils.Sex;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;

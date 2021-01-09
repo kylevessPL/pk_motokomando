@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.motokomando.healthcare.domain.model.patients.Patient;
 import pl.motokomando.healthcare.domain.model.patients.PatientBasicPage;
-import pl.motokomando.healthcare.domain.model.patients.utils.PatientQueryCommand;
 import pl.motokomando.healthcare.domain.model.patients.utils.PatientRequestCommand;
+import pl.motokomando.healthcare.domain.model.utils.BasicQueryCommand;
 import pl.motokomando.healthcare.domain.model.utils.MyException;
 import pl.motokomando.healthcare.domain.model.utils.PageProperties;
 import pl.motokomando.healthcare.domain.model.utils.SortProperties;
@@ -23,7 +23,7 @@ public class PatientsServiceImpl implements PatientsService {
 
     @Override
     @Transactional(readOnly = true)
-    public PatientBasicPage getAllPatients(PatientQueryCommand query) {
+    public PatientBasicPage getAllPatients(BasicQueryCommand query) {
         PageProperties pageProperties = new PageProperties(query.getPage(), query.getSize());
         SortProperties sortProperties = new SortProperties(query.getSortBy(), query.getSortDir());
         return repository.getAllPatients(pageProperties, sortProperties);

@@ -1,4 +1,4 @@
-package pl.motokomando.healthcare.api.patients;
+package pl.motokomando.healthcare.api.doctors;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -13,14 +13,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import pl.motokomando.healthcare.api.patients.mapper.PatientsMapper;
-import pl.motokomando.healthcare.api.patients.utils.PatientQuery;
-import pl.motokomando.healthcare.api.patients.utils.PatientRequest;
+import pl.motokomando.healthcare.api.doctors.mapper.DoctorsMapper;
+import pl.motokomando.healthcare.api.doctors.utils.DoctorQuery;
+import pl.motokomando.healthcare.api.doctors.utils.DoctorRequest;
 import pl.motokomando.healthcare.api.utils.PageResponse;
-import pl.motokomando.healthcare.domain.patients.PatientsService;
-import pl.motokomando.healthcare.dto.patients.PatientBasicResponse;
-import pl.motokomando.healthcare.dto.patients.PatientResponse;
-import pl.motokomando.healthcare.dto.patients.utils.PatientBasic;
+import pl.motokomando.healthcare.domain.doctors.DoctorsService;
+import pl.motokomando.healthcare.dto.doctors.DoctorBasicResponse;
+import pl.motokomando.healthcare.dto.doctors.DoctorResponse;
+import pl.motokomando.healthcare.dto.doctors.utils.DoctorBasic;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
@@ -30,27 +30,27 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Api
 @RestController
-@RequestMapping("/api/v1/patients")
+@RequestMapping("/api/v1/doctors")
 @Validated
 @RequiredArgsConstructor
-public class PatientsServiceController {
+public class DoctorsServiceController {
 
-    private final PatientsService patientsService;
-    private final PatientsMapper patientsMapper;
+    private final DoctorsService doctorsService;
+    private final DoctorsMapper doctorsMapper;
 
     @ApiOperation(
-            value = "Get all patients",
+            value = "Get all doctors",
             notes = "You can pass additional paging and sorting parameters",
-            nickname = "getAllPatients"
+            nickname = "getAllDoctors"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successfully fetched patients data"),
+            @ApiResponse(code = 200, message = "Successfully fetched doctors data"),
             @ApiResponse(code = 400, message = "Parameters not valid"),
             @ApiResponse(code = 500, message = "Internal server error")
     })
     @GetMapping(value = "/get", produces = APPLICATION_JSON_VALUE)
-    public PageResponse<PatientBasic> getAll(@Valid PatientQuery query) {
-        PatientBasicResponse response = patientsMapper.mapToResponse(patientsService.getAllPatients(patientsMapper.mapToCommand(query)));
+    public PageResponse<DoctorBasic> getAll(@Valid DoctorQuery query) {
+        DoctorBasicResponse response = doctorsMapper.mapToResponse(doctorsService.getAllDoctors(doctorsMapper.mapToCommand(query)));
         return new PageResponse<>(
                 query.getSize(),
                 response.getMeta(),
@@ -58,34 +58,34 @@ public class PatientsServiceController {
     }
 
     @ApiOperation(
-            value = "Get patient details by ID",
-            notes = "You are required to pass patient ID",
-            nickname = "getPatientById"
+            value = "Get doctor details by ID",
+            notes = "You are required to pass doctor ID",
+            nickname = "getDoctorById"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successfully fetched patient details"),
-            @ApiResponse(code = 400, message = "Parameters not valid or no such patient with provided ID"),
+            @ApiResponse(code = 200, message = "Successfully fetched doctors details"),
+            @ApiResponse(code = 400, message = "Parameters not valid or no such doctor with provided ID"),
             @ApiResponse(code = 500, message = "Internal server error")
     })
     @GetMapping(value = "/id/{id}", produces = APPLICATION_JSON_VALUE)
-    public PatientResponse getById(@PathVariable @Min(value = 1, message = "Patient ID must be a positive integer value") Integer id) {
-        return patientsMapper.mapToResponse(patientsService.getPatientById(id));
+    public DoctorResponse getById(@PathVariable @Min(value = 1, message = "Doctor ID must be a positive integer value") Integer id) {
+        return doctorsMapper.mapToResponse(doctorsService.getDoctorById(id));
     }
 
     @ApiOperation(
-            value = "Register patient or edit patient details",
-            notes = "You are required to pass JSON body with patient details",
-            nickname = "savePatient"
+            value = "Register doctor or edit doctor details",
+            notes = "You are required to pass JSON body with doctor details",
+            nickname = "saveDoctor"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Successfully saved patient details"),
+            @ApiResponse(code = 201, message = "Successfully saved doctor details"),
             @ApiResponse(code = 400, message = "Parameters not valid"),
             @ApiResponse(code = 500, message = "Internal server error")
     })
     @ResponseStatus(CREATED)
     @PostMapping(value = "/save", produces = APPLICATION_JSON_VALUE)
-    public void save(@RequestBody @Valid PatientRequest request) {
-        patientsService.savePatient(patientsMapper.mapToCommand(request));
+    public void save(@RequestBody @Valid DoctorRequest request) {
+        doctorsService.saveDoctor(doctorsMapper.mapToCommand(request));
     }
 
 }

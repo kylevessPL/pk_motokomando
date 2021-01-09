@@ -1,10 +1,5 @@
 package pl.motokomando.healthcare.dto.patients.utils;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
-@RequiredArgsConstructor
-@Getter
 public enum BloodType {
 
     O_POS,
