@@ -1,9 +1,9 @@
 package pl.motokomando.healthcare.infrastructure.mapper;
 
 import org.springframework.stereotype.Component;
-import pl.motokomando.healthcare.domain.model.patients.Patient;
-import pl.motokomando.healthcare.domain.model.patients.PatientBasic;
 import pl.motokomando.healthcare.domain.model.patients.PatientBasicPage;
+import pl.motokomando.healthcare.domain.model.patients.utils.PatientBasic;
+import pl.motokomando.healthcare.domain.model.patients.utils.PatientDetails;
 import pl.motokomando.healthcare.domain.model.utils.PageMeta;
 import pl.motokomando.healthcare.infrastructure.model.PatientsEntity;
 
@@ -14,8 +14,8 @@ import java.util.stream.Collectors;
 @Component
 public class PatientsEntityMapper {
 
-    public Optional<Patient> mapToPatient(Optional<PatientsEntity> patientsEntity) {
-        return patientsEntity.map(this::createPatient);
+    public Optional<PatientDetails> mapToPatient(Optional<PatientsEntity> patientsEntity) {
+        return patientsEntity.map(this::createPatientDetails);
     }
 
     public PatientBasicPage mapToPatientBasicPage(List<PatientsEntity> patientsEntityList, boolean isFirst, boolean isLast, boolean hasPrev, boolean hasNext, Integer currentPage, Integer totalPage, Long totalCount) {
@@ -35,8 +35,8 @@ public class PatientsEntityMapper {
                 patientsEntity.getLastName());
     }
 
-    private Patient createPatient(PatientsEntity patientsEntity) {
-        return new Patient(
+    private PatientDetails createPatientDetails(PatientsEntity patientsEntity) {
+        return new PatientDetails(
                 patientsEntity.getFirstName(),
                 patientsEntity.getLastName(),
                 patientsEntity.getBirthDate(),

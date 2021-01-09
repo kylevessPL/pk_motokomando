@@ -6,8 +6,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.motokomando.healthcare.domain.model.patients.Patient;
 import pl.motokomando.healthcare.domain.model.patients.PatientBasicPage;
+import pl.motokomando.healthcare.domain.model.patients.utils.PatientDetails;
 import pl.motokomando.healthcare.domain.model.patients.utils.PatientRequestCommand;
 import pl.motokomando.healthcare.domain.model.utils.PageProperties;
 import pl.motokomando.healthcare.domain.model.utils.SortProperties;
@@ -49,7 +49,7 @@ public class PatientsRepositoryImpl implements PatientsRepository {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Patient> getPatientById(Integer id) {
+    public Optional<PatientDetails> getPatientById(Integer id) {
         return mapper.mapToPatient(dao.findById(id));
     }
 
@@ -60,9 +60,9 @@ public class PatientsRepositoryImpl implements PatientsRepository {
 
     @Override
     @Transactional
-    public void savePatient(PatientRequestCommand data) {
+    public Integer savePatient(PatientRequestCommand data) {
         PatientsEntity patientsEntity = createEntity(data);
-        dao.save(patientsEntity);
+        return dao.save(patientsEntity).getId();
     }
 
     private Sort createSortProperty(SortProperties sortProperties) {

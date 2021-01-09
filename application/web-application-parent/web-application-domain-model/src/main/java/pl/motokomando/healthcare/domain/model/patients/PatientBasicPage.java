@@ -2,6 +2,7 @@ package pl.motokomando.healthcare.domain.model.patients;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import pl.motokomando.healthcare.domain.model.patients.utils.PatientBasic;
 import pl.motokomando.healthcare.domain.model.utils.PageMeta;
 
 import java.util.List;
