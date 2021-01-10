@@ -1,4 +1,4 @@
-package pl.motokomando.healthcare.domain.patientrecords;
+package pl.motokomando.healthcare.domain.bills;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -6,12 +6,14 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.motokomando.healthcare.domain.model.patientrecords.PatientRecord;
 import pl.motokomando.healthcare.domain.model.patientrecords.utils.PatientRecordPatchRequestCommand;
 import pl.motokomando.healthcare.domain.model.utils.MyException;
+import pl.motokomando.healthcare.domain.patientrecords.PatientRecordsRepository;
+import pl.motokomando.healthcare.domain.patientrecords.PatientRecordsService;
 
 import static pl.motokomando.healthcare.domain.model.utils.ErrorCode.PATIENT_RECORD_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
-public class PatientRecordsServiceImpl implements PatientRecordsService {
+public class BillsServiceImpl implements PatientRecordsService {
 
     private final PatientRecordsRepository repository;
 

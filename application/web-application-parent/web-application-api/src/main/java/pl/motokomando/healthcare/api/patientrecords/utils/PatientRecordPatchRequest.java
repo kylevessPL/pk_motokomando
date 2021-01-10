@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Setter
-public class PatientRecordRequest implements Serializable {
+public class PatientRecordPatchRequest implements Serializable {
 
     @ApiModelProperty(value = "Medical record ID", example = "1")
     @NotNull(message = "Medical record ID is mandatory")

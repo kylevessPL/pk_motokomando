@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.motokomando.healthcare.domain.model.patientrecords.PatientRecord;
 import pl.motokomando.healthcare.domain.model.patientrecords.utils.PatientBasicInfo;
-import pl.motokomando.healthcare.domain.model.patientrecords.utils.PatientRecordRequestCommand;
+import pl.motokomando.healthcare.domain.model.patientrecords.utils.PatientRecordPatchRequestCommand;
 import pl.motokomando.healthcare.domain.patientrecords.PatientRecordsRepository;
 import pl.motokomando.healthcare.infrastructure.dao.PatientRecordsEntityDao;
 import pl.motokomando.healthcare.infrastructure.mapper.PatientRecordsEntityMapper;
@@ -29,7 +29,7 @@ public class PatientRecordsRepositoryImpl implements PatientRecordsRepository {
 
     @Override
     @Transactional
-    public void updatePatientRecord(PatientRecordRequestCommand data) {
+    public void updatePatientRecord(PatientRecordPatchRequestCommand data) {
         PatientRecordsEntity patientRecordsEntity = createEntity(data);
         dao.save(patientRecordsEntity);
     }
@@ -59,7 +59,7 @@ public class PatientRecordsRepositoryImpl implements PatientRecordsRepository {
         return patientRecordsEntity;
     }
 
-    private PatientRecordsEntity createEntity(PatientRecordRequestCommand data) {
+    private PatientRecordsEntity createEntity(PatientRecordPatchRequestCommand data) {
         PatientRecordsEntity patientRecordsEntity = new PatientRecordsEntity();
         patientRecordsEntity.setId(data.getId());
         patientRecordsEntity.setPatientId(data.getPatientId());
