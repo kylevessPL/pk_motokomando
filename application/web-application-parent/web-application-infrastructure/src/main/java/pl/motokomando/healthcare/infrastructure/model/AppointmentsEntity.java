@@ -25,7 +25,7 @@ public class AppointmentsEntity {
     @GeneratedValue(strategy = SEQUENCE, generator = "appointments_generator")
     @SequenceGenerator(name="appointments_generator", sequenceName = "seq_appointments", allocationSize = 1)
     private Integer id;
-    @Column(name = "schedule_date", nullable = false, updatable = false)
+    @Column(name = "schedule_date", nullable = false)
     @CreationTimestamp
     private Timestamp scheduleDate;
     @Column(name = "appointment_date", nullable = false)
