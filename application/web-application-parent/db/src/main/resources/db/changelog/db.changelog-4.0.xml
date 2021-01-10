@@ -8,11 +8,27 @@
 
     <changeSet author="geekon" id="4.0-1">
         <addDefaultValue schemaName="public" tableName="patient_records"
-                        columnName="health_status" defaultValue="GOOD"/>
+                         columnName="health_status" defaultValue="GOOD"/>
     </changeSet>
-    <changeSet author="geekon" id="3.0-2">
+    <changeSet author="geekon" id="4.0-2">
         <modifyDataType schemaName="public" tableName="patients"
-                    columnName="blood_type" newDataType="VARCHAR(5)"/>
+                        columnName="blood_type" newDataType="VARCHAR(5)"/>
+    </changeSet>
+    <changeSet author="geekon" id="4.0-3">
+        <dropForeignKeyConstraint baseTableName="prescriptions_medicines"
+                                  baseTableSchemaName="public"
+                                  constraintName="prescriptions_medicines_fk1"/>
+    </changeSet>
+    <changeSet author="geekon" id="4.0-4">
+        <dropTable schemaName="public" tableName="medicines"/>
+    </changeSet>
+    <changeSet author="geekon" id="4.0-5">
+        <modifyDataType schemaName="public" tableName="prescriptions_medicines"
+                        columnName="medicine_id" newDataType="VARCHAR(10)"/>
+    </changeSet>
+    <changeSet author="geekon" id="4.0-6">
+        <renameColumn schemaName="public" tableName="prescriptions_medicines"
+                      oldColumnName="medicine_id" newColumnName="medicine_ndc"/>
     </changeSet>
 
 </databaseChangeLog>

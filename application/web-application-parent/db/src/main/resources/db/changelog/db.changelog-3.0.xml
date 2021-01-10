@@ -8,7 +8,7 @@
 
     <changeSet author="geekon" id="4.0-1">
         <dropNotNullConstraint schemaName="public" tableName="appointments"
-                    columnName="bill_id"/>
+                               columnName="bill_id"/>
     </changeSet>
 
 </databaseChangeLog>
