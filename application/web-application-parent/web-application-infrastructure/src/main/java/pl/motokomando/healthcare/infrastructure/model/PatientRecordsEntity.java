@@ -35,7 +35,7 @@ public class PatientRecordsEntity {
     private HealthStatus healthStatus = GOOD;
     @Column(name = "notes", length = 100)
     private String notes;
-    @Column(name = "registration_date", nullable = false)
+    @Column(name = "registration_date", nullable = false, updatable = false)
     @CreationTimestamp
     private Timestamp registrationDate;
 

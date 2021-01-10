@@ -1,12 +1,11 @@
 package pl.motokomando.healthcare.api.patientrecords.utils;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
 import pl.motokomando.healthcare.domain.model.patientrecords.utils.HealthStatus;
 
 import javax.validation.constraints.Min;
@@ -21,9 +20,7 @@ import java.time.LocalDateTime;
 @Setter
 public class PatientRecordRequest implements Serializable {
 
-    @ApiModelProperty(value = "Medical record ID", example = "1")
-    @NotNull(message = "Medical record ID is mandatory")
-    @Min(value = 1, message = "Medical record ID must be a positive integer value")
+    @JsonIgnore
     private Integer id;
     @ApiModelProperty(value = "Patient ID", example = "5")
     @NotNull(message = "Patient ID is mandatory")
@@ -35,10 +32,7 @@ public class PatientRecordRequest implements Serializable {
     @ApiModelProperty(value = "Health status notes")
     @Size(min = 5, max = 100, message = "Health status notes must be between 5 and 100 characters long")
     private String notes;
-    @ApiModelProperty(value = "Patient registration date")
-    @NotNull(message = "Patient registration date is mandatory")
-    @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm:ss")
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+    @JsonIgnore
     private LocalDateTime registrationDate;
 
 }

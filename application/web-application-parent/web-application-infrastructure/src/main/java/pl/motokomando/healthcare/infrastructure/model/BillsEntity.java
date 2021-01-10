@@ -2,6 +2,7 @@ package pl.motokomando.healthcare.infrastructure.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,7 +25,8 @@ public class BillsEntity {
     @GeneratedValue(strategy = SEQUENCE, generator = "bills_generator")
     @SequenceGenerator(name="bills_generator", sequenceName = "seq_bills", allocationSize = 1)
     private Integer id;
-    @Column(name = "issue_date", nullable = false)
+    @Column(name = "issue_date", nullable = false, updatable = false)
+    @CreationTimestamp
     private Timestamp issueDate;
     @Column(name = "amount", nullable = false, precision = 2)
     private BigDecimal amount;
