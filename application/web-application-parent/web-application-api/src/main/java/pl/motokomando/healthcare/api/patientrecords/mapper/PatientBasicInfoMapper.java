@@ -1,4 +1,4 @@
-package pl.motokomando.healthcare.api.patientrecords.utils;
+package pl.motokomando.healthcare.api.patientrecords.mapper;
 
 import org.mapstruct.Mapper;
 import pl.motokomando.healthcare.dto.patientrecords.utils.PatientBasicInfo;
