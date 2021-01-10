@@ -49,7 +49,7 @@ public class PatientsServiceImpl implements PatientsService {
         patientId.ifPresent(this::checkPatientExistence);
         Integer id = patientsRepository.savePatient(request);
         if (!patientId.isPresent()) {
-            patientRecordsRepository.create(id);
+            patientRecordsRepository.createPatientRecord(id);
         }
     }
 

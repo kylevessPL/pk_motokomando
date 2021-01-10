@@ -25,7 +25,7 @@ import pl.motokomando.healthcare.dto.doctors.utils.DoctorBasic;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 
-import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Api
@@ -48,7 +48,7 @@ public class DoctorsServiceController {
             @ApiResponse(code = 400, message = "Parameters not valid"),
             @ApiResponse(code = 500, message = "Internal server error")
     })
-    @GetMapping(value = "/get", produces = APPLICATION_JSON_VALUE)
+    @GetMapping(produces = APPLICATION_JSON_VALUE)
     public PageResponse<DoctorBasic> getAll(@Valid DoctorQuery query) {
         DoctorBasicResponse response = doctorsMapper.mapToResponse(doctorsService.getAllDoctors(doctorsMapper.mapToCommand(query)));
         return new PageResponse<>(
@@ -78,11 +78,11 @@ public class DoctorsServiceController {
             nickname = "saveDoctor"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Successfully saved doctor details"),
+            @ApiResponse(code = 204, message = "Successfully saved doctor details"),
             @ApiResponse(code = 400, message = "Parameters not valid"),
             @ApiResponse(code = 500, message = "Internal server error")
     })
-    @ResponseStatus(CREATED)
+    @ResponseStatus(NO_CONTENT)
     @PostMapping(value = "/save", produces = APPLICATION_JSON_VALUE)
     public void save(@RequestBody @Valid DoctorRequest request) {
         doctorsService.saveDoctor(doctorsMapper.mapToCommand(request));
