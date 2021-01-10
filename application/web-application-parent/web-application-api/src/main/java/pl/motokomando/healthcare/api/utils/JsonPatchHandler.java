@@ -14,7 +14,7 @@ import javax.json.JsonValue;
 public class JsonPatchHandler {
 
     @Qualifier("jsonPatchObjectMapper")
-    private ObjectMapper mapper;
+    private final ObjectMapper mapper;
 
     public <T> T patch(JsonPatch patch, T targetBean, Class<T> beanClass) {
         JsonStructure target = mapper.convertValue(targetBean, JsonStructure.class);

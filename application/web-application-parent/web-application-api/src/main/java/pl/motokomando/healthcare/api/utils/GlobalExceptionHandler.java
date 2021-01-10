@@ -16,6 +16,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import pl.motokomando.healthcare.domain.model.utils.MyException;
 import pl.motokomando.healthcare.domain.model.utils.NoMedicinesFoundException;
 
+import javax.json.JsonException;
 import javax.validation.ConstraintViolationException;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -51,7 +52,8 @@ public final class GlobalExceptionHandler extends ResponseEntityExceptionHandler
     @ExceptionHandler(value = {
             MethodArgumentTypeMismatchException.class,
             ConstraintViolationException.class,
-            IllegalArgumentException.class
+            IllegalArgumentException.class,
+            JsonException.class
     })
     protected ResponseEntity<Object> handleValidationError(Exception ex) {
         HttpStatus status = BAD_REQUEST;
