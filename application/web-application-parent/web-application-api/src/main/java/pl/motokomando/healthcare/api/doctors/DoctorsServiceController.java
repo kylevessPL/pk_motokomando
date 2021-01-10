@@ -78,7 +78,7 @@ public class DoctorsServiceController {
             nickname = "saveDoctor"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Successfully saved doctor details"),
+            @ApiResponse(code = 204, message = "Successfully saved doctor details"),
             @ApiResponse(code = 400, message = "Parameters not valid"),
             @ApiResponse(code = 500, message = "Internal server error")
     })

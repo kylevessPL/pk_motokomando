@@ -1,6 +1,9 @@
 package pl.motokomando.healthcare.api.patientrecords;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -30,8 +33,18 @@ public class PatientRecordsServiceController {
     private final PatientRecordsMapper patientRecordsMapper;
     private final JsonPatchHandler jsonPatchHandler;
 
-    @PatchMapping(path = "/id/{id}", consumes = "application/json-patch+json")
+    @ApiOperation(
+            value = "Update patient record data",
+            notes = "You are required to pass JSON Patch body with patch instructions",
+            nickname = "updatePatientRecord"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "Successfully updated patient record data"),
+            @ApiResponse(code = 400, message = "Parameters not valid"),
+            @ApiResponse(code = 500, message = "Internal server error")
+    })
     @ResponseStatus(NO_CONTENT)
+    @PatchMapping(path = "/id/{id}", consumes = "application/json-patch+json")
     public void update(@PathVariable Integer id, @RequestBody JsonPatch patchDocument) {
         PatientRecordResponse response = patientRecordsMapper.mapToResponse(patientRecordsService.getPatientRecordById(id));
         PatientRecordRequest request = patientRecordsMapper.mapToRequest(response);
