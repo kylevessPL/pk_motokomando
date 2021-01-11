@@ -18,6 +18,7 @@ import pl.motokomando.healthcare.api.doctors.utils.DoctorQuery;
 import pl.motokomando.healthcare.api.doctors.utils.DoctorRequest;
 import pl.motokomando.healthcare.api.utils.PageResponse;
 import pl.motokomando.healthcare.domain.doctors.DoctorsService;
+import pl.motokomando.healthcare.domain.model.utils.BasicQueryCommand;
 import pl.motokomando.healthcare.dto.doctors.DoctorBasicResponse;
 import pl.motokomando.healthcare.dto.doctors.DoctorResponse;
 import pl.motokomando.healthcare.dto.doctors.utils.DoctorBasic;
@@ -50,7 +51,8 @@ public class DoctorsServiceController {
     })
     @GetMapping(produces = APPLICATION_JSON_VALUE)
     public PageResponse<DoctorBasic> getAll(@Valid DoctorQuery query) {
-        DoctorBasicResponse response = doctorsMapper.mapToResponse(doctorsService.getAllDoctors(doctorsMapper.mapToCommand(query)));
+        BasicQueryCommand command = doctorsMapper.mapToCommand(query);
+        DoctorBasicResponse response = doctorsMapper.mapToResponse(doctorsService.getAllDoctors(command));
         return new PageResponse<>(
                 query.getSize(),
                 response.getMeta(),

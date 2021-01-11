@@ -24,7 +24,7 @@ public class PrescriptionsMedicinesEntity {
     private Integer id;
     @Column(name = "prescription_id", nullable = false)
     private Integer prescriptionId;
-    @Column(name = "medicine_id", nullable = false)
-    private Integer medicineId;
+    @Column(name = "medicine_ndc", nullable = false, length = 10)
+    private String productNDC;
 
 }

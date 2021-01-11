@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.motokomando.healthcare.domain.model.patientrecords.PatientRecord;
-import pl.motokomando.healthcare.domain.model.patientrecords.utils.PatientRecordRequestCommand;
+import pl.motokomando.healthcare.domain.model.patientrecords.utils.PatientRecordPatchRequestCommand;
 import pl.motokomando.healthcare.domain.model.utils.MyException;
 
 import static pl.motokomando.healthcare.domain.model.utils.ErrorCode.PATIENT_RECORD_NOT_FOUND;
@@ -24,7 +24,7 @@ public class PatientRecordsServiceImpl implements PatientRecordsService {
 
     @Override
     @Transactional
-    public void updatePatientRecord(PatientRecordRequestCommand request) {
+    public void updatePatientRecord(PatientRecordPatchRequestCommand request) {
         repository.updatePatientRecord(request);
     }
 

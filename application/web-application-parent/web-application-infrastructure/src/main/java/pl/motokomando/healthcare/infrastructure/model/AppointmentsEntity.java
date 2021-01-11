@@ -2,6 +2,7 @@ package pl.motokomando.healthcare.infrastructure.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,8 +10,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import java.sql.Date;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 import static javax.persistence.GenerationType.SEQUENCE;
 
@@ -25,10 +26,11 @@ public class AppointmentsEntity {
     @SequenceGenerator(name="appointments_generator", sequenceName = "seq_appointments", allocationSize = 1)
     private Integer id;
     @Column(name = "schedule_date", nullable = false)
+    @CreationTimestamp
     private Timestamp scheduleDate;
     @Column(name = "appointment_date", nullable = false)
-    private Date appointmentDate;
-    @Column(name = "bill_id", nullable = false)
+    private LocalDateTime appointmentDate;
+    @Column(name = "bill_id")
     private Integer billId;
     @Column(name = "doctor_id", nullable = false)
     private Integer doctorId;

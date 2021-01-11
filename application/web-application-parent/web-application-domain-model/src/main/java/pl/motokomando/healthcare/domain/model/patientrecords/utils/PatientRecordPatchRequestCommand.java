@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Setter
-public class PatientRecordRequestCommand {
+public class PatientRecordPatchRequestCommand {
 
     private Integer id;
     private Integer patientId;

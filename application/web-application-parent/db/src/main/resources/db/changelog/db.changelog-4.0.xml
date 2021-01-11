@@ -1,0 +1,34 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.0.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+
+    <changeSet author="geekon" id="4.0-1">
+        <addDefaultValue schemaName="public" tableName="patient_records"
+                         columnName="health_status" defaultValue="GOOD"/>
+    </changeSet>
+    <changeSet author="geekon" id="4.0-2">
+        <modifyDataType schemaName="public" tableName="patients"
+                        columnName="blood_type" newDataType="VARCHAR(5)"/>
+    </changeSet>
+    <changeSet author="geekon" id="4.0-3">
+        <dropForeignKeyConstraint baseTableName="prescriptions_medicines"
+                                  baseTableSchemaName="public"
+                                  constraintName="prescriptions_medicines_fk1"/>
+    </changeSet>
+    <changeSet author="geekon" id="4.0-4">
+        <dropTable schemaName="public" tableName="medicines"/>
+    </changeSet>
+    <changeSet author="geekon" id="4.0-5">
+        <modifyDataType schemaName="public" tableName="prescriptions_medicines"
+                        columnName="medicine_id" newDataType="VARCHAR(10)"/>
+    </changeSet>
+    <changeSet author="geekon" id="4.0-6">
+        <renameColumn schemaName="public" tableName="prescriptions_medicines"
+                      oldColumnName="medicine_id" newColumnName="medicine_ndc"/>
+    </changeSet>
+
+</databaseChangeLog>
