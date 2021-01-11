@@ -85,7 +85,7 @@ public class PatientsServiceController {
             @ApiResponse(code = 500, message = "Internal server error")
     })
     @ResponseStatus(NO_CONTENT)
-    @PutMapping(value = "/save", produces = APPLICATION_JSON_VALUE)
+    @PutMapping(produces = APPLICATION_JSON_VALUE)
     public void save(@RequestBody @Valid PatientRequest request) {
         patientsService.savePatient(patientsMapper.mapToCommand(request));
     }

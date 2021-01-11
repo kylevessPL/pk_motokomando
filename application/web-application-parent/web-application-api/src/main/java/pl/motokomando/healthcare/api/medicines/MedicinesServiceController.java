@@ -41,7 +41,7 @@ public class MedicinesServiceController {
             @ApiResponse(code = 404, message = "No medicines found"),
             @ApiResponse(code = 500, message = "Internal server error")
     })
-    @GetMapping(value = "/search", produces = APPLICATION_JSON_VALUE)
+    @GetMapping(produces = APPLICATION_JSON_VALUE)
     public List<MedicineResponse> search(@Valid MedicineQuery query) {
         MedicineCommand command = medicinesMapper.mapToCommand(query);
         return medicinesMapper.mapToResponse(medicinesService.searchMedicine(command));

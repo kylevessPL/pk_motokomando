@@ -24,6 +24,7 @@ import pl.motokomando.healthcare.dto.bills.BillResponse;
 
 import javax.json.JsonPatch;
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
@@ -51,7 +52,7 @@ public class BillsServiceController {
             @ApiResponse(code = 500, message = "Internal server error")
     })
     @ResponseStatus(CREATED)
-    @PostMapping(value = "/create", produces = APPLICATION_JSON_VALUE)
+    @PostMapping(produces = APPLICATION_JSON_VALUE)
     public BillBasicResponse create(@RequestBody @Valid BillRequest request) {
         BillRequestCommand command = billsMapper.mapToCommand(request);
         return billsMapper.mapToBasicResponse(billsService.createBill(command));
@@ -69,7 +70,9 @@ public class BillsServiceController {
     })
     @ResponseStatus(NO_CONTENT)
     @PatchMapping(path = "/id/{id}", consumes = "application/json-patch+json")
-    public void update(@PathVariable Integer id, @RequestBody JsonPatch patchDocument) {
+    public void update(
+            @PathVariable @Min(value = 1, message = "Bill ID must be a positive integer value") Integer id,
+            @RequestBody JsonPatch patchDocument) {
         BillResponse response = billsMapper.mapToResponse(billsService.getBillById(id));
         BillRequest request = billsMapper.mapToRequest(response);
         request = jsonPatchHandler.patch(patchDocument, request, BillRequest.class);

@@ -38,7 +38,7 @@ public class PatientRequest implements Serializable {
     @NotBlank(message = "Last name is mandatory")
     @Size(min = 2, max = 30, message = "Last name must be between 2 and 30 characters long")
     private String lastName;
-    @ApiModelProperty(value = "Patient birth date", example = "01-01-1985")
+    @ApiModelProperty(value = "Patient birth date")
     @NotNull(message = "Birth date is mandatory")
     @DateTimeFormat(pattern = "dd-MM-yyyy")
     @JsonFormat(pattern = "dd-MM-yyyy")
