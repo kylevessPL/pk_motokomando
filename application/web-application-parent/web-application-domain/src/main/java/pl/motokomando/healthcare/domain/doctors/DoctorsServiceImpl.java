@@ -32,7 +32,8 @@ public class DoctorsServiceImpl implements DoctorsService {
     @Override
     @Transactional(readOnly = true)
     public Doctor getDoctorById(Integer id) {
-        return repository.getDoctorById(id).orElseThrow(() -> new MyException(DOCTOR_NOT_FOUND));
+        return repository.getDoctorById(id)
+                .orElseThrow(() -> new MyException(DOCTOR_NOT_FOUND));
     }
 
     @Override

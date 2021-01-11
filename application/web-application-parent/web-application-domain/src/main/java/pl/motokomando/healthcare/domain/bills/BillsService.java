@@ -1,11 +1,15 @@
 package pl.motokomando.healthcare.domain.bills;
 
-import pl.motokomando.healthcare.domain.model.patientrecords.PatientRecord;
-import pl.motokomando.healthcare.domain.model.patientrecords.utils.PatientRecordPatchRequestCommand;
+import pl.motokomando.healthcare.domain.model.bills.Bill;
+import pl.motokomando.healthcare.domain.model.bills.BillBasic;
+import pl.motokomando.healthcare.domain.model.bills.utils.BillPatchRequestCommand;
+
+import java.math.BigDecimal;
 
 public interface BillsService {
 
-    PatientRecord getPatientRecordById(Integer id);
-    void updatePatientRecord(PatientRecordPatchRequestCommand request);
+    Bill getBillById(Integer id);
+    void updateBill(BillPatchRequestCommand command);
+    BillBasic createBill(BigDecimal amount);
 
 }
