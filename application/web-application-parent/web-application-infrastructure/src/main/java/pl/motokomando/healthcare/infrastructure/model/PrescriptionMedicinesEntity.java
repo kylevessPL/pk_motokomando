@@ -13,14 +13,14 @@ import javax.persistence.Table;
 import static javax.persistence.GenerationType.SEQUENCE;
 
 @Entity
-@Table(name = "prescriptions_medicines")
+@Table(name = "prescription_medicines")
 @Getter
 @Setter
-public class PrescriptionsMedicinesEntity {
+public class PrescriptionMedicinesEntity {
 
     @Id @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = SEQUENCE, generator = "prescriptions_medicines_generator")
-    @SequenceGenerator(name="prescriptions_medicines_generator", sequenceName = "seq_prescriptions_medicines", allocationSize = 1)
+    @GeneratedValue(strategy = SEQUENCE, generator = "prescription_medicines_generator")
+    @SequenceGenerator(name="prescription_medicines_generator", sequenceName = "seq_prescription_medicines", allocationSize = 1)
     private Integer id;
     @Column(name = "prescription_id", nullable = false)
     private Integer prescriptionId;
