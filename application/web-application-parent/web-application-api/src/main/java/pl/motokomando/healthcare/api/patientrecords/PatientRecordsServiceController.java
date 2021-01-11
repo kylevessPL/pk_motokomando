@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.motokomando.healthcare.api.patientrecords.mapper.PatientRecordsMapper;
 import pl.motokomando.healthcare.api.patientrecords.utils.PatientRecordPatchRequest;
 import pl.motokomando.healthcare.api.utils.JsonPatchHandler;
+import pl.motokomando.healthcare.domain.model.patientrecords.utils.PatientRecordPatchRequestCommand;
 import pl.motokomando.healthcare.domain.patientrecords.PatientRecordsService;
 import pl.motokomando.healthcare.dto.patientrecords.PatientRecordResponse;
 
@@ -49,7 +50,9 @@ public class PatientRecordsServiceController {
         PatientRecordResponse response = patientRecordsMapper.mapToResponse(patientRecordsService.getPatientRecordById(id));
         PatientRecordPatchRequest request = patientRecordsMapper.mapToRequest(response);
         request = jsonPatchHandler.patch(patchDocument, request, PatientRecordPatchRequest.class);
-        patientRecordsService.updatePatientRecord(patientRecordsMapper.mapToCommand(request));
+        PatientRecordPatchRequestCommand command = patientRecordsMapper.mapToCommand(response);
+        patientRecordsMapper.update(request, command);
+        patientRecordsService.updatePatientRecord(command);
     }
 
 }

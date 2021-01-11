@@ -6,9 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.motokomando.healthcare.domain.model.bills.Bill;
 import pl.motokomando.healthcare.domain.model.bills.BillBasic;
 import pl.motokomando.healthcare.domain.model.bills.utils.BillPatchRequestCommand;
+import pl.motokomando.healthcare.domain.model.bills.utils.BillRequestCommand;
 import pl.motokomando.healthcare.domain.model.utils.MyException;
-
-import java.math.BigDecimal;
 
 import static pl.motokomando.healthcare.domain.model.utils.ErrorCode.BILL_NOT_FOUND;
 
@@ -27,14 +26,14 @@ public class BillsServiceImpl implements BillsService {
 
     @Override
     @Transactional
-    public void updateBill(BillPatchRequestCommand command) {
-        repository.updateBill(command);
+    public BillBasic createBill(BillRequestCommand command) {
+        return repository.createBill(command.getAmount());
     }
 
     @Override
     @Transactional
-    public BillBasic createBill(BigDecimal amount) {
-        return repository.createBill(amount);
+    public void updateBill(BillPatchRequestCommand command) {
+        repository.updateBill(command);
     }
 
 }

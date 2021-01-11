@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.motokomando.healthcare.api.medicines.mapper.MedicinesMapper;
 import pl.motokomando.healthcare.api.medicines.utils.MedicineQuery;
 import pl.motokomando.healthcare.domain.medicines.MedicinesService;
+import pl.motokomando.healthcare.domain.model.medicines.utils.MedicineCommand;
 import pl.motokomando.healthcare.dto.medicines.MedicineResponse;
 
 import javax.validation.Valid;
@@ -42,7 +43,8 @@ public class MedicinesServiceController {
     })
     @GetMapping(value = "/search", produces = APPLICATION_JSON_VALUE)
     public List<MedicineResponse> search(@Valid MedicineQuery query) {
-        return medicinesMapper.mapToResponse(medicinesService.searchMedicine(medicinesMapper.mapToCommand(query)));
+        MedicineCommand command = medicinesMapper.mapToCommand(query);
+        return medicinesMapper.mapToResponse(medicinesService.searchMedicine(command));
     }
 
     @ApiOperation(
