@@ -2,10 +2,12 @@ package pl.motokomando.healthcare.api.prescriptions;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,8 +16,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import pl.motokomando.healthcare.api.prescriptions.mapper.PrescriptionMapper;
+import pl.motokomando.healthcare.api.prescriptions.mapper.PrescriptionMedicineMapper;
+import pl.motokomando.healthcare.api.prescriptions.utils.PrescriptionMedicineDeleteRequest;
+import pl.motokomando.healthcare.api.prescriptions.utils.PrescriptionMedicineRequest;
 import pl.motokomando.healthcare.api.prescriptions.utils.PrescriptionRequest;
 import pl.motokomando.healthcare.api.utils.JsonPatchHandler;
+import pl.motokomando.healthcare.domain.model.prescriptions.utils.PrescriptionMedicineDeleteRequestCommand;
+import pl.motokomando.healthcare.domain.model.prescriptions.utils.PrescriptionMedicineRequestCommand;
 import pl.motokomando.healthcare.domain.model.prescriptions.utils.PrescriptionPatchRequestCommand;
 import pl.motokomando.healthcare.domain.model.prescriptions.utils.PrescriptionRequestCommand;
 import pl.motokomando.healthcare.domain.prescriptions.PrescriptionsService;
@@ -39,6 +46,7 @@ public class PrescriptionsServiceController {
 
     private final PrescriptionsService prescriptionsService;
     private final PrescriptionMapper prescriptionMapper;
+    private final PrescriptionMedicineMapper prescriptionMedicineMapper;
     private final JsonPatchHandler jsonPatchHandler;
 
     @ApiOperation(
@@ -60,7 +68,7 @@ public class PrescriptionsServiceController {
 
     @ApiOperation(
             value = "Update prescription data",
-            notes = "You are required to pass JSON Patch body with patch instructions",
+            notes = "You are required to pass JSON Patch body with update instructions",
             nickname = "updatePrescription"
     )
     @ApiResponses(value = {
@@ -71,7 +79,7 @@ public class PrescriptionsServiceController {
     @ResponseStatus(NO_CONTENT)
     @PatchMapping(path = "/id/{id}", consumes = "application/json-patch+json")
     public void update(
-            @PathVariable @Min(value = 1, message = "Prescription ID must be a positive integer value") Integer id,
+            @ApiParam(value = "Prescription ID") @PathVariable @Min(value = 1, message = "Prescription ID must be a positive integer value") Integer id,
             @RequestBody JsonPatch patchDocument) {
         PrescriptionResponse response = prescriptionMapper.mapToResponse(prescriptionsService.getPrescriptionById(id));
         PrescriptionRequest request = prescriptionMapper.mapToRequest(response);
@@ -79,6 +87,42 @@ public class PrescriptionsServiceController {
         PrescriptionPatchRequestCommand command = prescriptionMapper.mapToCommand(response);
         prescriptionMapper.update(request, command);
         prescriptionsService.updatePrescription(command);
+    }
+
+    @ApiOperation(
+            value = "Add medicine to prescription",
+            notes = "You are required to pass JSON body with medicine NDC",
+            nickname = "addMedicine"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successfully added medicine to prescription"),
+            @ApiResponse(code = 400, message = "Parameters not valid"),
+            @ApiResponse(code = 500, message = "Internal server error")
+    })
+    @ResponseStatus(CREATED)
+    @PostMapping(value = "/id/{id}/medicines", produces = APPLICATION_JSON_VALUE)
+    public void addMedicine(
+            @ApiParam(value = "Prescription ID") @PathVariable @Min(value = 1, message = "Prescription ID must be a positive integer value") Integer id,
+            @RequestBody @Valid PrescriptionMedicineRequest request) {
+        PrescriptionMedicineRequestCommand command = prescriptionMedicineMapper.mapToCommand(request);
+        prescriptionsService.createPrescriptionMedicine(id, command);
+    }
+
+    @ApiOperation(
+            value = "Remove medicine from prescription",
+            notes = "You are required to pass medicine NDC as a parameter",
+            nickname = "removeMedicine"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "Successfully removed medicine from prescription"),
+            @ApiResponse(code = 400, message = "Parameters not valid"),
+            @ApiResponse(code = 500, message = "Internal server error")
+    })
+    @ResponseStatus(NO_CONTENT)
+    @DeleteMapping(value = "/id/{id}/medicines", produces = APPLICATION_JSON_VALUE)
+    public void removeMedicine(@Valid PrescriptionMedicineDeleteRequest request) {
+        PrescriptionMedicineDeleteRequestCommand command = prescriptionMedicineMapper.mapToCommand(request);
+        prescriptionsService.deletePrescriptionMedicine(command);
     }
 
 }

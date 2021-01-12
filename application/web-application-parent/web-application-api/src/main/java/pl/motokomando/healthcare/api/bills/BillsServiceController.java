@@ -2,6 +2,7 @@ package pl.motokomando.healthcare.api.bills;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
@@ -60,7 +61,7 @@ public class BillsServiceController {
 
     @ApiOperation(
             value = "Update bill data",
-            notes = "You are required to pass JSON Patch body with patch instructions",
+            notes = "You are required to pass JSON Patch body with update instructions",
             nickname = "updateBill"
     )
     @ApiResponses(value = {
@@ -71,7 +72,7 @@ public class BillsServiceController {
     @ResponseStatus(NO_CONTENT)
     @PatchMapping(path = "/id/{id}", consumes = "application/json-patch+json")
     public void update(
-            @PathVariable @Min(value = 1, message = "Bill ID must be a positive integer value") Integer id,
+            @ApiParam(value = "Bill ID") @PathVariable @Min(value = 1, message = "Bill ID must be a positive integer value") Integer id,
             @RequestBody JsonPatch patchDocument) {
         BillResponse response = billsMapper.mapToResponse(billsService.getBillById(id));
         BillRequest request = billsMapper.mapToRequest(response);

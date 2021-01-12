@@ -16,6 +16,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static pl.motokomando.healthcare.domain.model.utils.ErrorCode.MEDICINE_NOT_FOUND;
+import static pl.motokomando.healthcare.domain.model.utils.ErrorCode.NO_MEDICINES_FOUND;
+
 @Service
 public class MedicinesServiceImpl implements MedicinesService {
 
@@ -37,7 +40,7 @@ public class MedicinesServiceImpl implements MedicinesService {
                         .build())
                 .retrieve()
                 .bodyToMono(OpenFDAResponse.class)
-                .onErrorMap(WebClientResponseException.NotFound.class, e -> new NoMedicinesFoundException())
+                .onErrorMap(WebClientResponseException.NotFound.class, e -> new NoMedicinesFoundException(MEDICINE_NOT_FOUND))
                 .blockOptional(REQUEST_TIMEOUT);
         return response.map(e ->
                 medicineToReadable(e.getMedicines().get(0))
@@ -55,7 +58,7 @@ public class MedicinesServiceImpl implements MedicinesService {
                         .build())
                 .retrieve()
                 .bodyToMono(OpenFDAResponse.class)
-                .onErrorMap(WebClientResponseException.NotFound.class, e -> new NoMedicinesFoundException())
+                .onErrorMap(WebClientResponseException.NotFound.class, e -> new NoMedicinesFoundException(NO_MEDICINES_FOUND))
                 .blockOptional(REQUEST_TIMEOUT);
         return response.map(e -> e.getMedicines()
                 .stream()
