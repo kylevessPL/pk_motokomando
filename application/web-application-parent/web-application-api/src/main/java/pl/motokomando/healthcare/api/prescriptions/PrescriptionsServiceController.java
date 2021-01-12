@@ -2,6 +2,7 @@ package pl.motokomando.healthcare.api.prescriptions;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
@@ -60,7 +61,7 @@ public class PrescriptionsServiceController {
 
     @ApiOperation(
             value = "Update prescription data",
-            notes = "You are required to pass JSON Patch body with patch instructions",
+            notes = "You are required to pass JSON Patch body with update instructions",
             nickname = "updatePrescription"
     )
     @ApiResponses(value = {
@@ -71,7 +72,7 @@ public class PrescriptionsServiceController {
     @ResponseStatus(NO_CONTENT)
     @PatchMapping(path = "/id/{id}", consumes = "application/json-patch+json")
     public void update(
-            @PathVariable @Min(value = 1, message = "Prescription ID must be a positive integer value") Integer id,
+            @ApiParam(value = "Prescription ID") @PathVariable @Min(value = 1, message = "Prescription ID must be a positive integer value") Integer id,
             @RequestBody JsonPatch patchDocument) {
         PrescriptionResponse response = prescriptionMapper.mapToResponse(prescriptionsService.getPrescriptionById(id));
         PrescriptionRequest request = prescriptionMapper.mapToRequest(response);

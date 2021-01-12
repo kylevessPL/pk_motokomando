@@ -2,6 +2,7 @@ package pl.motokomando.healthcare.api.patientrecords;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
@@ -46,7 +47,7 @@ public class PatientRecordsServiceController {
     })
     @ResponseStatus(NO_CONTENT)
     @PatchMapping(path = "/id/{id}", consumes = "application/json-patch+json")
-    public void update(@PathVariable Integer id, @RequestBody JsonPatch patchDocument) {
+    public void update(@ApiParam(value = "Patient record ID") @PathVariable Integer id, @RequestBody JsonPatch patchDocument) {
         PatientRecordResponse response = patientRecordsMapper.mapToResponse(patientRecordsService.getPatientRecordById(id));
         PatientRecordPatchRequest request = patientRecordsMapper.mapToRequest(response);
         request = jsonPatchHandler.patch(patchDocument, request, PatientRecordPatchRequest.class);

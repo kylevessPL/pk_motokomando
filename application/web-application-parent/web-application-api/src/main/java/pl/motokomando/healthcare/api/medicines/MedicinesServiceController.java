@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,7 @@ import pl.motokomando.healthcare.domain.model.medicines.utils.MedicineCommand;
 import pl.motokomando.healthcare.dto.medicines.MedicineResponse;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -24,6 +26,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Api
 @RestController
 @RequestMapping("/api/v1/medicines")
+@Validated
 @RequiredArgsConstructor
 public class MedicinesServiceController {
 
@@ -59,7 +62,7 @@ public class MedicinesServiceController {
             @ApiResponse(code = 500, message = "Internal server error")
     })
     @GetMapping(value = "/ndc/{productNDC}", produces = APPLICATION_JSON_VALUE)
-    public MedicineResponse getByProductNDC(@ApiParam(value = "Product NDC") @PathVariable String productNDC) {
+    public MedicineResponse getByProductNDC(@ApiParam(value = "Product NDC") @PathVariable @NotBlank(message = "Product NDC is mandatory") String productNDC) {
         return medicinesMapper.mapToResponse(medicinesService.getMedicineByProductNDC(productNDC));
     }
 

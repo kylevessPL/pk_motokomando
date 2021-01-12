@@ -2,6 +2,7 @@ package pl.motokomando.healthcare.api.doctors;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
@@ -70,7 +71,7 @@ public class DoctorsServiceController {
             @ApiResponse(code = 500, message = "Internal server error")
     })
     @GetMapping(value = "/id/{id}", produces = APPLICATION_JSON_VALUE)
-    public DoctorResponse getById(@PathVariable @Min(value = 1, message = "Doctor ID must be a positive integer value") Integer id) {
+    public DoctorResponse getById(@ApiParam(value = "Doctor ID") @PathVariable @Min(value = 1, message = "Doctor ID must be a positive integer value") Integer id) {
         return doctorsMapper.mapToResponse(doctorsService.getDoctorById(id));
     }
 
