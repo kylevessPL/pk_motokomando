@@ -46,29 +46,49 @@ public class PrescriptionsServiceImpl implements PrescriptionsService {
 
     @Override
     @Transactional
-    public void createPrescriptionMedicine(Integer prescriptionId, PrescriptionMedicineRequestCommand command) {
-        checkPrescriptionMedicineExistence(prescriptionId, command.getProductNDC());
-        try {
-            medicinesService.getMedicineByProductNDC(command.getProductNDC());
-        } catch (NoMedicinesFoundException ex) {
-            throw new MyException(ex.getErrorCode());
+    public void deletePrescription(Integer id) {
+        boolean deleteResult = prescriptionsRepository.deletePrescription(id);
+        if (!deleteResult) {
+            throw new MyException(PRESCRIPTION_NOT_FOUND);
         }
+    }
+
+    @Override
+    @Transactional
+    public void createPrescriptionMedicine(Integer prescriptionId, PrescriptionMedicineRequestCommand command) {
+        checkPrescriptionExistence(prescriptionId);
+        checkPrescriptionMedicineExistence(prescriptionId, command.getProductNDC());
+        checkMedicineExistence(command.getProductNDC());
         prescriptionMedicinesRepository.createPrescriptionMedicine(prescriptionId, command.getProductNDC());
     }
 
     @Override
     @Transactional
     public void deletePrescriptionMedicine(PrescriptionMedicineDeleteRequestCommand command) {
-        Long result = prescriptionMedicinesRepository.deletePrescriptionMedicine(
+        boolean deleteResult = prescriptionMedicinesRepository.deletePrescriptionMedicine(
                 command.getPrescriptionId(), command.getProductNDC());
-        if (result == 0) {
+        if (!deleteResult) {
             throw new MyException(PRESCRIPTION_MEDICINE_NOT_FOUND);
+        }
+    }
+
+    private void checkPrescriptionExistence(Integer prescriptionId) {
+        if (!prescriptionsRepository.prescriptionExists(prescriptionId)) {
+            throw new MyException(PRESCRIPTION_NOT_FOUND);
         }
     }
 
     private void checkPrescriptionMedicineExistence(Integer prescriptionId, String productNDC) {
         if (prescriptionMedicinesRepository.prescriptionMedicineExists(prescriptionId, productNDC)) {
             throw new MyException(PRESCRIPTION_MEDICINE_ALREADY_EXISTS);
+        }
+    }
+
+    private void checkMedicineExistence(String productNDC) {
+        try {
+            medicinesService.getMedicineByProductNDC(productNDC);
+        } catch (NoMedicinesFoundException ex) {
+            throw new MyException(ex.getErrorCode());
         }
     }
 

@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -80,6 +81,22 @@ public class BillsServiceController {
         BillPatchRequestCommand command = billsMapper.mapToCommand(response);
         billsMapper.update(request, command);
         billsService.updateBill(command);
+    }
+
+    @ApiOperation(
+            value = "Delete bill",
+            notes = "You are required to pass bill ID as a parameter",
+            nickname = "deleteBill"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "Successfully deleted bill"),
+            @ApiResponse(code = 400, message = "Parameters not valid"),
+            @ApiResponse(code = 500, message = "Internal server error")
+    })
+    @ResponseStatus(NO_CONTENT)
+    @DeleteMapping(value = "/id/{id}", produces = APPLICATION_JSON_VALUE)
+    public void deleteBill(@ApiParam(value = "Bill ID") @PathVariable @Min(value = 1, message = "Bill ID must be a positive integer value") Integer id) {
+        billsService.deleteBill(id);
     }
 
 }

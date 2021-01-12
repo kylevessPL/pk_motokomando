@@ -36,4 +36,12 @@ public class BillsServiceImpl implements BillsService {
         repository.updateBill(command);
     }
 
+    @Override
+    public void deleteBill(Integer id) {
+        boolean deleteResult = repository.deleteBill(id);
+        if (!deleteResult) {
+            throw new MyException(BILL_NOT_FOUND);
+        }
+    }
+
 }

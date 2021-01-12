@@ -12,6 +12,7 @@ public interface PrescriptionsRepository {
     Optional<Prescription> getPrescriptionById(Integer id);
     void updatePrescription(PrescriptionPatchRequestCommand data);
     PrescriptionBasic createPrescription(PrescriptionRequestCommand data);
+    boolean deletePrescription(Integer id);
     boolean prescriptionExists(Integer id);
 
 }

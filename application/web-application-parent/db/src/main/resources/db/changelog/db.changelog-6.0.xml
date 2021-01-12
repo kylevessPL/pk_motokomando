@@ -1,0 +1,47 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.0.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+
+    <changeSet author="geekon" id="6.0-1">
+        <dropForeignKeyConstraint baseTableName="appointments"
+                                  baseTableSchemaName="public"
+                                  constraintName="appointments_fk2"/>
+    </changeSet>
+    <changeSet author="geekon" id="6.0-2">
+        <dropForeignKeyConstraint baseTableName="appointments"
+                                  baseTableSchemaName="public"
+                                  constraintName="appointments_fk0"/>
+    </changeSet>
+    <changeSet author="geekon" id="6.0-3">
+        <dropForeignKeyConstraint baseTableName="prescription_medicines"
+                                  baseTableSchemaName="public"
+                                  constraintName="prescription_medicines_fk0"/>
+    </changeSet>
+    <changeSet author="geekon" id="6.0-4">
+        <dropForeignKeyConstraint baseTableName="patients_appointments"
+                                  baseTableSchemaName="public"
+                                  constraintName="patients_appointments_fk1"/>
+    </changeSet>
+    <changeSet author="geekon" id="6.0-5">
+        <addForeignKeyConstraint baseColumnNames="appointment_id" baseTableName="patients_appointments" constraintName="patients_appointments_fk1" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="appointments"/>
+    </changeSet>
+    <changeSet author="geekon" id="6.0-6">
+        <addForeignKeyConstraint baseColumnNames="prescription_id" baseTableName="prescription_medicines" constraintName="prescription_medicines_fk0" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="prescriptions"/>
+    </changeSet>
+    <changeSet author="geekon" id="6.0-7">
+        <addForeignKeyConstraint baseColumnNames="bill_id" baseTableName="appointments" constraintName="appointments_fk0" deferrable="false" initiallyDeferred="false" onDelete="SET NULL" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="bills"/>
+    </changeSet>
+    <changeSet author="geekon" id="6.0-8">
+        <addForeignKeyConstraint baseColumnNames="prescription_id" baseTableName="appointments" constraintName="appointments_fk2" deferrable="false" initiallyDeferred="false" onDelete="SET NULL" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="prescriptions"/>
+    </changeSet>
+    <changeSet author="geekon" id="6.0.9">
+        <dropForeignKeyConstraint baseTableName="prescription_medicines"
+                                  baseTableSchemaName="public"
+                                  constraintName="prescriptions_medicines_fk0"/>
+    </changeSet>
+
+</databaseChangeLog>

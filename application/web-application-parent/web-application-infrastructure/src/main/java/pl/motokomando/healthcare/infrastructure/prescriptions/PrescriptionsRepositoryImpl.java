@@ -1,6 +1,7 @@
 package pl.motokomando.healthcare.infrastructure.prescriptions;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.motokomando.healthcare.domain.model.prescriptions.Prescription;
@@ -41,6 +42,17 @@ public class PrescriptionsRepositoryImpl implements PrescriptionsRepository {
         PrescriptionsEntity prescriptionsEntity = createEntity(data);
         Integer id = dao.save(prescriptionsEntity).getId();
         return mapper.mapToPrescriptionBasic(id);
+    }
+
+    @Override
+    @Transactional
+    public boolean deletePrescription(Integer id) {
+        try {
+            dao.deleteById(id);
+        } catch (EmptyResultDataAccessException ex) {
+            return false;
+        }
+        return true;
     }
 
     @Override
