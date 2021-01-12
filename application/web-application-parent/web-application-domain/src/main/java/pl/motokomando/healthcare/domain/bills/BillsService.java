@@ -10,5 +10,6 @@ public interface BillsService {
     Bill getBillById(Integer id);
     BillBasic createBill(BillRequestCommand command);
     void updateBill(BillPatchRequestCommand command);
+    void deleteBill(Integer id);
 
 }

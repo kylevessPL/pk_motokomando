@@ -12,6 +12,7 @@ public interface BillsRepository {
     Optional<Bill> getBillById(Integer id);
     void updateBill(BillPatchRequestCommand data);
     BillBasic createBill(BigDecimal amount);
+    boolean deleteBill(Integer id);
     boolean billExists(Integer id);
 
 }

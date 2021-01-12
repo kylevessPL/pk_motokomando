@@ -12,6 +12,7 @@ public interface PrescriptionsService {
     Prescription getPrescriptionById(Integer id);
     PrescriptionBasic createPrescription(PrescriptionRequestCommand command);
     void updatePrescription(PrescriptionPatchRequestCommand command);
+    void deletePrescription(Integer id);
     void createPrescriptionMedicine(Integer prescriptionId, PrescriptionMedicineRequestCommand command);
     void deletePrescriptionMedicine(PrescriptionMedicineDeleteRequestCommand command);
 

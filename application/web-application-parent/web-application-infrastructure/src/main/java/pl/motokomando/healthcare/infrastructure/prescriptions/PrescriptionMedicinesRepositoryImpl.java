@@ -22,8 +22,9 @@ public class PrescriptionMedicinesRepositoryImpl implements PrescriptionMedicine
 
     @Override
     @Transactional
-    public Long deletePrescriptionMedicine(Integer prescriptionId, String productNDC) {
-        return dao.deleteByPrescriptionIdAndProductNDC(prescriptionId, productNDC);
+    public boolean deletePrescriptionMedicine(Integer prescriptionId, String productNDC) {
+        long result = dao.deleteByPrescriptionIdAndProductNDC(prescriptionId, productNDC);
+        return result != 0;
     }
 
     @Override

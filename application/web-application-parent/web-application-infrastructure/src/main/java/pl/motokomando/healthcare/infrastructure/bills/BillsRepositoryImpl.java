@@ -1,6 +1,7 @@
 package pl.motokomando.healthcare.infrastructure.bills;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.motokomando.healthcare.domain.bills.BillsRepository;
@@ -41,6 +42,17 @@ public class BillsRepositoryImpl implements BillsRepository {
         BillsEntity billsEntity = createEntity(amount);
         Integer id = dao.save(billsEntity).getId();
         return mapper.mapToBillBasic(id);
+    }
+
+    @Override
+    @Transactional
+    public boolean deleteBill(Integer id) {
+        try {
+            dao.deleteById(id);
+        } catch (EmptyResultDataAccessException ex) {
+            return false;
+        }
+        return true;
     }
 
     @Override
