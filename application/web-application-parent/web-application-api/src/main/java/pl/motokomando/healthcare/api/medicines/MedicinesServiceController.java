@@ -35,7 +35,7 @@ public class MedicinesServiceController {
 
     @ApiOperation(
             value = "Search medicines by query string",
-            notes = "You are required to pass query string as parameter; optional ASC/DESC sorting by medicine name & results limit available",
+            notes = "You are required to pass query string as a parameter; optional ASC/DESC sorting by medicine name & results limit available",
             nickname = "searchMedicines"
     )
     @ApiResponses(value = {
@@ -52,7 +52,7 @@ public class MedicinesServiceController {
 
     @ApiOperation(
             value = "Find medicine by FDA product NDC",
-            notes = "You are required to pass product NDC as parameter",
+            notes = "You are required to pass product NDC as a parameter",
             nickname = "getMedicineByProductNDC"
     )
     @ApiResponses(value = {

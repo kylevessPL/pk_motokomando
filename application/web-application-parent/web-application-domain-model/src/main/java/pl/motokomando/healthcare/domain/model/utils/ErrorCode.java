@@ -7,7 +7,8 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public enum ErrorCode {
 
-    NO_MEDICINES_FOUND("M04", "No medicines found matching your query"),
+    NO_MEDICINES_FOUND("MS04", "No medicines found matching your query"),
+    MEDICINE_NOT_FOUND("M04", "Medicine not found"),
     PATIENT_NOT_FOUND("P04", "Patient not found"),
     PATIENT_RECORD_NOT_FOUND("PR04", "Patient record not found"),
     BILL_NOT_FOUND("B04", "Bill not found"),

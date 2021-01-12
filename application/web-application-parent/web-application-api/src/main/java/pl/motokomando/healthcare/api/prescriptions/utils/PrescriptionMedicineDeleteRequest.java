@@ -19,7 +19,7 @@ public class PrescriptionMedicineDeleteRequest {
     @ApiModelProperty(value = "Prescription ID", example = "56")
     @NotNull(message = "Prescription ID is mandatory")
     @Min(value = 1, message = "Prescription ID must be a positive integer value")
-    private Integer prescriptionId;
+    private Integer id;
     @ApiModelProperty(value = "Medicine NDC", example = "0536-1261")
     @NotBlank(message = "Product NDC is mandatory")
     private String productNDC;
