@@ -2,7 +2,7 @@ package pl.motokomando.healthcare.domain.model.patients;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import pl.motokomando.healthcare.domain.model.patientrecords.utils.PatientBasicInfo;
+import pl.motokomando.healthcare.domain.model.patients.utils.PatientBasicInfo;
 import pl.motokomando.healthcare.domain.model.patients.utils.PatientDetails;
 
 @RequiredArgsConstructor

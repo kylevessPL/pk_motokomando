@@ -77,7 +77,7 @@ public class PrescriptionsServiceController {
             @ApiResponse(code = 500, message = "Internal server error")
     })
     @ResponseStatus(NO_CONTENT)
-    @PatchMapping(path = "/id/{id}", consumes = "application/json-patch+json")
+    @PatchMapping(path = "/{id}", consumes = "application/json-patch+json")
     public void update(
             @ApiParam(value = "Prescription ID") @PathVariable @Min(value = 1, message = "Prescription ID must be a positive integer value") Integer id,
             @RequestBody JsonPatch patchDocument) {
@@ -100,7 +100,7 @@ public class PrescriptionsServiceController {
             @ApiResponse(code = 500, message = "Internal server error")
     })
     @ResponseStatus(NO_CONTENT)
-    @DeleteMapping(value = "/id/{id}", produces = APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
     public void deletePrescription(@ApiParam(value = "Prescription ID") @PathVariable @Min(value = 1, message = "Prescription ID must be a positive integer value") Integer id) {
         prescriptionsService.deletePrescription(id);
     }
@@ -116,7 +116,7 @@ public class PrescriptionsServiceController {
             @ApiResponse(code = 500, message = "Internal server error")
     })
     @ResponseStatus(CREATED)
-    @PostMapping(value = "/id/{id}/medicines", produces = APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/{id}/medicines", produces = APPLICATION_JSON_VALUE)
     public void addMedicine(
             @ApiParam(value = "Prescription ID") @PathVariable @Min(value = 1, message = "Prescription ID must be a positive integer value") Integer id,
             @RequestBody @Valid PrescriptionMedicineRequest request) {
@@ -135,7 +135,7 @@ public class PrescriptionsServiceController {
             @ApiResponse(code = 500, message = "Internal server error")
     })
     @ResponseStatus(NO_CONTENT)
-    @DeleteMapping(value = "/id/{id}/medicines", produces = APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/{id}/medicines", produces = APPLICATION_JSON_VALUE)
     public void removeMedicine(@Valid PrescriptionMedicineDeleteRequest request) {
         PrescriptionMedicineDeleteRequestCommand command = prescriptionMedicineMapper.mapToCommand(request);
         prescriptionsService.deletePrescriptionMedicine(command);
