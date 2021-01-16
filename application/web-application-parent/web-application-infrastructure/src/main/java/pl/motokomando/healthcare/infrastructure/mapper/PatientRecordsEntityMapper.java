@@ -1,8 +1,8 @@
 package pl.motokomando.healthcare.infrastructure.mapper;
 
 import org.springframework.stereotype.Component;
-import pl.motokomando.healthcare.domain.model.patientrecords.PatientRecord;
-import pl.motokomando.healthcare.domain.model.patientrecords.utils.PatientBasicInfo;
+import pl.motokomando.healthcare.domain.model.patients.PatientRecord;
+import pl.motokomando.healthcare.domain.model.patients.utils.PatientBasicInfo;
 import pl.motokomando.healthcare.infrastructure.model.PatientRecordsEntity;
 
 import java.util.Optional;

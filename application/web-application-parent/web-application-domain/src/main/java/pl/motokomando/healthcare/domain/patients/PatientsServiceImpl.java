@@ -3,20 +3,22 @@ package pl.motokomando.healthcare.domain.patients;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.motokomando.healthcare.domain.model.patientrecords.utils.PatientBasicInfo;
 import pl.motokomando.healthcare.domain.model.patients.Patient;
 import pl.motokomando.healthcare.domain.model.patients.PatientBasicPage;
+import pl.motokomando.healthcare.domain.model.patients.PatientRecord;
+import pl.motokomando.healthcare.domain.model.patients.utils.PatientBasicInfo;
 import pl.motokomando.healthcare.domain.model.patients.utils.PatientDetails;
+import pl.motokomando.healthcare.domain.model.patients.utils.PatientRecordPatchRequestCommand;
 import pl.motokomando.healthcare.domain.model.patients.utils.PatientRequestCommand;
 import pl.motokomando.healthcare.domain.model.utils.BasicQueryCommand;
 import pl.motokomando.healthcare.domain.model.utils.MyException;
 import pl.motokomando.healthcare.domain.model.utils.PageProperties;
 import pl.motokomando.healthcare.domain.model.utils.SortProperties;
-import pl.motokomando.healthcare.domain.patientrecords.PatientRecordsRepository;
 
 import java.util.Optional;
 
 import static pl.motokomando.healthcare.domain.model.utils.ErrorCode.PATIENT_NOT_FOUND;
+import static pl.motokomando.healthcare.domain.model.utils.ErrorCode.PATIENT_RECORD_NOT_FOUND;
 
 @Service
 @RequiredArgsConstructor
@@ -51,6 +53,19 @@ public class PatientsServiceImpl implements PatientsService {
         if (!patientId.isPresent()) {
             patientRecordsRepository.createPatientRecord(id);
         }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PatientRecord getPatientRecordById(Integer id) {
+        return patientRecordsRepository.getPatientRecordById(id)
+                .orElseThrow(() -> new MyException(PATIENT_RECORD_NOT_FOUND));
+    }
+
+    @Override
+    @Transactional
+    public void updatePatientRecord(PatientRecordPatchRequestCommand request) {
+        patientRecordsRepository.updatePatientRecord(request);
     }
 
     private void checkPatientExistence(Integer id) {
