@@ -1,11 +1,11 @@
-package pl.motokomando.healthcare.api.patientrecords.mapper;
+package pl.motokomando.healthcare.api.patients.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
-import pl.motokomando.healthcare.api.patientrecords.utils.PatientRecordPatchRequest;
-import pl.motokomando.healthcare.domain.model.patientrecords.PatientRecord;
-import pl.motokomando.healthcare.domain.model.patientrecords.utils.PatientRecordPatchRequestCommand;
-import pl.motokomando.healthcare.dto.patientrecords.PatientRecordResponse;
+import pl.motokomando.healthcare.api.patients.utils.PatientRecordPatchRequest;
+import pl.motokomando.healthcare.domain.model.patients.PatientRecord;
+import pl.motokomando.healthcare.domain.model.patients.utils.PatientRecordPatchRequestCommand;
+import pl.motokomando.healthcare.dto.patients.PatientRecordResponse;
 
 @Mapper
 public interface PatientRecordsMapper {

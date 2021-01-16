@@ -1,7 +1,6 @@
 package pl.motokomando.healthcare.api.patients.mapper;
 
 import org.mapstruct.Mapper;
-import pl.motokomando.healthcare.api.patientrecords.mapper.PatientBasicInfoMapper;
 import pl.motokomando.healthcare.api.patients.utils.PatientQuery;
 import pl.motokomando.healthcare.api.patients.utils.PatientRequest;
 import pl.motokomando.healthcare.domain.model.patients.Patient;
