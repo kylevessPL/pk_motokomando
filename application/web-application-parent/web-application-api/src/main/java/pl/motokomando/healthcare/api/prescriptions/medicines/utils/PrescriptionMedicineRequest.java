@@ -1,4 +1,4 @@
-package pl.motokomando.healthcare.api.prescriptions.utils;
+package pl.motokomando.healthcare.api.prescriptions.medicines.utils;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

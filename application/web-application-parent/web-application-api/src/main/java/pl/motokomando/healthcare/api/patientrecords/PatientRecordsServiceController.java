@@ -46,7 +46,7 @@ public class PatientRecordsServiceController {
             @ApiResponse(code = 500, message = "Internal server error")
     })
     @ResponseStatus(NO_CONTENT)
-    @PatchMapping(path = "/id/{id}", consumes = "application/json-patch+json")
+    @PatchMapping(path = "/{id}", consumes = "application/json-patch+json")
     public void update(@ApiParam(value = "Patient record ID") @PathVariable Integer id, @RequestBody JsonPatch patchDocument) {
         PatientRecordResponse response = patientRecordsMapper.mapToResponse(patientRecordsService.getPatientRecordById(id));
         PatientRecordPatchRequest request = patientRecordsMapper.mapToRequest(response);

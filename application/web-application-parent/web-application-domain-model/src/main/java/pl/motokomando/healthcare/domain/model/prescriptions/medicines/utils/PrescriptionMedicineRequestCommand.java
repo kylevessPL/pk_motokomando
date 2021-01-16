@@ -1,4 +1,4 @@
-package pl.motokomando.healthcare.domain.model.prescriptions.utils;
+package pl.motokomando.healthcare.domain.model.prescriptions.medicines.utils;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

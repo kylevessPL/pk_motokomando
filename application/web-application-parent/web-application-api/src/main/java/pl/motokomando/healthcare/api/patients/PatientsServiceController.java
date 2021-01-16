@@ -70,7 +70,7 @@ public class PatientsServiceController {
             @ApiResponse(code = 400, message = "Parameters not valid or no such patient with provided ID"),
             @ApiResponse(code = 500, message = "Internal server error")
     })
-    @GetMapping(value = "/id/{id}", produces = APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
     public PatientResponse getById(@ApiParam(value = "Patient ID") @PathVariable @Min(value = 1, message = "Patient ID must be a positive integer value") Integer id) {
         return patientsMapper.mapToResponse(patientsService.getPatientById(id));
     }

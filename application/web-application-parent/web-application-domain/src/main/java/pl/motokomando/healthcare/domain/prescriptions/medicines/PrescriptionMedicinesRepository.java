@@ -1,4 +1,4 @@
-package pl.motokomando.healthcare.domain.prescriptions;
+package pl.motokomando.healthcare.domain.prescriptions.medicines;
 
 public interface PrescriptionMedicinesRepository {
 
