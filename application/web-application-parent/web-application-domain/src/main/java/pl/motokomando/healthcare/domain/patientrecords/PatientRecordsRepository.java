@@ -1,8 +1,8 @@
-package pl.motokomando.healthcare.domain.patients;
+package pl.motokomando.healthcare.domain.patientrecords;
 
-import pl.motokomando.healthcare.domain.model.patients.PatientRecord;
-import pl.motokomando.healthcare.domain.model.patients.utils.PatientBasicInfo;
-import pl.motokomando.healthcare.domain.model.patients.utils.PatientRecordPatchRequestCommand;
+import pl.motokomando.healthcare.domain.model.patientrecords.PatientRecord;
+import pl.motokomando.healthcare.domain.model.patientrecords.utils.PatientBasicInfo;
+import pl.motokomando.healthcare.domain.model.patientrecords.utils.PatientRecordPatchRequestCommand;
 
 import java.util.Optional;
 

@@ -1,12 +1,12 @@
-package pl.motokomando.healthcare.infrastructure.patients;
+package pl.motokomando.healthcare.infrastructure.patientrecords;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.motokomando.healthcare.domain.model.patients.PatientRecord;
-import pl.motokomando.healthcare.domain.model.patients.utils.PatientBasicInfo;
-import pl.motokomando.healthcare.domain.model.patients.utils.PatientRecordPatchRequestCommand;
-import pl.motokomando.healthcare.domain.patients.PatientRecordsRepository;
+import pl.motokomando.healthcare.domain.model.patientrecords.PatientRecord;
+import pl.motokomando.healthcare.domain.model.patientrecords.utils.PatientBasicInfo;
+import pl.motokomando.healthcare.domain.model.patientrecords.utils.PatientRecordPatchRequestCommand;
+import pl.motokomando.healthcare.domain.patientrecords.PatientRecordsRepository;
 import pl.motokomando.healthcare.infrastructure.dao.PatientRecordsEntityDao;
 import pl.motokomando.healthcare.infrastructure.mapper.PatientRecordsEntityMapper;
 import pl.motokomando.healthcare.infrastructure.model.PatientRecordsEntity;

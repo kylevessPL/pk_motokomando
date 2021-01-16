@@ -1,8 +1,8 @@
-package pl.motokomando.healthcare.domain.model.patients;
+package pl.motokomando.healthcare.domain.model.patientrecords;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import pl.motokomando.healthcare.domain.model.patients.utils.HealthStatus;
+import pl.motokomando.healthcare.domain.model.patientrecords.utils.HealthStatus;
 
 import java.time.LocalDateTime;
 

@@ -71,7 +71,7 @@ public class BillsServiceController {
             @ApiResponse(code = 500, message = "Internal server error")
     })
     @ResponseStatus(NO_CONTENT)
-    @PatchMapping(path = "/{id}", consumes = "application/json-patch+json")
+    @PatchMapping(path = "/id/{id}", consumes = "application/json-patch+json")
     public void update(
             @ApiParam(value = "Bill ID") @PathVariable @Min(value = 1, message = "Bill ID must be a positive integer value") Integer id,
             @RequestBody JsonPatch patchDocument) {
@@ -94,7 +94,7 @@ public class BillsServiceController {
             @ApiResponse(code = 500, message = "Internal server error")
     })
     @ResponseStatus(NO_CONTENT)
-    @DeleteMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/id/{id}", produces = APPLICATION_JSON_VALUE)
     public void deleteBill(@ApiParam(value = "Bill ID") @PathVariable @Min(value = 1, message = "Bill ID must be a positive integer value") Integer id) {
         billsService.deleteBill(id);
     }

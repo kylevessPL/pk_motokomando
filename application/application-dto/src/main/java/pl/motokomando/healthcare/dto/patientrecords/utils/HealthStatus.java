@@ -1,4 +1,4 @@
-package pl.motokomando.healthcare.domain.model.patients.utils;
+package pl.motokomando.healthcare.dto.patientrecords.utils;
 
 public enum HealthStatus {
 

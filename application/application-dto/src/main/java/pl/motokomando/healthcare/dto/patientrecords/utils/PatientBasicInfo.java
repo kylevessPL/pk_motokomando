@@ -1,4 +1,4 @@
-package pl.motokomando.healthcare.dto.patients.utils;
+package pl.motokomando.healthcare.dto.patientrecords.utils;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
