@@ -7,7 +7,7 @@ import pl.motokomando.healthcare.domain.model.prescriptions.utils.PrescriptionRe
 
 public interface PrescriptionsService {
 
-    Prescription getPrescriptionById(Integer id);
+    Prescription getPrescription(Integer id);
     PrescriptionBasic createPrescription(PrescriptionRequestCommand command);
     void updatePrescription(PrescriptionPatchRequestCommand command);
     void deletePrescription(Integer id);

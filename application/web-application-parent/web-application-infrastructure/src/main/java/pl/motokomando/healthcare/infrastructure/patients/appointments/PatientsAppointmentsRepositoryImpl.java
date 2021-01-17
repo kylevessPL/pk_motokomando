@@ -20,6 +20,11 @@ public class PatientsAppointmentsRepositoryImpl implements PatientsAppointmentsR
         dao.save(patientsAppointmentsEntity);
     }
 
+    @Override
+    public boolean patientAppointmentExistsByPatientIdAndAppointmentId(Integer patientId, Integer appointmentId) {
+        return dao.existsByPatientIdAndAppointmentId(patientId, appointmentId);
+    }
+
     private PatientsAppointmentsEntity createEntity(Integer patientId, Integer appointmentId) {
         PatientsAppointmentsEntity patientsAppointmentsEntity = new PatientsAppointmentsEntity();
         patientsAppointmentsEntity.setPatientId(patientId);

@@ -47,12 +47,6 @@ public class PatientRecordsRepositoryImpl implements PatientRecordsRepository {
         dao.save(patientRecordsEntity);
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public boolean patientRecordExists(Integer id) {
-        return dao.existsById(id);
-    }
-
     private PatientRecordsEntity createEntity(Integer patientId) {
         PatientRecordsEntity patientRecordsEntity = new PatientRecordsEntity();
         patientRecordsEntity.setPatientId(patientId);

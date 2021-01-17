@@ -7,8 +7,8 @@ import pl.motokomando.healthcare.domain.model.utils.BasicQueryCommand;
 
 public interface PatientsService {
 
-    PatientBasicPage getAllPatients(BasicQueryCommand query);
-    Patient getPatientById(Integer id);
-    void savePatient(PatientRequestCommand request);
+    PatientBasicPage getAllPatients(BasicQueryCommand command);
+    Patient getPatient(Integer id);
+    void savePatient(PatientRequestCommand command);
 
 }

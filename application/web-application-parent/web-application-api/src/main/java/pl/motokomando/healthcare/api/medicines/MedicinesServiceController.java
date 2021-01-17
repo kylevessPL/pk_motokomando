@@ -53,7 +53,7 @@ public class MedicinesServiceController {
     @ApiOperation(
             value = "Find medicine by FDA product NDC",
             notes = "You are required to pass product NDC as a parameter",
-            nickname = "getMedicineByProductNDC"
+            nickname = "getMedicine"
     )
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully fecthed medicine details"),
@@ -63,7 +63,7 @@ public class MedicinesServiceController {
     })
     @GetMapping(value = "/{productNDC}", produces = APPLICATION_JSON_VALUE)
     public MedicineResponse getByProductNDC(@ApiParam(value = "Product NDC") @PathVariable @NotBlank(message = "Product NDC is mandatory") String productNDC) {
-        return medicinesMapper.mapToResponse(medicinesService.getMedicineByProductNDC(productNDC));
+        return medicinesMapper.mapToResponse(medicinesService.getMedicine(productNDC));
     }
 
 }

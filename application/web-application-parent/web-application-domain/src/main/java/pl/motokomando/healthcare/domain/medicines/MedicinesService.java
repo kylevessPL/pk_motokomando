@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface MedicinesService {
 
-    Medicine getMedicineByProductNDC(String productNDC);
-    List<Medicine> searchMedicine(MedicineCommand query);
+    Medicine getMedicine(String productNDC);
+    List<Medicine> searchMedicine(MedicineCommand command);
 
 }

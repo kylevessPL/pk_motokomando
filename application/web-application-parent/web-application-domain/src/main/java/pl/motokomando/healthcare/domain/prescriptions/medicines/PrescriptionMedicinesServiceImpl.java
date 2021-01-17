@@ -55,7 +55,7 @@ public class PrescriptionMedicinesServiceImpl implements PrescriptionMedicinesSe
 
     private void checkMedicineExistence(String productNDC) {
         try {
-            medicinesService.getMedicineByProductNDC(productNDC);
+            medicinesService.getMedicine(productNDC);
         } catch (NoMedicinesFoundException ex) {
             throw new MyException(ex.getErrorCode());
         }

@@ -63,7 +63,7 @@ public class DoctorsServiceController {
     @ApiOperation(
             value = "Get doctor details by ID",
             notes = "You are required to pass doctor ID",
-            nickname = "getDoctorById"
+            nickname = "getDoctor"
     )
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully fetched doctors details"),
@@ -72,7 +72,7 @@ public class DoctorsServiceController {
     })
     @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
     public DoctorResponse getById(@ApiParam(value = "Doctor ID") @PathVariable @Min(value = 1, message = "Doctor ID must be a positive integer value") Integer id) {
-        return doctorsMapper.mapToResponse(doctorsService.getDoctorById(id));
+        return doctorsMapper.mapToResponse(doctorsService.getDoctor(id));
     }
 
     @ApiOperation(

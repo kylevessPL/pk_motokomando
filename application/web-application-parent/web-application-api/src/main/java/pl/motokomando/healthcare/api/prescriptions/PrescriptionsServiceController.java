@@ -75,7 +75,7 @@ public class PrescriptionsServiceController {
     public void update(
             @ApiParam(value = "Prescription ID") @PathVariable @Min(value = 1, message = "Prescription ID must be a positive integer value") Integer id,
             @RequestBody JsonPatch patchDocument) {
-        PrescriptionResponse response = prescriptionMapper.mapToResponse(prescriptionsService.getPrescriptionById(id));
+        PrescriptionResponse response = prescriptionMapper.mapToResponse(prescriptionsService.getPrescription(id));
         PrescriptionRequest request = prescriptionMapper.mapToRequest(response);
         request = jsonPatchHandler.patch(patchDocument, request, PrescriptionRequest.class);
         PrescriptionPatchRequestCommand command = prescriptionMapper.mapToCommand(response);
@@ -86,7 +86,7 @@ public class PrescriptionsServiceController {
     @ApiOperation(
             value = "Delete prescription",
             notes = "You are required to pass prescription ID as a parameter",
-            nickname = "delete"
+            nickname = "deletePrescription"
     )
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "Successfully deleted prescription"),

@@ -5,7 +5,7 @@ import pl.motokomando.healthcare.domain.model.patientrecords.utils.PatientRecord
 
 public interface PatientRecordsService {
 
-    PatientRecord getPatientRecordById(Integer id);
-    void updatePatientRecord(PatientRecordPatchRequestCommand request);
+    PatientRecord getPatientRecord(Integer id);
+    void updatePatientRecord(PatientRecordPatchRequestCommand command);
 
 }

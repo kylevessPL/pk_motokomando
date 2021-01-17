@@ -19,7 +19,7 @@ public class BillsServiceImpl implements BillsService {
 
     @Override
     @Transactional(readOnly = true)
-    public Bill getBillById(Integer id) {
+    public Bill getBill(Integer id) {
         return repository.getBillById(id)
                 .orElseThrow(() -> new MyException(BILL_NOT_FOUND));
     }
