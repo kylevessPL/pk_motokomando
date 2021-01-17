@@ -30,7 +30,7 @@ public class AppointmentsRepositoryImpl implements AppointmentsRepository {
     @Override
     @Transactional(readOnly = true)
     public boolean isDateAvailable(LocalDateTime date) {
-        return !dao.existsByAppointmentDate(date);
+        return !dao.existsByAppointmentDateAndAndAppointmentStatusEqualsScheduled(date);
     }
 
     private AppointmentsEntity createEntity(AppointmentRequestCommand data) {

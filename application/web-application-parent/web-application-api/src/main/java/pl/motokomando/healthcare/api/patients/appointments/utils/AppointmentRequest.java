@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.Future;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -21,6 +22,7 @@ public class AppointmentRequest implements Serializable {
 
     @ApiModelProperty(value = "Appointment date")
     @NotNull(message = "Appointment date is mandatory")
+    @Future(message = "Appointment date must be in the future")
     @DateTimeFormat(pattern = "dd-MM-yyyy HH:mm")
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
     private LocalDateTime appointmentDate;
