@@ -41,7 +41,7 @@ public class PrescriptionMedicinesServiceController {
     @ApiOperation(
             value = "Add medicine to prescription",
             notes = "You are required to pass JSON body with medicine NDC",
-            nickname = "addMedicine"
+            nickname = "create"
     )
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successfully added medicine to prescription"),
@@ -50,7 +50,7 @@ public class PrescriptionMedicinesServiceController {
     })
     @ResponseStatus(CREATED)
     @PostMapping(value = "/{id}/medicines", produces = APPLICATION_JSON_VALUE)
-    public void addMedicine(
+    public void create(
             @ApiParam(value = "Prescription ID") @PathVariable @Min(value = 1, message = "Prescription ID must be a positive integer value") Integer id,
             @RequestBody @Valid PrescriptionMedicineRequest request) {
         PrescriptionMedicineRequestCommand command = prescriptionMedicineMapper.mapToCommand(request);
@@ -60,7 +60,7 @@ public class PrescriptionMedicinesServiceController {
     @ApiOperation(
             value = "Remove medicine from prescription",
             notes = "You are required to pass medicine NDC as a parameter",
-            nickname = "removeMedicine"
+            nickname = "remove"
     )
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "Successfully removed medicine from prescription"),
@@ -69,7 +69,7 @@ public class PrescriptionMedicinesServiceController {
     })
     @ResponseStatus(NO_CONTENT)
     @DeleteMapping(value = "/{id}/medicines", produces = APPLICATION_JSON_VALUE)
-    public void removeMedicine(@Valid PrescriptionMedicineDeleteRequest request) {
+    public void remove(@Valid PrescriptionMedicineDeleteRequest request) {
         PrescriptionMedicineDeleteRequestCommand command = prescriptionMedicineMapper.mapToCommand(request);
         prescriptionMedicinesService.deletePrescriptionMedicine(command);
     }

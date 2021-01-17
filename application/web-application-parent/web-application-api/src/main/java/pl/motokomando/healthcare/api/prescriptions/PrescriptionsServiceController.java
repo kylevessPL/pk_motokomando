@@ -86,7 +86,7 @@ public class PrescriptionsServiceController {
     @ApiOperation(
             value = "Delete prescription",
             notes = "You are required to pass prescription ID as a parameter",
-            nickname = "deletePrescription"
+            nickname = "delete"
     )
     @ApiResponses(value = {
             @ApiResponse(code = 204, message = "Successfully deleted prescription"),
@@ -95,7 +95,7 @@ public class PrescriptionsServiceController {
     })
     @ResponseStatus(NO_CONTENT)
     @DeleteMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
-    public void deletePrescription(@ApiParam(value = "Prescription ID") @PathVariable @Min(value = 1, message = "Prescription ID must be a positive integer value") Integer id) {
+    public void delete(@ApiParam(value = "Prescription ID") @PathVariable @Min(value = 1, message = "Prescription ID must be a positive integer value") Integer id) {
         prescriptionsService.deletePrescription(id);
     }
 

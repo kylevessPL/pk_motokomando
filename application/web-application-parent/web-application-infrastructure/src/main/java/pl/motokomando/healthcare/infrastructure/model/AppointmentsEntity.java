@@ -3,9 +3,11 @@ package pl.motokomando.healthcare.infrastructure.model;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import pl.motokomando.healthcare.domain.model.patients.appointments.utils.AppointmentStatus;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
@@ -13,7 +15,9 @@ import javax.persistence.Table;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
+import static javax.persistence.EnumType.STRING;
 import static javax.persistence.GenerationType.SEQUENCE;
+import static pl.motokomando.healthcare.domain.model.patients.appointments.utils.AppointmentStatus.SCHEDULED;
 
 @Entity
 @Table(name = "appointments")
@@ -39,6 +43,7 @@ public class AppointmentsEntity {
     @Column(name = "giagnosis", length = 200)
     private String giagnosis;
     @Column(name = "appointment_status", nullable = false, length = 10)
-    private String appointmentStatus;
+    @Enumerated(STRING)
+    private AppointmentStatus appointmentStatus = SCHEDULED;
 
 }
