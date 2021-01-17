@@ -23,24 +23,24 @@ public class DoctorsServiceImpl implements DoctorsService {
 
     @Override
     @Transactional(readOnly = true)
-    public DoctorBasicPage getAllDoctors(BasicQueryCommand query) {
-        PageProperties pageProperties = new PageProperties(query.getPage(), query.getSize());
-        SortProperties sortProperties = new SortProperties(query.getSortBy(), query.getSortDir());
+    public DoctorBasicPage getAllDoctors(BasicQueryCommand command) {
+        PageProperties pageProperties = new PageProperties(command.getPage(), command.getSize());
+        SortProperties sortProperties = new SortProperties(command.getSortBy(), command.getSortDir());
         return repository.getAllDoctors(pageProperties, sortProperties);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Doctor getDoctorById(Integer id) {
+    public Doctor getDoctor(Integer id) {
         return repository.getDoctorById(id)
                 .orElseThrow(() -> new MyException(DOCTOR_NOT_FOUND));
     }
 
     @Override
     @Transactional
-    public void saveDoctor(DoctorRequestCommand request) {
-        Optional.ofNullable(request.getId()).ifPresent(this::checkDoctorExistence);
-        repository.saveDoctor(request);
+    public void saveDoctor(DoctorRequestCommand command) {
+        Optional.ofNullable(command.getId()).ifPresent(this::checkDoctorExistence);
+        repository.saveDoctor(command);
     }
 
     private void checkDoctorExistence(Integer id) {

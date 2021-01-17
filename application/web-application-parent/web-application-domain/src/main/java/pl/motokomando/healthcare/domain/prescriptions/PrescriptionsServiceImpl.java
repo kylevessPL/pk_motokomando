@@ -19,7 +19,7 @@ public class PrescriptionsServiceImpl implements PrescriptionsService {
 
     @Override
     @Transactional(readOnly = true)
-    public Prescription getPrescriptionById(Integer id) {
+    public Prescription getPrescription(Integer id) {
         return prescriptionsRepository.getPrescriptionById(id)
                 .orElseThrow(() -> new MyException(PRESCRIPTION_NOT_FOUND));
     }

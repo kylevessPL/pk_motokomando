@@ -17,15 +17,15 @@ public class PatientRecordsServiceImpl implements PatientRecordsService {
 
     @Override
     @Transactional(readOnly = true)
-    public PatientRecord getPatientRecordById(Integer id) {
+    public PatientRecord getPatientRecord(Integer id) {
         return repository.getPatientRecordById(id)
                 .orElseThrow(() -> new MyException(PATIENT_RECORD_NOT_FOUND));
     }
 
     @Override
     @Transactional
-    public void updatePatientRecord(PatientRecordPatchRequestCommand request) {
-        repository.updatePatientRecord(request);
+    public void updatePatientRecord(PatientRecordPatchRequestCommand command) {
+        repository.updatePatientRecord(command);
     }
 
 }

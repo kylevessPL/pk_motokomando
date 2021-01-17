@@ -27,15 +27,15 @@ public class PatientsServiceImpl implements PatientsService {
 
     @Override
     @Transactional(readOnly = true)
-    public PatientBasicPage getAllPatients(BasicQueryCommand query) {
-        PageProperties pageProperties = new PageProperties(query.getPage(), query.getSize());
-        SortProperties sortProperties = new SortProperties(query.getSortBy(), query.getSortDir());
+    public PatientBasicPage getAllPatients(BasicQueryCommand command) {
+        PageProperties pageProperties = new PageProperties(command.getPage(), command.getSize());
+        SortProperties sortProperties = new SortProperties(command.getSortBy(), command.getSortDir());
         return patientsRepository.getAllPatients(pageProperties, sortProperties);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Patient getPatientById(Integer id) {
+    public Patient getPatient(Integer id) {
         PatientDetails patientDetails = patientsRepository.getPatientById(id)
                 .orElseThrow(() -> new MyException(PATIENT_NOT_FOUND));
         PatientBasicInfo basicInfo = patientRecordsRepository.getPatientRecordBasicByPatientId(id);
@@ -44,10 +44,10 @@ public class PatientsServiceImpl implements PatientsService {
 
     @Override
     @Transactional
-    public void savePatient(PatientRequestCommand request) {
-        Optional<Integer> patientId = Optional.ofNullable(request.getId());
+    public void savePatient(PatientRequestCommand command) {
+        Optional<Integer> patientId = Optional.ofNullable(command.getId());
         patientId.ifPresent(this::checkPatientExistence);
-        Integer id = patientsRepository.savePatient(request);
+        Integer id = patientsRepository.savePatient(command);
         if (!patientId.isPresent()) {
             patientRecordsRepository.createPatientRecord(id);
         }

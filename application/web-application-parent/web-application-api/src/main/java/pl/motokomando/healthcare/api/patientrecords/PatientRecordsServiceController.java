@@ -47,8 +47,10 @@ public class PatientRecordsServiceController {
     })
     @ResponseStatus(NO_CONTENT)
     @PatchMapping(path = "/{id}", consumes = "application/json-patch+json")
-    public void update(@ApiParam(value = "Patient record ID") @PathVariable Integer id, @RequestBody JsonPatch patchDocument) {
-        PatientRecordResponse response = patientRecordsMapper.mapToResponse(patientRecordsService.getPatientRecordById(id));
+    public void update(
+            @ApiParam(value = "Patient record ID") @PathVariable Integer id,
+            @RequestBody JsonPatch patchDocument) {
+        PatientRecordResponse response = patientRecordsMapper.mapToResponse(patientRecordsService.getPatientRecord(id));
         PatientRecordPatchRequest request = patientRecordsMapper.mapToRequest(response);
         request = jsonPatchHandler.patch(patchDocument, request, PatientRecordPatchRequest.class);
         PatientRecordPatchRequestCommand command = patientRecordsMapper.mapToCommand(response);

@@ -75,7 +75,7 @@ public class BillsServiceController {
     public void update(
             @ApiParam(value = "Bill ID") @PathVariable @Min(value = 1, message = "Bill ID must be a positive integer value") Integer id,
             @RequestBody JsonPatch patchDocument) {
-        BillResponse response = billsMapper.mapToResponse(billsService.getBillById(id));
+        BillResponse response = billsMapper.mapToResponse(billsService.getBill(id));
         BillRequest request = billsMapper.mapToRequest(response);
         request = jsonPatchHandler.patch(patchDocument, request, BillRequest.class);
         BillPatchRequestCommand command = billsMapper.mapToCommand(response);
@@ -95,7 +95,7 @@ public class BillsServiceController {
     })
     @ResponseStatus(NO_CONTENT)
     @DeleteMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
-    public void deleteBill(@ApiParam(value = "Bill ID") @PathVariable @Min(value = 1, message = "Bill ID must be a positive integer value") Integer id) {
+    public void delete(@ApiParam(value = "Bill ID") @PathVariable @Min(value = 1, message = "Bill ID must be a positive integer value") Integer id) {
         billsService.deleteBill(id);
     }
 

@@ -10,7 +10,7 @@ public interface AppointmentsEntityDao extends JpaRepository<AppointmentsEntity,
 
     @Query("SELECT CASE WHEN count(e) > 0 THEN true ELSE false END FROM AppointmentsEntity e " +
             "WHERE e.appointmentDate = ?1 AND e.appointmentStatus = " +
-            "pl.motokomando.healthcare.domain.model.patients.appointments.utils.AppointmentStatus.SCHEDULED")
-    boolean existsByAppointmentDateAndAndAppointmentStatusEqualsScheduled(LocalDateTime date);
+            "pl.motokomando.healthcare.domain.model.patients.appointments.utils.AppointmentStatus.VALID")
+    boolean existsByAppointmentDateAndAndAppointmentStatusEqualsValid(LocalDateTime date);
 
 }

@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,15 +15,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import pl.motokomando.healthcare.api.patients.appointments.mapper.AppointmentsMapper;
+import pl.motokomando.healthcare.api.patients.appointments.utils.AppointmentPatchRequest;
 import pl.motokomando.healthcare.api.patients.appointments.utils.AppointmentRequest;
+import pl.motokomando.healthcare.api.patients.appointments.utils.AppointmentRequestParams;
+import pl.motokomando.healthcare.api.utils.JsonPatchHandler;
+import pl.motokomando.healthcare.domain.model.patients.appointments.utils.AppointmentPatchRequestCommand;
 import pl.motokomando.healthcare.domain.model.patients.appointments.utils.AppointmentRequestCommand;
+import pl.motokomando.healthcare.domain.model.patients.appointments.utils.AppointmentRequestParamsCommand;
 import pl.motokomando.healthcare.domain.patients.appointments.AppointmentsService;
 import pl.motokomando.healthcare.dto.patients.appointments.AppointmentBasicResponse;
+import pl.motokomando.healthcare.dto.patients.appointments.AppointmentResponse;
 
+import javax.json.JsonPatch;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Api
@@ -34,6 +43,7 @@ public class AppointmentsServiceController {
 
     private final AppointmentsService appointmentsService;
     private final AppointmentsMapper appointmentsMapper;
+    private final JsonPatchHandler jsonPatchHandler;
 
     @ApiOperation(
             value = "Schedule new appointment",
@@ -52,6 +62,30 @@ public class AppointmentsServiceController {
             @RequestBody @Valid AppointmentRequest request) {
         AppointmentRequestCommand command = appointmentsMapper.mapToCommand(request);
         return appointmentsMapper.mapToBasicResponse(appointmentsService.createAppointment(id, command));
+    }
+
+    @ApiOperation(
+            value = "Update appointment data",
+            notes = "You are required to pass JSON Patch body with patch instructions",
+            nickname = "updateAppointment"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "Successfully updated appointment data"),
+            @ApiResponse(code = 400, message = "Parameters not valid"),
+            @ApiResponse(code = 500, message = "Internal server error")
+    })
+    @ResponseStatus(NO_CONTENT)
+    @PatchMapping(path = "/{patientId}/appointments/{appointmentId}", consumes = "application/json-patch+json")
+    public void update(
+            @Valid AppointmentRequestParams params,
+            @RequestBody JsonPatch patchDocument) {
+        AppointmentRequestParamsCommand paramsCommand = appointmentsMapper.mapToCommand(params);
+        AppointmentResponse response = appointmentsMapper.mapToResponse(appointmentsService.getAppointment(paramsCommand));
+        AppointmentPatchRequest request = appointmentsMapper.mapToRequest(response);
+        request = jsonPatchHandler.patch(patchDocument, request, AppointmentPatchRequest.class);
+        AppointmentPatchRequestCommand patchCommand = appointmentsMapper.mapToCommand(response);
+        appointmentsMapper.update(request, patchCommand);
+        appointmentsService.updateAppointment(patchCommand);
     }
 
 }

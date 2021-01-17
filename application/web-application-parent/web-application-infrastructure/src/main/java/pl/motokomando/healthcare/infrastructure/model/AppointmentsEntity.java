@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.GenerationType.SEQUENCE;
-import static pl.motokomando.healthcare.domain.model.patients.appointments.utils.AppointmentStatus.SCHEDULED;
+import static pl.motokomando.healthcare.domain.model.patients.appointments.utils.AppointmentStatus.VALID;
 
 @Entity
 @Table(name = "appointments")
@@ -44,6 +44,6 @@ public class AppointmentsEntity {
     private String giagnosis;
     @Column(name = "appointment_status", nullable = false, length = 10)
     @Enumerated(STRING)
-    private AppointmentStatus appointmentStatus = SCHEDULED;
+    private AppointmentStatus appointmentStatus = VALID;
 
 }

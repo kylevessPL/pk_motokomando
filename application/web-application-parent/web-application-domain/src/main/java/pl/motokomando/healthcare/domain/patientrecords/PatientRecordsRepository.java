@@ -12,6 +12,5 @@ public interface PatientRecordsRepository {
     void updatePatientRecord(PatientRecordPatchRequestCommand data);
     PatientBasicInfo getPatientRecordBasicByPatientId(Integer patientId);
     void createPatientRecord(Integer patientId);
-    boolean patientRecordExists(Integer id);
 
 }

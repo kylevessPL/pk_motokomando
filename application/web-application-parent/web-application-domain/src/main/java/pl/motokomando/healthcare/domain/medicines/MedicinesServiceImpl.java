@@ -32,7 +32,7 @@ public class MedicinesServiceImpl implements MedicinesService {
     }
 
     @Override
-    public Medicine getMedicineByProductNDC(String productNDC) {
+    public Medicine getMedicine(String productNDC) {
         Optional<OpenFDAResponse> response = openFDAClient
                 .get()
                 .uri(uriBuilder -> uriBuilder
@@ -48,13 +48,13 @@ public class MedicinesServiceImpl implements MedicinesService {
     }
 
     @Override
-    public List<Medicine> searchMedicine(MedicineCommand medicineCommand) {
-        String query = medicineCommand.getQuery().trim().replaceAll(" ", "+");
+    public List<Medicine> searchMedicine(MedicineCommand command) {
+        String query = command.getQuery().trim().replaceAll(" ", "+");
         Optional<OpenFDAResponse> response = openFDAClient
                 .get()
                 .uri(uriBuilder -> uriBuilder
                         .queryParam("search", "(product_type:HUMAN+DRUG)+AND+" + query)
-                        .queryParamIfPresent("limit", Optional.ofNullable(medicineCommand.getLimit()))
+                        .queryParamIfPresent("limit", Optional.ofNullable(command.getLimit()))
                         .build())
                 .retrieve()
                 .bodyToMono(OpenFDAResponse.class)
