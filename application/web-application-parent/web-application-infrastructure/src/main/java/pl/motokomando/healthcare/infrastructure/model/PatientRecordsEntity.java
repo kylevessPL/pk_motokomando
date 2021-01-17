@@ -3,7 +3,7 @@ package pl.motokomando.healthcare.infrastructure.model;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-import pl.motokomando.healthcare.domain.model.patients.utils.HealthStatus;
+import pl.motokomando.healthcare.domain.model.patientrecords.utils.HealthStatus;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,7 +16,7 @@ import java.sql.Timestamp;
 
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.GenerationType.SEQUENCE;
-import static pl.motokomando.healthcare.domain.model.patients.utils.HealthStatus.GOOD;
+import static pl.motokomando.healthcare.domain.model.patientrecords.utils.HealthStatus.GOOD;
 
 @Entity
 @Table(name = "patient_records")

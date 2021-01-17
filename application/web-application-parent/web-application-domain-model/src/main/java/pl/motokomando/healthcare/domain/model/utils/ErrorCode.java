@@ -16,6 +16,7 @@ public enum ErrorCode {
     PRESCRIPTION_MEDICINE_NOT_FOUND("PM04", "Prescription medicine not found"),
     PRESCRIPTION_MEDICINE_ALREADY_EXISTS("PM09", "Prescription medicine already exists"),
     DOCTOR_NOT_FOUND("D04", "Doctor not found"),
+    DATE_NOT_AVAILABLE("AP09", "Appointment date not available"),
     VALIDATION_FAILED("V06", "Validation failed");
 
     private final String code;
