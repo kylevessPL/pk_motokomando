@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.motokomando.healthcare.domain.model.doctors.Doctor;
 import pl.motokomando.healthcare.domain.model.doctors.DoctorBasicPage;
 import pl.motokomando.healthcare.domain.model.doctors.utils.DoctorRequestCommand;
-import pl.motokomando.healthcare.domain.model.utils.BasicQueryCommand;
+import pl.motokomando.healthcare.domain.model.utils.BasicPagedQueryCommand;
 import pl.motokomando.healthcare.domain.model.utils.MyException;
 import pl.motokomando.healthcare.domain.model.utils.PageProperties;
 import pl.motokomando.healthcare.domain.model.utils.SortProperties;
@@ -23,7 +23,7 @@ public class DoctorsServiceImpl implements DoctorsService {
 
     @Override
     @Transactional(readOnly = true)
-    public DoctorBasicPage getAllDoctors(BasicQueryCommand command) {
+    public DoctorBasicPage getAllDoctors(BasicPagedQueryCommand command) {
         PageProperties pageProperties = new PageProperties(command.getPage(), command.getSize());
         SortProperties sortProperties = new SortProperties(command.getSortBy(), command.getSortDir());
         return repository.getAllDoctors(pageProperties, sortProperties);

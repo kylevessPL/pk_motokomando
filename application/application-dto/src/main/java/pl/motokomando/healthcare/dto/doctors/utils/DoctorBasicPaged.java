@@ -10,7 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class DoctorBasic {
+public class DoctorBasicPaged {
 
     @ApiModelProperty(value = "Doctor ID", example = "1")
     private Integer id;

@@ -2,6 +2,7 @@ package pl.motokomando.healthcare.domain.model.doctors;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import pl.motokomando.healthcare.domain.model.doctors.utils.DoctorBasicPaged;
 import pl.motokomando.healthcare.domain.model.utils.PageMeta;
 
 import java.util.List;
@@ -11,6 +12,6 @@ import java.util.List;
 public final class DoctorBasicPage {
 
     private final PageMeta meta;
-    private final List<DoctorBasic> content;
+    private final List<DoctorBasicPaged> content;
 
 }

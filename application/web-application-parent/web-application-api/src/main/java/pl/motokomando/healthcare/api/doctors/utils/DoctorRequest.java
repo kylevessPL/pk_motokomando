@@ -35,7 +35,7 @@ public class DoctorRequest implements Serializable {
     private String lastName;
     @ApiModelProperty(value = "Doctor medical specialty")
     @NotNull(message = "Medical specialty is mandatory")
-    private MedicalSpecialty medicalSpecialty;
+    private MedicalSpecialty specialty;
     @ApiModelProperty(value = "Doctor phone number", example = "+48502672107")
     @NotBlank(message = "Phone number is mandatory")
     @Pattern(regexp = "^\\+[- 0-9]+$", message = "Phone number must start with country code and contain only numbers, spaces or dashes")

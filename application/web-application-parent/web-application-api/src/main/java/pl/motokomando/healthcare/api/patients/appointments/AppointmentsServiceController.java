@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,16 +16,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import pl.motokomando.healthcare.api.patients.appointments.mapper.AppointmentsMapper;
+import pl.motokomando.healthcare.api.patients.appointments.utils.AppointmentPagedQuery;
 import pl.motokomando.healthcare.api.patients.appointments.utils.AppointmentPatchRequest;
 import pl.motokomando.healthcare.api.patients.appointments.utils.AppointmentRequest;
 import pl.motokomando.healthcare.api.patients.appointments.utils.AppointmentRequestParams;
 import pl.motokomando.healthcare.api.utils.JsonPatchHandler;
+import pl.motokomando.healthcare.api.utils.PageResponse;
 import pl.motokomando.healthcare.domain.model.patients.appointments.utils.AppointmentPatchRequestCommand;
 import pl.motokomando.healthcare.domain.model.patients.appointments.utils.AppointmentRequestCommand;
 import pl.motokomando.healthcare.domain.model.patients.appointments.utils.AppointmentRequestParamsCommand;
+import pl.motokomando.healthcare.domain.model.utils.BasicPagedQueryCommand;
 import pl.motokomando.healthcare.domain.patients.appointments.AppointmentsService;
+import pl.motokomando.healthcare.dto.patients.appointments.AppointmentBasicPageResponse;
 import pl.motokomando.healthcare.dto.patients.appointments.AppointmentBasicResponse;
 import pl.motokomando.healthcare.dto.patients.appointments.AppointmentResponse;
+import pl.motokomando.healthcare.dto.patients.appointments.utils.AppointmentBasicPaged;
 
 import javax.json.JsonPatch;
 import javax.validation.Valid;
@@ -44,6 +50,29 @@ public class AppointmentsServiceController {
     private final AppointmentsService appointmentsService;
     private final AppointmentsMapper appointmentsMapper;
     private final JsonPatchHandler jsonPatchHandler;
+
+    @ApiOperation(
+            value = "Get all patient appointments",
+            notes = "You can pass additional paging and sorting parameters",
+            nickname = "getAllAppointments"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Successfully fetched patient appointments data"),
+            @ApiResponse(code = 400, message = "Parameters not valid"),
+            @ApiResponse(code = 500, message = "Internal server error")
+    })
+    @GetMapping(value = "/{id}/appointments", produces = APPLICATION_JSON_VALUE)
+    public PageResponse<AppointmentBasicPaged> getAll(
+            @ApiParam(value = "Patient ID") @PathVariable @Min(value = 1, message = "Patient ID must be a positive integer value") Integer id,
+            @Valid AppointmentPagedQuery query) {
+        BasicPagedQueryCommand command = appointmentsMapper.mapToCommand(query);
+        AppointmentBasicPageResponse response = appointmentsMapper.mapToResponse(
+                appointmentsService.getAllAppointments(id, command));
+        return new PageResponse<>(
+                query.getSize(),
+                response.getMeta(),
+                response.getContent());
+    }
 
     @ApiOperation(
             value = "Schedule new appointment",

@@ -8,7 +8,7 @@ import pl.motokomando.healthcare.domain.model.patients.Patient;
 import pl.motokomando.healthcare.domain.model.patients.PatientBasicPage;
 import pl.motokomando.healthcare.domain.model.patients.utils.PatientDetails;
 import pl.motokomando.healthcare.domain.model.patients.utils.PatientRequestCommand;
-import pl.motokomando.healthcare.domain.model.utils.BasicQueryCommand;
+import pl.motokomando.healthcare.domain.model.utils.BasicPagedQueryCommand;
 import pl.motokomando.healthcare.domain.model.utils.MyException;
 import pl.motokomando.healthcare.domain.model.utils.PageProperties;
 import pl.motokomando.healthcare.domain.model.utils.SortProperties;
@@ -27,7 +27,7 @@ public class PatientsServiceImpl implements PatientsService {
 
     @Override
     @Transactional(readOnly = true)
-    public PatientBasicPage getAllPatients(BasicQueryCommand command) {
+    public PatientBasicPage getAllPatients(BasicPagedQueryCommand command) {
         PageProperties pageProperties = new PageProperties(command.getPage(), command.getSize());
         SortProperties sortProperties = new SortProperties(command.getSortBy(), command.getSortDir());
         return patientsRepository.getAllPatients(pageProperties, sortProperties);

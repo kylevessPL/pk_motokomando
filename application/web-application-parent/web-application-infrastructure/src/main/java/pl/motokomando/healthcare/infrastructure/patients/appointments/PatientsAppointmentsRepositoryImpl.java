@@ -7,11 +7,23 @@ import pl.motokomando.healthcare.domain.patients.appointments.PatientsAppointmen
 import pl.motokomando.healthcare.infrastructure.dao.PatientsAppointmentsEntityDao;
 import pl.motokomando.healthcare.infrastructure.model.PatientsAppointmentsEntity;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class PatientsAppointmentsRepositoryImpl implements PatientsAppointmentsRepository {
 
     private final PatientsAppointmentsEntityDao dao;
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Integer> getPatientAppointmentIdList(Integer id) {
+        return dao.findAllByPatientId(id)
+                .stream()
+                .map(PatientsAppointmentsEntity::getAppointmentId)
+                .collect(Collectors.toList());
+    }
 
     @Override
     @Transactional
