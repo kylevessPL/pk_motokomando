@@ -1,22 +1,21 @@
 package pl.motokomando.healthcare.dto.patients.utils;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@ApiModel
+@Schema
 @NoArgsConstructor
 @Getter
 @Setter
 public class PatientBasicPaged {
 
-    @ApiModelProperty(value = "Patient ID", example = "1")
+    @Schema(description = "Patient ID", example = "1")
     private Integer id;
-    @ApiModelProperty(value = "Patient first name", example = "James")
+    @Schema(description = "Patient first name", example = "James")
     private String firstName;
-    @ApiModelProperty(value = "Patient last name", example = "Smith")
+    @Schema(description = "Patient last name", example = "Smith")
     private String lastName;
 
 }

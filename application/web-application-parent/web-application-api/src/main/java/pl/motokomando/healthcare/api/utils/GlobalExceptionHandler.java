@@ -1,5 +1,6 @@
 package pl.motokomando.healthcare.api.utils;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,7 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static pl.motokomando.healthcare.domain.model.utils.ErrorCode.VALIDATION_FAILED;
 
+@Hidden
 @ControllerAdvice
 public final class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 

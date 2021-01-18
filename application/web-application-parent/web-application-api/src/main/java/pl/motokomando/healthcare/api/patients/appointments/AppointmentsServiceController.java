@@ -1,10 +1,13 @@
 package pl.motokomando.healthcare.api.patients.appointments;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,9 +43,9 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-@Api
 @RestController
 @RequestMapping("/api/v1/patients")
+@Tag(name = "Patient appointments API", description = "API performing operations on patient appointment resources")
 @Validated
 @RequiredArgsConstructor
 public class AppointmentsServiceController {
@@ -51,20 +54,23 @@ public class AppointmentsServiceController {
     private final AppointmentsMapper appointmentsMapper;
     private final JsonPatchHandler jsonPatchHandler;
 
-    @ApiOperation(
-            value = "Get all patient appointments",
-            notes = "You can pass additional paging and sorting parameters",
-            nickname = "getAllAppointments"
+    @Operation(
+            summary = "Get all patient appointments",
+            description = "You can pass additional paging and sorting parameters",
+            operationId = "getAllAppointments"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successfully fetched patient appointments data"),
-            @ApiResponse(code = 204, message = "Patient appointments data is empty"),
-            @ApiResponse(code = 400, message = "Parameters not valid"),
-            @ApiResponse(code = 500, message = "Internal server error")
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Successfully fetched patient appointments data",
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = AppointmentBasicPaged.class)))),
+            @ApiResponse(responseCode = "204", description = "Patient appointments data is empty", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Parameters not valid", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
     @GetMapping(value = "/{id}/appointments", produces = APPLICATION_JSON_VALUE)
     public PageResponse<AppointmentBasicPaged> getAll(
-            @ApiParam(value = "Patient ID") @PathVariable @Min(value = 1, message = "Patient ID must be a positive integer value") Integer id,
+            @Parameter(description = "Patient ID") @PathVariable @Min(value = 1, message = "Patient ID must be a positive integer value") Integer id,
             @Valid AppointmentPagedQuery query) {
         BasicPagedQueryCommand command = appointmentsMapper.mapToCommand(query);
         AppointmentBasicPageResponse response = appointmentsMapper.mapToResponse(
@@ -75,34 +81,34 @@ public class AppointmentsServiceController {
                 response.getContent());
     }
 
-    @ApiOperation(
-            value = "Schedule new appointment",
-            notes = "You are required to pass JSON body with appointment date and doctor ID",
-            nickname = "scheduleAppointment"
+    @Operation(
+            summary = "Schedule new appointment",
+            description = "You are required to pass JSON body with appointment date and doctor ID",
+            operationId = "scheduleAppointment"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Successfully scheduled appointment"),
-            @ApiResponse(code = 400, message = "Parameters not valid"),
-            @ApiResponse(code = 500, message = "Internal server error")
+            @ApiResponse(responseCode = "201", description = "Successfully scheduled appointment"),
+            @ApiResponse(responseCode = "400", description = "Parameters not valid", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
     @ResponseStatus(CREATED)
     @PostMapping(value = "/{id}/appointments", produces = APPLICATION_JSON_VALUE)
     public AppointmentBasicResponse create(
-            @ApiParam(value = "Patient ID") @PathVariable @Min(value = 1, message = "Patient ID must be a positive integer value") Integer id,
+            @Parameter(description = "Patient ID") @PathVariable @Min(value = 1, message = "Patient ID must be a positive integer value") Integer id,
             @RequestBody @Valid AppointmentRequest request) {
         AppointmentRequestCommand command = appointmentsMapper.mapToCommand(request);
         return appointmentsMapper.mapToBasicResponse(appointmentsService.createAppointment(id, command));
     }
 
-    @ApiOperation(
-            value = "Update appointment data",
-            notes = "You are required to pass JSON Patch body with patch instructions",
-            nickname = "updateAppointment"
+    @Operation(
+            summary = "Update appointment data",
+            description = "You are required to pass JSON Patch body with patch instructions",
+            operationId = "updateAppointment"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Successfully updated appointment data"),
-            @ApiResponse(code = 400, message = "Parameters not valid"),
-            @ApiResponse(code = 500, message = "Internal server error")
+            @ApiResponse(responseCode = "204", description = "Successfully updated appointment data"),
+            @ApiResponse(responseCode = "400", description = "Parameters not valid"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @ResponseStatus(NO_CONTENT)
     @PatchMapping(path = "/{patientId}/appointments/{appointmentId}", consumes = "application/json-patch+json")

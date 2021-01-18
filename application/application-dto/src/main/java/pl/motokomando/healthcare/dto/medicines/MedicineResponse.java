@@ -1,7 +1,6 @@
 package pl.motokomando.healthcare.dto.medicines;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,29 +9,29 @@ import pl.motokomando.healthcare.dto.medicines.utils.ProductType;
 
 import java.util.List;
 
-@ApiModel
+@Schema
 @NoArgsConstructor
 @Getter
 @Setter
 public class MedicineResponse {
 
-    @ApiModelProperty(value = "FDA National Drug Code", example = "76282-200")
+    @Schema(description = "FDA National Drug Code", example = "76282-200")
     private String productNDC;
-    @ApiModelProperty(value = "Product manufacturer", example = "Exelan Pharmaceuticals, Inc.")
+    @Schema(description = "Product manufacturer", example = "Exelan Pharmaceuticals, Inc.")
     private String manufacturer;
-    @ApiModelProperty(value = "Product name", example = "Fosinopril sodium")
+    @Schema(description = "Product name", example = "Fosinopril sodium")
     private String productName;
-    @ApiModelProperty(value = "Generic product name", example = "Alcohol")
+    @Schema(description = "Generic product name", example = "Alcohol")
     private String genericName;
-    @ApiModelProperty(value = "Prescription drug or OTC", example = "OTC")
+    @Schema(description = "Prescription drug or OTC", example = "OTC")
     private ProductType productType;
-    @ApiModelProperty(value = "Active ingredients")
+    @Schema(description = "Active ingredients")
     private List<ActiveIngredient> activeIngredients;
-    @ApiModelProperty(value = "Administration route", example = "[\"ORAL\"]")
+    @Schema(description = "Administration route", example = "[\"ORAL\"]")
     private String[] administrationRoute;
-    @ApiModelProperty(value = "Dosage form", example = "TABLET")
+    @Schema(description = "Dosage form", example = "TABLET")
     private String dosageForm;
-    @ApiModelProperty(value = "Packaging variants")
+    @Schema(description = "Packaging variants")
     private String[] packagingVariants;
 
 }
