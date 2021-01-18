@@ -7,9 +7,11 @@ import pl.motokomando.healthcare.domain.bills.BillsRepository;
 import pl.motokomando.healthcare.domain.doctors.DoctorsRepository;
 import pl.motokomando.healthcare.domain.model.patients.appointments.Appointment;
 import pl.motokomando.healthcare.domain.model.patients.appointments.AppointmentBasic;
+import pl.motokomando.healthcare.domain.model.patients.appointments.AppointmentBasicPage;
 import pl.motokomando.healthcare.domain.model.patients.appointments.utils.AppointmentPatchRequestCommand;
 import pl.motokomando.healthcare.domain.model.patients.appointments.utils.AppointmentRequestCommand;
 import pl.motokomando.healthcare.domain.model.patients.appointments.utils.AppointmentRequestParamsCommand;
+import pl.motokomando.healthcare.domain.model.utils.BasicPagedQueryCommand;
 import pl.motokomando.healthcare.domain.model.utils.MyException;
 import pl.motokomando.healthcare.domain.patients.PatientsRepository;
 import pl.motokomando.healthcare.domain.prescriptions.PrescriptionsRepository;
@@ -34,6 +36,12 @@ public class AppointmentsServiceImpl implements AppointmentsService {
     private final DoctorsRepository doctorsRepository;
     private final BillsRepository billsRepository;
     private final PrescriptionsRepository prescriptionsRepository;
+
+    @Override
+    @Transactional(readOnly = true)
+    public AppointmentBasicPage getAllAppointments(BasicPagedQueryCommand command) {
+        return null;
+    }
 
     @Override
     @Transactional(readOnly = true)

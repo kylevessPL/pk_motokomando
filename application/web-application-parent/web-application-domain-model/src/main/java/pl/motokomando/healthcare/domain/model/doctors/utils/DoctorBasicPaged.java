@@ -1,11 +1,11 @@
-package pl.motokomando.healthcare.domain.model.patients.utils;
+package pl.motokomando.healthcare.domain.model.doctors.utils;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Getter
-public final class PatientBasic {
+public final class DoctorBasicPaged {
 
     private final Integer id;
     private final String firstName;

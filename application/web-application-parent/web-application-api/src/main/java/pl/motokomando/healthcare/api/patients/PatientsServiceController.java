@@ -15,14 +15,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import pl.motokomando.healthcare.api.patients.mapper.PatientsMapper;
-import pl.motokomando.healthcare.api.patients.utils.PatientQuery;
+import pl.motokomando.healthcare.api.patients.utils.PatientPagedQuery;
 import pl.motokomando.healthcare.api.patients.utils.PatientRequest;
 import pl.motokomando.healthcare.api.utils.PageResponse;
-import pl.motokomando.healthcare.domain.model.utils.BasicQueryCommand;
+import pl.motokomando.healthcare.domain.model.utils.BasicPagedQueryCommand;
 import pl.motokomando.healthcare.domain.patients.PatientsService;
-import pl.motokomando.healthcare.dto.patients.PatientBasicResponse;
+import pl.motokomando.healthcare.dto.patients.PatientBasicPageResponse;
 import pl.motokomando.healthcare.dto.patients.PatientResponse;
-import pl.motokomando.healthcare.dto.patients.utils.PatientBasic;
+import pl.motokomando.healthcare.dto.patients.utils.PatientBasicPaged;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
@@ -51,9 +51,9 @@ public class PatientsServiceController {
             @ApiResponse(code = 500, message = "Internal server error")
     })
     @GetMapping(produces = APPLICATION_JSON_VALUE)
-    public PageResponse<PatientBasic> getAll(@Valid PatientQuery query) {
-        BasicQueryCommand command = patientsMapper.mapToCommand(query);
-        PatientBasicResponse response = patientsMapper.mapToResponse(patientsService.getAllPatients(command));
+    public PageResponse<PatientBasicPaged> getAll(@Valid PatientPagedQuery query) {
+        BasicPagedQueryCommand command = patientsMapper.mapToCommand(query);
+        PatientBasicPageResponse response = patientsMapper.mapToResponse(patientsService.getAllPatients(command));
         return new PageResponse<>(
                 query.getSize(),
                 response.getMeta(),

@@ -29,7 +29,7 @@ public class AppointmentResponse {
     private Integer prescriptionId;
     @ApiModelProperty(value = "Diagnosis notes", example = "Cranial tumour in the right frontal lobe")
     private String diagnosis;
-    @ApiModelProperty(value = "Appointment status", allowableValues = "VALID, CANCELLED")
+    @ApiModelProperty(value = "Appointment status")
     private AppointmentStatus appointmentStatus;
 
 }

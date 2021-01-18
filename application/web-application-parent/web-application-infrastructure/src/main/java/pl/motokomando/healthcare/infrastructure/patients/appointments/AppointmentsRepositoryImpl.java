@@ -5,8 +5,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.motokomando.healthcare.domain.model.patients.appointments.Appointment;
 import pl.motokomando.healthcare.domain.model.patients.appointments.AppointmentBasic;
+import pl.motokomando.healthcare.domain.model.patients.appointments.AppointmentBasicPage;
 import pl.motokomando.healthcare.domain.model.patients.appointments.utils.AppointmentPatchRequestCommand;
 import pl.motokomando.healthcare.domain.model.patients.appointments.utils.AppointmentRequestCommand;
+import pl.motokomando.healthcare.domain.model.utils.PageProperties;
+import pl.motokomando.healthcare.domain.model.utils.SortProperties;
 import pl.motokomando.healthcare.domain.patients.appointments.AppointmentsRepository;
 import pl.motokomando.healthcare.infrastructure.dao.AppointmentsEntityDao;
 import pl.motokomando.healthcare.infrastructure.mapper.AppointmentsEntityMapper;
@@ -21,6 +24,12 @@ public class AppointmentsRepositoryImpl implements AppointmentsRepository {
 
     private final AppointmentsEntityDao dao;
     private final AppointmentsEntityMapper mapper;
+
+    @Override
+    @Transactional(readOnly = true)
+    public AppointmentBasicPage getAllAppointments(PageProperties pageProperties, SortProperties sortProperties) {
+        return null;
+    }
 
     @Override
     @Transactional(readOnly = true)

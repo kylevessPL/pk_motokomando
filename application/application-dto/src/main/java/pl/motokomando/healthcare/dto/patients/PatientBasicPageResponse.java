@@ -1,9 +1,9 @@
-package pl.motokomando.healthcare.dto.doctors;
+package pl.motokomando.healthcare.dto.patients;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import pl.motokomando.healthcare.dto.doctors.utils.DoctorBasic;
+import pl.motokomando.healthcare.dto.patients.utils.PatientBasicPaged;
 import pl.motokomando.healthcare.dto.utils.PageMetaResponse;
 
 import java.util.List;
@@ -11,9 +11,9 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-public class DoctorBasicResponse {
+public class PatientBasicPageResponse {
 
     private PageMetaResponse meta;
-    private List<DoctorBasic> content;
+    private List<PatientBasicPaged> content;
 
 }

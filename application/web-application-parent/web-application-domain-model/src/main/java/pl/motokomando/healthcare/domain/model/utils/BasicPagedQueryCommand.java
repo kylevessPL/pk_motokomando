@@ -7,7 +7,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class BasicQueryCommand {
+public class BasicPagedQueryCommand {
 
     private Integer page;
     private Integer size;

@@ -1,4 +1,4 @@
-package pl.motokomando.healthcare.api.patients.utils;
+package pl.motokomando.healthcare.api.doctors.utils;
 
 import io.swagger.annotations.ApiParam;
 import lombok.Getter;
@@ -14,7 +14,7 @@ import static pl.motokomando.healthcare.domain.model.utils.SortDirection.ASC;
 @NoArgsConstructor
 @Getter
 @Setter
-public class PatientQuery {
+public class DoctorPagedQuery {
 
     @ApiParam(value = "Page number", defaultValue = "1", example = "5")
     @Min(value = 1, message = "Page number must be a positive integer value")
@@ -22,8 +22,8 @@ public class PatientQuery {
     @ApiParam(value = "Page size", defaultValue = "10", example = "50")
     @Min(value = 1, message = "Page size must be a positive integer value")
     private Integer size = 20;
-    @ApiParam(value = "Value to sort room by", defaultValue = "id", allowableValues = "id, firstName, lastName, sex, bloodType", example = "lastName")
-    @ValidateString(acceptedValues = {"id", "firstName", "lastName", "sex", "bloodType"}, message = "Sort by property not valid")
+    @ApiParam(value = "Value to sort by", defaultValue = "id", allowableValues = "id, firstName, lastName, specialty", example = "specialty")
+    @ValidateString(acceptedValues = {"id", "firstName", "lastName", "specialty"}, message = "Sort by property not valid")
     private String sortBy = "id";
     @ApiParam(value = "Sort direction", defaultValue = "ASC", allowableValues = "ASC, DESC")
     private SortDirection sortDir = ASC;
