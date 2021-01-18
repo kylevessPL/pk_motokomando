@@ -16,6 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static org.springframework.http.HttpHeaders.LINK;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @ControllerAdvice
 public class PageResponseAdvice implements ResponseBodyAdvice<Object> {
@@ -34,7 +35,9 @@ public class PageResponseAdvice implements ResponseBodyAdvice<Object> {
             @Nullable ServerHttpRequest request,
             @NonNull ServerHttpResponse response) {
         PageResponse<?> pageResponse = (PageResponse<?>) body;
-        if (!pageResponse.getContent().isEmpty()) {
+        if (pageResponse.getContent().isEmpty()) {
+            response.setStatusCode(NO_CONTENT);
+        } else {
             setPaginationLinks(response, pageResponse.getPageMeta());
             setPaginationData(response, pageResponse);
         }

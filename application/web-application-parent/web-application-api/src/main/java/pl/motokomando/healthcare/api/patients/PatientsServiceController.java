@@ -47,6 +47,7 @@ public class PatientsServiceController {
     )
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully fetched patients data"),
+            @ApiResponse(code = 204, message = "Patients data is empty"),
             @ApiResponse(code = 400, message = "Parameters not valid"),
             @ApiResponse(code = 500, message = "Internal server error")
     })
