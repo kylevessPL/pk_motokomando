@@ -16,7 +16,7 @@ public class StringValidator implements ConstraintValidator<ValidateString, Stri
 
     @Override
     public boolean isValid(final String value, final ConstraintValidatorContext context) {
-        return value != null && acceptedValues.stream().anyMatch(acceptedValue -> acceptedValue.equalsIgnoreCase(value));
+        return value != null && acceptedValues.stream().anyMatch(acceptedValue -> acceptedValue.equals(value));
     }
 
 }
