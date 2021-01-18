@@ -22,8 +22,8 @@ public class AppointmentPagedQuery {
     @ApiParam(value = "Page size", defaultValue = "10", example = "50")
     @Min(value = 1, message = "Page size must be a positive integer value")
     private Integer size = 20;
-    @ApiParam(value = "Value to sort by", defaultValue = "id", allowableValues = "id, scheduleDate, appointmentDate, appointmentStatus", example = "specialty")
-    @ValidateString(acceptedValues = {"id", "firstName", "lastName", "specialty"}, message = "Sort by property not valid")
+    @ApiParam(value = "Value to sort by", defaultValue = "id", allowableValues = "id, appointmentDate, appointmentStatus", example = "appointmentDate")
+    @ValidateString(acceptedValues = {"id", "appointmentDate", "appointmentStatus"}, message = "Sort by property not valid")
     private String sortBy = "id";
     @ApiParam(value = "Sort direction", defaultValue = "ASC", allowableValues = "ASC, DESC")
     private SortDirection sortDir = ASC;
