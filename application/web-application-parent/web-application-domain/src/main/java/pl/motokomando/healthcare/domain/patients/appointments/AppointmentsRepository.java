@@ -9,10 +9,11 @@ import pl.motokomando.healthcare.domain.model.utils.PageProperties;
 import pl.motokomando.healthcare.domain.model.utils.SortProperties;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public interface AppointmentsRepository {
 
-    AppointmentBasicPage getAllAppointments(PageProperties pageProperties, SortProperties sortProperties);
+    AppointmentBasicPage getAllAppointmentsByIdIn(List<Integer> appointmentIdList, PageProperties pageProperties, SortProperties sortProperties);
     Appointment getAppointmentById(Integer id);
     void updateAppointment(AppointmentPatchRequestCommand data);
     AppointmentBasic createAppointment(AppointmentRequestCommand data);

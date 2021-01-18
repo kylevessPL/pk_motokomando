@@ -1,5 +1,7 @@
 package pl.motokomando.healthcare.infrastructure.dao;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import pl.motokomando.healthcare.infrastructure.model.AppointmentsEntity;
@@ -9,7 +11,7 @@ import java.util.List;
 
 public interface AppointmentsEntityDao extends JpaRepository<AppointmentsEntity, Integer> {
 
-    List<AppointmentsEntity> findAllByIdIn(List<Integer> appointmentIdList);
+    Page<AppointmentsEntity> findAllByIdIn(List<Integer> appointmentIdList, Pageable pageable);
     @Query("SELECT CASE WHEN count(e) > 0 THEN true ELSE false END FROM AppointmentsEntity e " +
             "WHERE e.appointmentDate = ?1 AND e.appointmentStatus = " +
             "pl.motokomando.healthcare.domain.model.patients.appointments.utils.AppointmentStatus.VALID")

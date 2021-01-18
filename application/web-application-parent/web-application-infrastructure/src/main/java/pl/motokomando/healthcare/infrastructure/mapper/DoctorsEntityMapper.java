@@ -21,14 +21,14 @@ public class DoctorsEntityMapper {
     public DoctorBasicPage mapToDoctorBasicPage(List<DoctorsEntity> doctorsEntityList, boolean isFirst, boolean isLast, boolean hasPrev, boolean hasNext, Integer currentPage, Integer totalPage, Long totalCount) {
         List<DoctorBasicPaged> doctorBasicPagedList = doctorsEntityList
                 .stream()
-                .map(this::createDoctorBasic)
+                .map(this::createDoctorBasicPaged)
                 .collect(Collectors.toList());
         return new DoctorBasicPage(
                 new PageMeta(isFirst, isLast, hasPrev, hasNext, currentPage, totalPage, totalCount),
                 doctorBasicPagedList);
     }
 
-    private DoctorBasicPaged createDoctorBasic(DoctorsEntity doctorsEntity) {
+    private DoctorBasicPaged createDoctorBasicPaged(DoctorsEntity doctorsEntity) {
         return new DoctorBasicPaged(
                 doctorsEntity.getId(),
                 doctorsEntity.getFirstName(),

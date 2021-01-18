@@ -13,10 +13,15 @@ import pl.motokomando.healthcare.domain.model.patients.appointments.utils.Appoin
 import pl.motokomando.healthcare.domain.model.patients.appointments.utils.AppointmentRequestParamsCommand;
 import pl.motokomando.healthcare.domain.model.utils.BasicPagedQueryCommand;
 import pl.motokomando.healthcare.domain.model.utils.MyException;
+import pl.motokomando.healthcare.domain.model.utils.PageMeta;
+import pl.motokomando.healthcare.domain.model.utils.PageProperties;
+import pl.motokomando.healthcare.domain.model.utils.SortProperties;
 import pl.motokomando.healthcare.domain.patients.PatientsRepository;
 import pl.motokomando.healthcare.domain.prescriptions.PrescriptionsRepository;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static pl.motokomando.healthcare.domain.model.utils.ErrorCode.APPOINTMENT_NOT_FOUND;
@@ -39,8 +44,15 @@ public class AppointmentsServiceImpl implements AppointmentsService {
 
     @Override
     @Transactional(readOnly = true)
-    public AppointmentBasicPage getAllAppointments(BasicPagedQueryCommand command) {
-        return null;
+    public AppointmentBasicPage getAllAppointments(Integer patientId, BasicPagedQueryCommand command) {
+        checkPatientExistence(patientId);
+        PageProperties pageProperties = new PageProperties(command.getPage(), command.getSize());
+        SortProperties sortProperties = new SortProperties(command.getSortBy(), command.getSortDir());
+        List<Integer> appointmentIdList = patientsAppointmentsRepository.getPatientAppointmentIdList(patientId);
+        if (appointmentIdList.isEmpty()) {
+            return createEmptyAppointmentBasicPage();
+        }
+        return appointmentsRepository.getAllAppointmentsByIdIn(appointmentIdList, pageProperties, sortProperties);
     }
 
     @Override
@@ -71,6 +83,21 @@ public class AppointmentsServiceImpl implements AppointmentsService {
         Optional.ofNullable(command.getBillId()).ifPresent(this::checkBillExistence);
         Optional.ofNullable(command.getPrescriptionId()).ifPresent(this::checkPrescriptionExistence);
         appointmentsRepository.updateAppointment(command);
+    }
+
+    private AppointmentBasicPage createEmptyAppointmentBasicPage() {
+        return new AppointmentBasicPage(
+                new PageMeta(
+                       true,
+                       true,
+                       false,
+                       false,
+                       1,
+                       1,
+                        0L
+                ),
+                Collections.emptyList()
+        );
     }
 
     private void checkDateAvailability(LocalDateTime date) {

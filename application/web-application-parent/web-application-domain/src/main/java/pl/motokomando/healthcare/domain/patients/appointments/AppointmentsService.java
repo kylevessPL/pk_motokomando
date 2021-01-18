@@ -10,7 +10,7 @@ import pl.motokomando.healthcare.domain.model.utils.BasicPagedQueryCommand;
 
 public interface AppointmentsService {
 
-    AppointmentBasicPage getAllAppointments(BasicPagedQueryCommand command);
+    AppointmentBasicPage getAllAppointments(Integer patientId, BasicPagedQueryCommand command);
     Appointment getAppointment(AppointmentRequestParamsCommand command);
     AppointmentBasic createAppointment(Integer patientId, AppointmentRequestCommand command);
     void updateAppointment(AppointmentPatchRequestCommand command);

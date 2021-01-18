@@ -8,6 +8,7 @@ import pl.motokomando.healthcare.infrastructure.dao.PatientsAppointmentsEntityDa
 import pl.motokomando.healthcare.infrastructure.model.PatientsAppointmentsEntity;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -18,7 +19,10 @@ public class PatientsAppointmentsRepositoryImpl implements PatientsAppointmentsR
     @Override
     @Transactional(readOnly = true)
     public List<Integer> getPatientAppointmentIdList(Integer id) {
-        return null;
+        return dao.findAllByPatientId(id)
+                .stream()
+                .map(PatientsAppointmentsEntity::getAppointmentId)
+                .collect(Collectors.toList());
     }
 
     @Override
