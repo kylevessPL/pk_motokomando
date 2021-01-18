@@ -1,22 +1,21 @@
 package pl.motokomando.healthcare.dto.patients;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pl.motokomando.healthcare.dto.patientrecords.utils.PatientBasicInfo;
 import pl.motokomando.healthcare.dto.patients.utils.PatientDetails;
 
-@ApiModel
+@Schema
 @NoArgsConstructor
 @Getter
 @Setter
 public class PatientResponse {
 
-    @ApiModelProperty(value = "Patient basic information")
+    @Schema(description = "Patient basic information")
     private PatientBasicInfo basicInfo;
-    @ApiModelProperty(value = "Patient details")
+    @Schema(description = "Patient details")
     private PatientDetails patientDetails;
 
 }

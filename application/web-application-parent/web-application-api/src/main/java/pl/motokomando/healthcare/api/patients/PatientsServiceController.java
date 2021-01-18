@@ -1,10 +1,13 @@
 package pl.motokomando.healthcare.api.patients;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,9 +33,9 @@ import javax.validation.constraints.Min;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-@Api
 @RestController
 @RequestMapping("/api/v1/patients")
+@Tag(name = "Patients API", description = "API performing operations on patient resources")
 @Validated
 @RequiredArgsConstructor
 public class PatientsServiceController {
@@ -40,16 +43,19 @@ public class PatientsServiceController {
     private final PatientsService patientsService;
     private final PatientsMapper patientsMapper;
 
-    @ApiOperation(
-            value = "Get all patients",
-            notes = "You can pass additional paging and sorting parameters",
-            nickname = "getAllPatients"
+    @Operation(
+            summary = "Get all patients",
+            description = "You can pass additional paging and sorting parameters",
+            operationId = "getAllPatients"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successfully fetched patients data"),
-            @ApiResponse(code = 204, message = "Patients data is empty"),
-            @ApiResponse(code = 400, message = "Parameters not valid"),
-            @ApiResponse(code = 500, message = "Internal server error")
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Successfully fetched patients data",
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = PatientBasicPaged.class)))),
+            @ApiResponse(responseCode = "204", description = "Patients data is empty", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Parameters not valid", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
     @GetMapping(produces = APPLICATION_JSON_VALUE)
     public PageResponse<PatientBasicPaged> getAll(@Valid PatientPagedQuery query) {
@@ -61,30 +67,30 @@ public class PatientsServiceController {
                 response.getContent());
     }
 
-    @ApiOperation(
-            value = "Get patient details by ID",
-            notes = "You are required to pass patient ID",
-            nickname = "getPatient"
+    @Operation(
+            summary = "Get patient details by ID",
+            description = "You are required to pass patient ID",
+            operationId = "getPatient"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successfully fetched patient details"),
-            @ApiResponse(code = 400, message = "Parameters not valid or no such patient with provided ID"),
-            @ApiResponse(code = 500, message = "Internal server error")
+            @ApiResponse(responseCode = "200", description = "Successfully fetched patient details"),
+            @ApiResponse(responseCode = "400", description = "Parameters not valid or no such patient with provided ID", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
     @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
-    public PatientResponse getById(@ApiParam(value = "Patient ID") @PathVariable @Min(value = 1, message = "Patient ID must be a positive integer value") Integer id) {
+    public PatientResponse getById(@Parameter(description = "Patient ID") @PathVariable @Min(value = 1, message = "Patient ID must be a positive integer value") Integer id) {
         return patientsMapper.mapToResponse(patientsService.getPatient(id));
     }
 
-    @ApiOperation(
-            value = "Register patient or edit patient details",
-            notes = "You are required to pass JSON body with patient details",
-            nickname = "savePatient"
+    @Operation(
+            summary = "Register patient or edit patient details",
+            description = "You are required to pass JSON body with patient details",
+            operationId = "savePatient"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Successfully saved patient details"),
-            @ApiResponse(code = 400, message = "Parameters not valid"),
-            @ApiResponse(code = 500, message = "Internal server error")
+            @ApiResponse(responseCode = "204", description = "Successfully saved patient details"),
+            @ApiResponse(responseCode = "400", description = "Parameters not valid"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @ResponseStatus(NO_CONTENT)
     @PutMapping(produces = APPLICATION_JSON_VALUE)

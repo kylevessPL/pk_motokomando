@@ -1,10 +1,11 @@
 package pl.motokomando.healthcare.api.medicines;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,9 +24,9 @@ import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-@Api
 @RestController
 @RequestMapping("/api/v1/medicines")
+@Tag(name = "Medicines API", description = "API searching medicines in FDA database")
 @Validated
 @RequiredArgsConstructor
 public class MedicinesServiceController {
@@ -33,16 +34,16 @@ public class MedicinesServiceController {
     private final MedicinesService medicinesService;
     private final MedicinesMapper medicinesMapper;
 
-    @ApiOperation(
-            value = "Search medicines by query string",
-            notes = "You are required to pass query string as a parameter; optional ASC/DESC sorting by medicine name & results limit available",
-            nickname = "searchMedicines"
+    @Operation(
+            summary = "Search medicines by query string",
+            description = "You are required to pass query string as a parameter; optional ASC/DESC sorting by medicine name & results limit available",
+            operationId = "searchMedicines"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successfully fetched medicines"),
-            @ApiResponse(code = 400, message = "Parameters not valid"),
-            @ApiResponse(code = 404, message = "No medicines found"),
-            @ApiResponse(code = 500, message = "Internal server error")
+            @ApiResponse(responseCode = "200", description = "Successfully fetched medicines"),
+            @ApiResponse(responseCode = "400", description = "Parameters not valid", content = @Content),
+            @ApiResponse(responseCode = "404", description = "No medicines found", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
     @GetMapping(produces = APPLICATION_JSON_VALUE)
     public List<MedicineResponse> search(@Valid MedicineQuery query) {
@@ -50,19 +51,19 @@ public class MedicinesServiceController {
         return medicinesMapper.mapToResponse(medicinesService.searchMedicine(command));
     }
 
-    @ApiOperation(
-            value = "Find medicine by FDA product NDC",
-            notes = "You are required to pass product NDC as a parameter",
-            nickname = "getMedicine"
+    @Operation(
+            summary = "Find medicine by FDA product NDC",
+            description = "You are required to pass product NDC as a parameter",
+            operationId = "getMedicine"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Successfully fecthed medicine details"),
-            @ApiResponse(code = 400, message = "Parameter not valid"),
-            @ApiResponse(code = 404, message = "Medicine not found"),
-            @ApiResponse(code = 500, message = "Internal server error")
+            @ApiResponse(responseCode = "200", description = "Successfully fecthed medicine details"),
+            @ApiResponse(responseCode = "400", description = "Parameter not valid", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Medicine not found", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
     @GetMapping(value = "/{productNDC}", produces = APPLICATION_JSON_VALUE)
-    public MedicineResponse getByProductNDC(@ApiParam(value = "Product NDC") @PathVariable @NotBlank(message = "Product NDC is mandatory") String productNDC) {
+    public MedicineResponse getByProductNDC(@Parameter(description = "Product NDC") @PathVariable @NotBlank(message = "Product NDC is mandatory") String productNDC) {
         return medicinesMapper.mapToResponse(medicinesService.getMedicine(productNDC));
     }
 

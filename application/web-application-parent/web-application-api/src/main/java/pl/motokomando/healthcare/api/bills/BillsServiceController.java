@@ -1,10 +1,11 @@
 package pl.motokomando.healthcare.api.bills;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -32,9 +33,9 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-@Api
 @RestController
 @RequestMapping("/api/v1/bills")
+@Tag(name = "Bills API", description = "API performing operations on bill resources")
 @Validated
 @RequiredArgsConstructor
 public class BillsServiceController {
@@ -43,15 +44,15 @@ public class BillsServiceController {
     private final BillsMapper billsMapper;
     private final JsonPatchHandler jsonPatchHandler;
 
-    @ApiOperation(
-            value = "Create new bill",
-            notes = "You are required to pass JSON body with bill amount value",
-            nickname = "createBill"
+    @Operation(
+            summary = "Create new bill",
+            description = "You are required to pass JSON body with bill amount value",
+            operationId = "createBill"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Successfully created bill"),
-            @ApiResponse(code = 400, message = "Parameters not valid"),
-            @ApiResponse(code = 500, message = "Internal server error")
+            @ApiResponse(responseCode = "201", description = "Successfully created bill"),
+            @ApiResponse(responseCode = "400", description = "Parameters not valid", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
     @ResponseStatus(CREATED)
     @PostMapping(produces = APPLICATION_JSON_VALUE)
@@ -60,20 +61,20 @@ public class BillsServiceController {
         return billsMapper.mapToBasicResponse(billsService.createBill(command));
     }
 
-    @ApiOperation(
-            value = "Update bill data",
-            notes = "You are required to pass JSON Patch body with update instructions",
-            nickname = "updateBill"
+    @Operation(
+            summary = "Update bill data",
+            description = "You are required to pass JSON Patch body with update instructions",
+            operationId = "updateBill"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Successfully updated bill data"),
-            @ApiResponse(code = 400, message = "Parameters not valid"),
-            @ApiResponse(code = 500, message = "Internal server error")
+            @ApiResponse(responseCode = "204", description = "Successfully updated bill data"),
+            @ApiResponse(responseCode = "400", description = "Parameters not valid"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @ResponseStatus(NO_CONTENT)
     @PatchMapping(path = "/{id}", consumes = "application/json-patch+json")
     public void update(
-            @ApiParam(value = "Bill ID") @PathVariable @Min(value = 1, message = "Bill ID must be a positive integer value") Integer id,
+            @Parameter(description = "Bill ID") @PathVariable @Min(value = 1, message = "Bill ID must be a positive integer value") Integer id,
             @RequestBody JsonPatch patchDocument) {
         BillResponse response = billsMapper.mapToResponse(billsService.getBill(id));
         BillRequest request = billsMapper.mapToRequest(response);
@@ -83,19 +84,19 @@ public class BillsServiceController {
         billsService.updateBill(command);
     }
 
-    @ApiOperation(
-            value = "Delete bill",
-            notes = "You are required to pass bill ID as a parameter",
-            nickname = "deleteBill"
+    @Operation(
+            summary = "Delete bill",
+            description = "You are required to pass bill ID as a parameter",
+            operationId = "deleteBill"
     )
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Successfully deleted bill"),
-            @ApiResponse(code = 400, message = "Parameters not valid"),
-            @ApiResponse(code = 500, message = "Internal server error")
+            @ApiResponse(responseCode = "204", description = "Successfully deleted bill"),
+            @ApiResponse(responseCode = "400", description = "Parameters not valid"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @ResponseStatus(NO_CONTENT)
     @DeleteMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
-    public void delete(@ApiParam(value = "Bill ID") @PathVariable @Min(value = 1, message = "Bill ID must be a positive integer value") Integer id) {
+    public void delete(@Parameter(description = "Bill ID") @PathVariable @Min(value = 1, message = "Bill ID must be a positive integer value") Integer id) {
         billsService.deleteBill(id);
     }
 

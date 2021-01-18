@@ -1,25 +1,24 @@
 package pl.motokomando.healthcare.dto.doctors;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pl.motokomando.healthcare.dto.doctors.utils.MedicalSpecialty;
 
-@ApiModel
+@Schema
 @NoArgsConstructor
 @Getter
 @Setter
 public class DoctorResponse {
 
-    @ApiModelProperty(value = "Doctor first name", example = "James")
+    @Schema(description = "Doctor first name", example = "James")
     private String firstName;
-    @ApiModelProperty(value = "Doctor last name", example = "Smith")
+    @Schema(description = "Doctor last name", example = "Smith")
     private String lastName;
-    @ApiModelProperty(value = "Doctor medical specialty")
+    @Schema(description = "Doctor medical specialty")
     private MedicalSpecialty specialty;
-    @ApiModelProperty(value = "Doctor phone number", example = "+48502672107")
+    @Schema(description = "Doctor phone number", example = "+48502672107")
     private String phoneNumber;
 
 }

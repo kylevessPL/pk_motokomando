@@ -1,7 +1,6 @@
 package pl.motokomando.healthcare.dto.patients.appointments;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,27 +8,27 @@ import pl.motokomando.healthcare.dto.patients.appointments.utils.AppointmentStat
 
 import java.time.LocalDateTime;
 
-@ApiModel
+@Schema
 @NoArgsConstructor
 @Getter
 @Setter
 public class AppointmentResponse {
 
-    @ApiModelProperty(value = "Appointment ID", example = "1")
+    @Schema(description = "Appointment ID", example = "1")
     private Integer id;
-    @ApiModelProperty(value = "Schedule date")
+    @Schema(description = "Schedule date")
     private LocalDateTime scheduleDate;
-    @ApiModelProperty(value = "Appointment date")
+    @Schema(description = "Appointment date")
     private LocalDateTime appointmentDate;
-    @ApiModelProperty(value = "Bill ID", example = "1")
+    @Schema(description = "Bill ID", example = "1")
     private Integer billId;
-    @ApiModelProperty(value = "Doctor ID", example = "1")
+    @Schema(description = "Doctor ID", example = "1")
     private Integer doctorId;
-    @ApiModelProperty(value = "Prescription ID", example = "1")
+    @Schema(description = "Prescription ID", example = "1")
     private Integer prescriptionId;
-    @ApiModelProperty(value = "Diagnosis notes", example = "Cranial tumour in the right frontal lobe")
+    @Schema(description = "Diagnosis notes", example = "Cranial tumour in the right frontal lobe")
     private String diagnosis;
-    @ApiModelProperty(value = "Appointment status")
+    @Schema(description = "Appointment status")
     private AppointmentStatus appointmentStatus;
 
 }
