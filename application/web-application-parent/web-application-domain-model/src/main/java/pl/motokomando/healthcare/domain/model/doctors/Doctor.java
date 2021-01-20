@@ -8,6 +8,7 @@ import pl.motokomando.healthcare.domain.model.doctors.utils.MedicalSpecialty;
 @Getter
 public final class Doctor {
 
+    private final Integer id;
     private final String firstName;
     private final String lastName;
     private final MedicalSpecialty specialty;

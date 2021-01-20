@@ -2,7 +2,6 @@ package pl.motokomando.healthcare.infrastructure.mapper;
 
 import org.springframework.stereotype.Component;
 import pl.motokomando.healthcare.domain.model.patients.appointments.Appointment;
-import pl.motokomando.healthcare.domain.model.patients.appointments.AppointmentBasic;
 import pl.motokomando.healthcare.domain.model.patients.appointments.AppointmentBasicPage;
 import pl.motokomando.healthcare.domain.model.patients.appointments.utils.AppointmentBasicPaged;
 import pl.motokomando.healthcare.domain.model.utils.PageMeta;
@@ -28,19 +27,11 @@ public class AppointmentsEntityMapper {
                 appointmentBasicPagedList);
     }
 
-    public AppointmentBasic mapToAppointmentBasic(Integer id) {
-        return createAppointmentBasic(id);
-    }
-
     private AppointmentBasicPaged createAppointmentBasicPaged(AppointmentsEntity appointmentsEntity) {
         return new AppointmentBasicPaged(
                 appointmentsEntity.getId(),
                 appointmentsEntity.getAppointmentDate(),
                 appointmentsEntity.getAppointmentStatus());
-    }
-
-    private AppointmentBasic createAppointmentBasic(Integer id) {
-        return new AppointmentBasic(id);
     }
 
     private Appointment createAppointment(AppointmentsEntity appointmentsEntity) {

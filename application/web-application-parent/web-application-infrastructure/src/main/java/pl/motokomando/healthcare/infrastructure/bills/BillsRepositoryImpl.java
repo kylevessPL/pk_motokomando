@@ -6,9 +6,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.motokomando.healthcare.domain.bills.BillsRepository;
 import pl.motokomando.healthcare.domain.model.bills.Bill;
-import pl.motokomando.healthcare.domain.model.bills.BillBasic;
 import pl.motokomando.healthcare.domain.model.bills.utils.BillPatchRequestCommand;
+import pl.motokomando.healthcare.domain.model.utils.Basic;
 import pl.motokomando.healthcare.infrastructure.dao.BillsEntityDao;
+import pl.motokomando.healthcare.infrastructure.mapper.BasicEntityMapper;
 import pl.motokomando.healthcare.infrastructure.mapper.BillsEntityMapper;
 import pl.motokomando.healthcare.infrastructure.model.BillsEntity;
 
@@ -21,12 +22,13 @@ import java.util.Optional;
 public class BillsRepositoryImpl implements BillsRepository {
 
     private final BillsEntityDao dao;
-    private final BillsEntityMapper mapper;
+    private final BillsEntityMapper billsEntityMapper;
+    private final BasicEntityMapper basicEntityMapper;
 
     @Override
     @Transactional(readOnly = true)
     public Optional<Bill> getBillById(Integer id) {
-        return mapper.mapToBill(dao.findById(id));
+        return billsEntityMapper.mapToBill(dao.findById(id));
     }
 
     @Override
@@ -38,10 +40,10 @@ public class BillsRepositoryImpl implements BillsRepository {
 
     @Override
     @Transactional
-    public BillBasic createBill(BigDecimal amount) {
+    public Basic createBill(BigDecimal amount) {
         BillsEntity billsEntity = createEntity(amount);
         Integer id = dao.save(billsEntity).getId();
-        return mapper.mapToBillBasic(id);
+        return basicEntityMapper.mapToBasic(id);
     }
 
     @Override

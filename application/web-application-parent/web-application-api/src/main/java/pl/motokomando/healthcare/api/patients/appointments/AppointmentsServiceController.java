@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import pl.motokomando.healthcare.api.mapper.BasicMapper;
 import pl.motokomando.healthcare.api.patients.appointments.mapper.AppointmentsMapper;
 import pl.motokomando.healthcare.api.patients.appointments.utils.AppointmentPagedQuery;
 import pl.motokomando.healthcare.api.patients.appointments.utils.AppointmentPatchRequest;
@@ -31,9 +32,9 @@ import pl.motokomando.healthcare.domain.model.patients.appointments.utils.Appoin
 import pl.motokomando.healthcare.domain.model.utils.BasicPagedQueryCommand;
 import pl.motokomando.healthcare.domain.patients.appointments.AppointmentsService;
 import pl.motokomando.healthcare.dto.patients.appointments.AppointmentBasicPageResponse;
-import pl.motokomando.healthcare.dto.patients.appointments.AppointmentBasicResponse;
 import pl.motokomando.healthcare.dto.patients.appointments.AppointmentResponse;
 import pl.motokomando.healthcare.dto.patients.appointments.utils.AppointmentBasicPaged;
+import pl.motokomando.healthcare.dto.utils.BasicResponse;
 
 import javax.json.JsonPatch;
 import javax.validation.Valid;
@@ -52,6 +53,7 @@ public class AppointmentsServiceController {
 
     private final AppointmentsService appointmentsService;
     private final AppointmentsMapper appointmentsMapper;
+    private final BasicMapper basicMapper;
     private final JsonPatchHandler jsonPatchHandler;
 
     @Operation(
@@ -93,11 +95,11 @@ public class AppointmentsServiceController {
     })
     @ResponseStatus(CREATED)
     @PostMapping(value = "/{id}/appointments", produces = APPLICATION_JSON_VALUE)
-    public AppointmentBasicResponse create(
+    public BasicResponse create(
             @Parameter(description = "Patient ID") @PathVariable @Min(value = 1, message = "Patient ID must be a positive integer value") Integer id,
             @RequestBody @Valid AppointmentRequest request) {
         AppointmentRequestCommand command = appointmentsMapper.mapToCommand(request);
-        return appointmentsMapper.mapToBasicResponse(appointmentsService.createAppointment(id, command));
+        return basicMapper.mapToBasicResponse(appointmentsService.createAppointment(id, command));
     }
 
     @Operation(

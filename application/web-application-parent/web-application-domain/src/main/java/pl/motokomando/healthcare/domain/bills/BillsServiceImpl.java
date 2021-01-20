@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.motokomando.healthcare.domain.model.bills.Bill;
-import pl.motokomando.healthcare.domain.model.bills.BillBasic;
 import pl.motokomando.healthcare.domain.model.bills.utils.BillPatchRequestCommand;
 import pl.motokomando.healthcare.domain.model.bills.utils.BillRequestCommand;
+import pl.motokomando.healthcare.domain.model.utils.Basic;
 import pl.motokomando.healthcare.domain.model.utils.MyException;
 
 import static pl.motokomando.healthcare.domain.model.utils.ErrorCode.BILL_NOT_FOUND;
@@ -26,7 +26,7 @@ public class BillsServiceImpl implements BillsService {
 
     @Override
     @Transactional
-    public BillBasic createBill(BillRequestCommand command) {
+    public Basic createBill(BillRequestCommand command) {
         return repository.createBill(command.getAmount());
     }
 

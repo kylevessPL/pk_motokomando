@@ -27,7 +27,7 @@ import java.util.Optional;
 public class PatientsRepositoryImpl implements PatientsRepository {
 
     private final PatientsEntityDao dao;
-    private final PatientsEntityMapper mapper;
+    private final PatientsEntityMapper patientsEntityMapper;
 
     @Override
     @Transactional(readOnly = true)
@@ -36,7 +36,7 @@ public class PatientsRepositoryImpl implements PatientsRepository {
         Integer size = pageProperties.getSize();
         Sort sort = createSortProperty(sortProperties);
         Page<PatientsEntity> result = getAllPaged(page, size, sort);
-        return mapper.mapToPatientBasicPage(
+        return patientsEntityMapper.mapToPatientBasicPage(
                 result.hasContent() ? result.getContent() : Collections.emptyList(),
                 result.isFirst(),
                 result.isLast(),
@@ -50,7 +50,7 @@ public class PatientsRepositoryImpl implements PatientsRepository {
     @Override
     @Transactional(readOnly = true)
     public Optional<PatientDetails> getPatientById(Integer id) {
-        return mapper.mapToPatient(dao.findById(id));
+        return patientsEntityMapper.mapToPatient(dao.findById(id));
     }
 
     @Override

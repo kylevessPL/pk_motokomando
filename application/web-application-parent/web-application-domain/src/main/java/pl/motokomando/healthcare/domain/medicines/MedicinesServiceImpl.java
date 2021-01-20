@@ -22,7 +22,7 @@ import static pl.motokomando.healthcare.domain.model.utils.ErrorCode.NO_MEDICINE
 @Service
 public class MedicinesServiceImpl implements MedicinesService {
 
-    private static final Duration REQUEST_TIMEOUT = Duration.ofSeconds(10);
+    private static final Duration REQUEST_TIMEOUT = Duration.ofSeconds(15);
 
     private final WebClient openFDAClient;
 
