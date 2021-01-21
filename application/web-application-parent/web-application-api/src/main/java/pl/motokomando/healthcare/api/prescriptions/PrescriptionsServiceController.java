@@ -21,6 +21,7 @@ import pl.motokomando.healthcare.api.mapper.BasicMapper;
 import pl.motokomando.healthcare.api.prescriptions.mapper.PrescriptionMapper;
 import pl.motokomando.healthcare.api.prescriptions.utils.PrescriptionRequest;
 import pl.motokomando.healthcare.api.utils.JsonPatchHandler;
+import pl.motokomando.healthcare.api.utils.ResourceCreatedResponse;
 import pl.motokomando.healthcare.domain.model.prescriptions.utils.PrescriptionPatchRequestCommand;
 import pl.motokomando.healthcare.domain.model.prescriptions.utils.PrescriptionRequestCommand;
 import pl.motokomando.healthcare.domain.prescriptions.PrescriptionsService;
@@ -74,9 +75,10 @@ public class PrescriptionsServiceController {
     })
     @ResponseStatus(CREATED)
     @PostMapping(produces = APPLICATION_JSON_VALUE)
-    public BasicResponse create(@RequestBody @Valid PrescriptionRequest request) {
+    public ResourceCreatedResponse create(@RequestBody @Valid PrescriptionRequest request) {
         PrescriptionRequestCommand command = prescriptionMapper.mapToCommand(request);
-        return basicMapper.mapToBasicResponse(prescriptionsService.createPrescription(command));
+        BasicResponse response = basicMapper.mapToBasicResponse(prescriptionsService.createPrescription(command));
+        return new ResourceCreatedResponse(response.getId());
     }
 
     @Operation(

@@ -21,6 +21,7 @@ import pl.motokomando.healthcare.api.bills.mapper.BillsMapper;
 import pl.motokomando.healthcare.api.bills.utils.BillRequest;
 import pl.motokomando.healthcare.api.mapper.BasicMapper;
 import pl.motokomando.healthcare.api.utils.JsonPatchHandler;
+import pl.motokomando.healthcare.api.utils.ResourceCreatedResponse;
 import pl.motokomando.healthcare.domain.bills.BillsService;
 import pl.motokomando.healthcare.domain.model.bills.utils.BillPatchRequestCommand;
 import pl.motokomando.healthcare.domain.model.bills.utils.BillRequestCommand;
@@ -74,9 +75,10 @@ public class BillsServiceController {
     })
     @ResponseStatus(CREATED)
     @PostMapping(produces = APPLICATION_JSON_VALUE)
-    public BasicResponse create(@RequestBody @Valid BillRequest request) {
+    public ResourceCreatedResponse create(@RequestBody @Valid BillRequest request) {
         BillRequestCommand command = billsMapper.mapToCommand(request);
-        return basicMapper.mapToBasicResponse(billsService.createBill(command));
+        BasicResponse response = basicMapper.mapToBasicResponse(billsService.createBill(command));
+        return new ResourceCreatedResponse(response.getId());
     }
 
     @Operation(

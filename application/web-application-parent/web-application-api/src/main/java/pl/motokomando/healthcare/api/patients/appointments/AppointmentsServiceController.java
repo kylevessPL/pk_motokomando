@@ -26,6 +26,7 @@ import pl.motokomando.healthcare.api.patients.appointments.utils.AppointmentRequ
 import pl.motokomando.healthcare.api.patients.appointments.utils.AppointmentRequestParams;
 import pl.motokomando.healthcare.api.utils.JsonPatchHandler;
 import pl.motokomando.healthcare.api.utils.PageResponse;
+import pl.motokomando.healthcare.api.utils.ResourceCreatedResponse;
 import pl.motokomando.healthcare.domain.model.patients.appointments.utils.AppointmentPatchRequestCommand;
 import pl.motokomando.healthcare.domain.model.patients.appointments.utils.AppointmentRequestCommand;
 import pl.motokomando.healthcare.domain.model.patients.appointments.utils.AppointmentRequestParamsCommand;
@@ -95,11 +96,12 @@ public class AppointmentsServiceController {
     })
     @ResponseStatus(CREATED)
     @PostMapping(value = "/{id}/appointments", produces = APPLICATION_JSON_VALUE)
-    public BasicResponse create(
+    public ResourceCreatedResponse create(
             @Parameter(description = "Patient ID") @PathVariable @Min(value = 1, message = "Patient ID must be a positive integer value") Integer id,
             @RequestBody @Valid AppointmentRequest request) {
         AppointmentRequestCommand command = appointmentsMapper.mapToCommand(request);
-        return basicMapper.mapToBasicResponse(appointmentsService.createAppointment(id, command));
+        BasicResponse response = basicMapper.mapToBasicResponse(appointmentsService.createAppointment(id, command));
+        return new ResourceCreatedResponse(response.getId());
     }
 
     @Operation(

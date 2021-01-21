@@ -20,6 +20,7 @@ import pl.motokomando.healthcare.api.mapper.BasicMapper;
 import pl.motokomando.healthcare.api.prescriptions.medicines.mapper.PrescriptionMedicineMapper;
 import pl.motokomando.healthcare.api.prescriptions.medicines.utils.PrescriptionMedicineBasicRequest;
 import pl.motokomando.healthcare.api.prescriptions.medicines.utils.PrescriptionMedicineRequest;
+import pl.motokomando.healthcare.api.utils.ResourceCreatedResponse;
 import pl.motokomando.healthcare.domain.model.prescriptions.medicines.utils.PrescriptionMedicineBasicRequestCommand;
 import pl.motokomando.healthcare.domain.model.prescriptions.medicines.utils.PrescriptionMedicineRequestCommand;
 import pl.motokomando.healthcare.domain.prescriptions.medicines.PrescriptionMedicinesService;
@@ -72,11 +73,12 @@ public class PrescriptionMedicinesServiceController {
     })
     @ResponseStatus(CREATED)
     @PostMapping(value = "/{id}/medicines", produces = APPLICATION_JSON_VALUE)
-    public BasicResponse create(
+    public ResourceCreatedResponse create(
             @Parameter(description = "Prescription ID") @PathVariable @Min(value = 1, message = "Prescription ID must be a positive integer value") Integer id,
             @RequestBody @Valid PrescriptionMedicineRequest request) {
         PrescriptionMedicineRequestCommand command = prescriptionMedicineMapper.mapToCommand(request);
-        return basicMapper.mapToBasicResponse(prescriptionMedicinesService.createPrescriptionMedicine(id, command));
+        BasicResponse response = basicMapper.mapToBasicResponse(prescriptionMedicinesService.createPrescriptionMedicine(id, command));
+        return new ResourceCreatedResponse(response.getId());
     }
 
     @Operation(
