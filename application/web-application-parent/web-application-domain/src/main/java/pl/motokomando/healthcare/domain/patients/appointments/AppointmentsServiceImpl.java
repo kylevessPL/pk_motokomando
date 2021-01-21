@@ -6,11 +6,11 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.motokomando.healthcare.domain.bills.BillsRepository;
 import pl.motokomando.healthcare.domain.doctors.DoctorsRepository;
 import pl.motokomando.healthcare.domain.model.patients.appointments.Appointment;
-import pl.motokomando.healthcare.domain.model.patients.appointments.AppointmentBasic;
 import pl.motokomando.healthcare.domain.model.patients.appointments.AppointmentBasicPage;
 import pl.motokomando.healthcare.domain.model.patients.appointments.utils.AppointmentPatchRequestCommand;
 import pl.motokomando.healthcare.domain.model.patients.appointments.utils.AppointmentRequestCommand;
 import pl.motokomando.healthcare.domain.model.patients.appointments.utils.AppointmentRequestParamsCommand;
+import pl.motokomando.healthcare.domain.model.utils.Basic;
 import pl.motokomando.healthcare.domain.model.utils.BasicPagedQueryCommand;
 import pl.motokomando.healthcare.domain.model.utils.MyException;
 import pl.motokomando.healthcare.domain.model.utils.PageMeta;
@@ -67,11 +67,11 @@ public class AppointmentsServiceImpl implements AppointmentsService {
 
     @Override
     @Transactional
-    public AppointmentBasic createAppointment(Integer patientId, AppointmentRequestCommand command) {
+    public Basic createAppointment(Integer patientId, AppointmentRequestCommand command) {
         checkPatientExistence(patientId);
         checkDoctorExistence(command.getDoctorId());
         checkDateAvailability(command.getAppointmentDate());
-        AppointmentBasic appointmentBasic = appointmentsRepository.createAppointment(command);
+        Basic appointmentBasic = appointmentsRepository.createAppointment(command);
         patientsAppointmentsRepository.createPatientAppointment(patientId, appointmentBasic.getId());
         return appointmentBasic;
     }

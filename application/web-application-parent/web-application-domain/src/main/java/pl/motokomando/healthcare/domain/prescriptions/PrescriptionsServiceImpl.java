@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.motokomando.healthcare.domain.model.prescriptions.Prescription;
-import pl.motokomando.healthcare.domain.model.prescriptions.PrescriptionBasic;
 import pl.motokomando.healthcare.domain.model.prescriptions.utils.PrescriptionPatchRequestCommand;
 import pl.motokomando.healthcare.domain.model.prescriptions.utils.PrescriptionRequestCommand;
+import pl.motokomando.healthcare.domain.model.utils.Basic;
 import pl.motokomando.healthcare.domain.model.utils.MyException;
 
 import static pl.motokomando.healthcare.domain.model.utils.ErrorCode.PRESCRIPTION_NOT_FOUND;
@@ -26,7 +26,7 @@ public class PrescriptionsServiceImpl implements PrescriptionsService {
 
     @Override
     @Transactional
-    public PrescriptionBasic createPrescription(PrescriptionRequestCommand command) {
+    public Basic createPrescription(PrescriptionRequestCommand command) {
         return prescriptionsRepository.createPrescription(command);
     }
 

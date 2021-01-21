@@ -7,15 +7,16 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.motokomando.healthcare.domain.model.patients.appointments.Appointment;
-import pl.motokomando.healthcare.domain.model.patients.appointments.AppointmentBasic;
 import pl.motokomando.healthcare.domain.model.patients.appointments.AppointmentBasicPage;
 import pl.motokomando.healthcare.domain.model.patients.appointments.utils.AppointmentPatchRequestCommand;
 import pl.motokomando.healthcare.domain.model.patients.appointments.utils.AppointmentRequestCommand;
+import pl.motokomando.healthcare.domain.model.utils.Basic;
 import pl.motokomando.healthcare.domain.model.utils.PageProperties;
 import pl.motokomando.healthcare.domain.model.utils.SortProperties;
 import pl.motokomando.healthcare.domain.patients.appointments.AppointmentsRepository;
 import pl.motokomando.healthcare.infrastructure.dao.AppointmentsEntityDao;
 import pl.motokomando.healthcare.infrastructure.mapper.AppointmentsEntityMapper;
+import pl.motokomando.healthcare.infrastructure.mapper.BasicEntityMapper;
 import pl.motokomando.healthcare.infrastructure.model.AppointmentsEntity;
 
 import java.sql.Timestamp;
@@ -28,7 +29,8 @@ import java.util.List;
 public class AppointmentsRepositoryImpl implements AppointmentsRepository {
 
     private final AppointmentsEntityDao dao;
-    private final AppointmentsEntityMapper mapper;
+    private final AppointmentsEntityMapper appointmentsEntityMapper;
+    private final BasicEntityMapper basicEntityMapper;
 
     @Override
     @Transactional(readOnly = true)
@@ -37,7 +39,7 @@ public class AppointmentsRepositoryImpl implements AppointmentsRepository {
         Integer size = pageProperties.getSize();
         Sort sort = createSortProperty(sortProperties);
         Page<AppointmentsEntity> result = getAllPaged(appointmentIdList, page, size, sort);
-        return mapper.mapToAppointmentBasicPage(
+        return appointmentsEntityMapper.mapToAppointmentBasicPage(
                 result.hasContent() ? result.getContent() : Collections.emptyList(),
                 result.isFirst(),
                 result.isLast(),
@@ -51,7 +53,7 @@ public class AppointmentsRepositoryImpl implements AppointmentsRepository {
     @Override
     @Transactional(readOnly = true)
     public Appointment getAppointmentById(Integer id) {
-        return mapper.mapToAppointment(dao.getOne(id));
+        return appointmentsEntityMapper.mapToAppointment(dao.getOne(id));
     }
 
     @Override
@@ -63,10 +65,10 @@ public class AppointmentsRepositoryImpl implements AppointmentsRepository {
 
     @Override
     @Transactional
-    public AppointmentBasic createAppointment(AppointmentRequestCommand data) {
+    public Basic createAppointment(AppointmentRequestCommand data) {
         AppointmentsEntity appointmentsEntity = createEntity(data);
         Integer id = dao.save(appointmentsEntity).getId();
-        return mapper.mapToAppointmentBasic(id);
+        return basicEntityMapper.mapToBasic(id);
     }
 
     @Override

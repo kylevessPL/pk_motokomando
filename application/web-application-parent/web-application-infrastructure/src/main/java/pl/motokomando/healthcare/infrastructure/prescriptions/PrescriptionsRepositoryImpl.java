@@ -5,11 +5,12 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.motokomando.healthcare.domain.model.prescriptions.Prescription;
-import pl.motokomando.healthcare.domain.model.prescriptions.PrescriptionBasic;
 import pl.motokomando.healthcare.domain.model.prescriptions.utils.PrescriptionPatchRequestCommand;
 import pl.motokomando.healthcare.domain.model.prescriptions.utils.PrescriptionRequestCommand;
+import pl.motokomando.healthcare.domain.model.utils.Basic;
 import pl.motokomando.healthcare.domain.prescriptions.PrescriptionsRepository;
 import pl.motokomando.healthcare.infrastructure.dao.PrescriptionsEntityDao;
+import pl.motokomando.healthcare.infrastructure.mapper.BasicEntityMapper;
 import pl.motokomando.healthcare.infrastructure.mapper.PrescriptionsEntityMapper;
 import pl.motokomando.healthcare.infrastructure.model.PrescriptionsEntity;
 
@@ -21,12 +22,13 @@ import java.util.Optional;
 public class PrescriptionsRepositoryImpl implements PrescriptionsRepository {
 
     private final PrescriptionsEntityDao dao;
-    private final PrescriptionsEntityMapper mapper;
+    private final PrescriptionsEntityMapper prescriptionsEntityMapper;
+    private final BasicEntityMapper basicEntityMapper;
 
     @Override
     @Transactional(readOnly = true)
     public Optional<Prescription> getPrescriptionById(Integer id) {
-        return mapper.mapToPrescription(dao.findById(id));
+        return prescriptionsEntityMapper.mapToPrescription(dao.findById(id));
     }
 
     @Override
@@ -38,10 +40,10 @@ public class PrescriptionsRepositoryImpl implements PrescriptionsRepository {
 
     @Override
     @Transactional
-    public PrescriptionBasic createPrescription(PrescriptionRequestCommand data) {
+    public Basic createPrescription(PrescriptionRequestCommand data) {
         PrescriptionsEntity prescriptionsEntity = createEntity(data);
         Integer id = dao.save(prescriptionsEntity).getId();
-        return mapper.mapToPrescriptionBasic(id);
+        return basicEntityMapper.mapToBasic(id);
     }
 
     @Override

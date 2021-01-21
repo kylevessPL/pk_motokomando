@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,12 +19,14 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import pl.motokomando.healthcare.api.bills.mapper.BillsMapper;
 import pl.motokomando.healthcare.api.bills.utils.BillRequest;
+import pl.motokomando.healthcare.api.mapper.BasicMapper;
 import pl.motokomando.healthcare.api.utils.JsonPatchHandler;
+import pl.motokomando.healthcare.api.utils.ResourceCreatedResponse;
 import pl.motokomando.healthcare.domain.bills.BillsService;
 import pl.motokomando.healthcare.domain.model.bills.utils.BillPatchRequestCommand;
 import pl.motokomando.healthcare.domain.model.bills.utils.BillRequestCommand;
-import pl.motokomando.healthcare.dto.bills.BillBasicResponse;
 import pl.motokomando.healthcare.dto.bills.BillResponse;
+import pl.motokomando.healthcare.dto.utils.BasicResponse;
 
 import javax.json.JsonPatch;
 import javax.validation.Valid;
@@ -42,7 +45,23 @@ public class BillsServiceController {
 
     private final BillsService billsService;
     private final BillsMapper billsMapper;
+    private final BasicMapper basicMapper;
     private final JsonPatchHandler jsonPatchHandler;
+
+    @Operation(
+            summary = "Get bill details by ID",
+            description = "You are required to pass bill ID",
+            operationId = "getBill"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully fetched bills details"),
+            @ApiResponse(responseCode = "400", description = "Parameters not valid or no such bill with provided ID", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+    })
+    @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
+    public BillResponse getById(@Parameter(description = "Bill ID") @PathVariable @Min(value = 1, message = "Bill ID must be a positive integer value") Integer id) {
+        return billsMapper.mapToResponse(billsService.getBill(id));
+    }
 
     @Operation(
             summary = "Create new bill",
@@ -56,9 +75,10 @@ public class BillsServiceController {
     })
     @ResponseStatus(CREATED)
     @PostMapping(produces = APPLICATION_JSON_VALUE)
-    public BillBasicResponse create(@RequestBody @Valid BillRequest request) {
+    public ResourceCreatedResponse create(@RequestBody @Valid BillRequest request) {
         BillRequestCommand command = billsMapper.mapToCommand(request);
-        return billsMapper.mapToBasicResponse(billsService.createBill(command));
+        BasicResponse response = basicMapper.mapToBasicResponse(billsService.createBill(command));
+        return new ResourceCreatedResponse(response.getId());
     }
 
     @Operation(

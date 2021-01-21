@@ -37,6 +37,7 @@ public class DoctorsEntityMapper {
 
     private Doctor createDoctor(DoctorsEntity doctorsEntity) {
         return new Doctor(
+                doctorsEntity.getId(),
                 doctorsEntity.getFirstName(),
                 doctorsEntity.getLastName(),
                 doctorsEntity.getSpecialty(),

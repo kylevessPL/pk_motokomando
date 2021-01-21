@@ -4,8 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.motokomando.healthcare.domain.medicines.MedicinesService;
-import pl.motokomando.healthcare.domain.model.prescriptions.medicines.utils.PrescriptionMedicineDeleteRequestCommand;
+import pl.motokomando.healthcare.domain.model.prescriptions.medicines.PrescriptionMedicine;
+import pl.motokomando.healthcare.domain.model.prescriptions.medicines.utils.PrescriptionMedicineBasicRequestCommand;
 import pl.motokomando.healthcare.domain.model.prescriptions.medicines.utils.PrescriptionMedicineRequestCommand;
+import pl.motokomando.healthcare.domain.model.utils.Basic;
 import pl.motokomando.healthcare.domain.model.utils.MyException;
 import pl.motokomando.healthcare.domain.model.utils.NoMedicinesFoundException;
 import pl.motokomando.healthcare.domain.prescriptions.PrescriptionsRepository;
@@ -23,19 +25,32 @@ public class PrescriptionMedicinesServiceImpl implements PrescriptionMedicinesSe
     private final PrescriptionMedicinesRepository prescriptionMedicinesRepository;
 
     @Override
-    @Transactional
-    public void createPrescriptionMedicine(Integer prescriptionId, PrescriptionMedicineRequestCommand command) {
+    @Transactional(readOnly = true)
+    public PrescriptionMedicine getPrescriptionMedicine(PrescriptionMedicineBasicRequestCommand command) {
+        Integer prescriptionId = command.getPrescriptionId();
+        Integer prescriptionMedicineId = command.getPrescriptionMedicineId();
         checkPrescriptionExistence(prescriptionId);
-        checkPrescriptionMedicineExistence(prescriptionId, command.getProductNDC());
-        checkMedicineExistence(command.getProductNDC());
-        prescriptionMedicinesRepository.createPrescriptionMedicine(prescriptionId, command.getProductNDC());
+        return prescriptionMedicinesRepository.getPrescriptionMedicine(prescriptionId, prescriptionMedicineId)
+                .orElseThrow(() -> new MyException(PRESCRIPTION_MEDICINE_NOT_FOUND));
     }
 
     @Override
     @Transactional
-    public void deletePrescriptionMedicine(PrescriptionMedicineDeleteRequestCommand command) {
-        boolean deleteResult = prescriptionMedicinesRepository.deletePrescriptionMedicine(
-                command.getPrescriptionId(), command.getProductNDC());
+    public Basic createPrescriptionMedicine(Integer prescriptionId, PrescriptionMedicineRequestCommand command) {
+        String productNDC = command.getProductNDC();
+        checkPrescriptionExistence(prescriptionId);
+        checkPrescriptionMedicineExistence(prescriptionId, productNDC);
+        checkMedicineExistence(productNDC);
+        return prescriptionMedicinesRepository.createPrescriptionMedicine(prescriptionId, productNDC);
+    }
+
+    @Override
+    @Transactional
+    public void deletePrescriptionMedicine(PrescriptionMedicineBasicRequestCommand command) {
+        Integer prescriptionId = command.getPrescriptionId();
+        Integer prescriptionMedicineId = command.getPrescriptionMedicineId();
+        checkPrescriptionExistence(prescriptionId);
+        boolean deleteResult = prescriptionMedicinesRepository.deletePrescriptionMedicine(prescriptionId, prescriptionMedicineId);
         if (!deleteResult) {
             throw new MyException(PRESCRIPTION_MEDICINE_NOT_FOUND);
         }

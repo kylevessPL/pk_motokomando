@@ -19,12 +19,12 @@ import java.util.Optional;
 public class PatientRecordsRepositoryImpl implements PatientRecordsRepository {
 
     private final PatientRecordsEntityDao dao;
-    private final PatientRecordsEntityMapper mapper;
+    private final PatientRecordsEntityMapper patientRecordsEntityMapper;
 
     @Override
     @Transactional(readOnly = true)
     public Optional<PatientRecord> getPatientRecordById(Integer id) {
-        return mapper.mapToPatientRecord(dao.findById(id));
+        return patientRecordsEntityMapper.mapToPatientRecord(dao.findById(id));
     }
 
     @Override
@@ -37,7 +37,7 @@ public class PatientRecordsRepositoryImpl implements PatientRecordsRepository {
     @Override
     @Transactional(readOnly = true)
     public PatientBasicInfo getPatientRecordBasicByPatientId(Integer patientId) {
-        return mapper.mapToPatientBasicInfo(dao.getByPatientId(patientId));
+        return patientRecordsEntityMapper.mapToPatientBasicInfo(dao.getByPatientId(patientId));
     }
 
     @Override
