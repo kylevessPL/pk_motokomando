@@ -3,10 +3,13 @@ package pl.motokomando.healthcare.domain.patients;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.motokomando.healthcare.domain.doctors.DoctorsRepository;
+import pl.motokomando.healthcare.domain.model.doctors.Doctor;
 import pl.motokomando.healthcare.domain.model.patients.Patient;
 import pl.motokomando.healthcare.domain.model.patients.PatientBasicPage;
 import pl.motokomando.healthcare.domain.model.patients.PatientHealthInfo;
 import pl.motokomando.healthcare.domain.model.patients.appointments.LatestAppointment;
+import pl.motokomando.healthcare.domain.model.patients.appointments.LatestAppointmentBasic;
 import pl.motokomando.healthcare.domain.model.patients.records.CurrentHealth;
 import pl.motokomando.healthcare.domain.model.patients.records.utils.PatientBasicInfo;
 import pl.motokomando.healthcare.domain.model.patients.utils.PatientDetails;
@@ -32,6 +35,7 @@ public class PatientsServiceImpl implements PatientsService {
     private final PatientRecordsRepository patientRecordsRepository;
     private final AppointmentsRepository appointmentsRepository;
     private final PatientsAppointmentsRepository patientsAppointmentsRepository;
+    private final DoctorsRepository doctorsRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -81,7 +85,18 @@ public class PatientsServiceImpl implements PatientsService {
         if (appointmentIdList.isEmpty()) {
             return Optional.empty();
         }
-        return Optional.of(appointmentsRepository.getLatestAppointment(appointmentIdList));
+        LatestAppointmentBasic latestAppointmentBasic = appointmentsRepository.getLatestAppointmentBasic(appointmentIdList);
+        Doctor doctor = doctorsRepository.getDoctorFullById(latestAppointmentBasic.getDoctorId());
+        return Optional.of(createLatestAppointment(latestAppointmentBasic, doctor));
+    }
+
+    private LatestAppointment createLatestAppointment(LatestAppointmentBasic latestAppointmentBasic, Doctor doctor) {
+        String doctorFullName = doctor.getFirstName() + ' ' + doctor.getLastName();
+        return new LatestAppointment(
+                latestAppointmentBasic.getAppointmentDate(),
+                doctorFullName,
+                latestAppointmentBasic.getDiagnosis()
+        );
     }
 
 }

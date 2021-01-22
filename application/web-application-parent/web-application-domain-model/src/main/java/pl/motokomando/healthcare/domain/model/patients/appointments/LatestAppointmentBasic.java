@@ -7,10 +7,10 @@ import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
 @Getter
-public final class LatestAppointment {
+public final class LatestAppointmentBasic {
 
     private final LocalDateTime appointmentDate;
-    private final String doctorFullName;
+    private final Integer doctorId;
     private final String diagnosis;
 
 }

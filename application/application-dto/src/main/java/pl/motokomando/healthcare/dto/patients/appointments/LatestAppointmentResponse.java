@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 public class LatestAppointmentResponse {
 
     private LocalDateTime appointmentDate;
+    private String doctorFullName;
     private String diagnosis;
 
 }
