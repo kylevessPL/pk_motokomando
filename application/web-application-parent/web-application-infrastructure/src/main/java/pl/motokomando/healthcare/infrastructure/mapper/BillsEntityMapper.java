@@ -9,6 +9,10 @@ import java.util.Optional;
 @Component
 public class BillsEntityMapper {
 
+    public Bill mapToBill(BillsEntity billsEntity) {
+        return createBill(billsEntity);
+    }
+
     public Optional<Bill> mapToBill(Optional<BillsEntity> billsEntity) {
         return billsEntity.map(this::createBill);
     }

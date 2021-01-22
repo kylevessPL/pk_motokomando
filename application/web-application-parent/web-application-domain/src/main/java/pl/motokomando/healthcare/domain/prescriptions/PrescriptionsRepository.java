@@ -9,6 +9,7 @@ import java.util.Optional;
 
 public interface PrescriptionsRepository {
 
+    Prescription getFullPrescriptionById(Integer id);
     Optional<Prescription> getPrescriptionById(Integer id);
     void updatePrescription(PrescriptionPatchRequestCommand data);
     Basic createPrescription(PrescriptionRequestCommand data);

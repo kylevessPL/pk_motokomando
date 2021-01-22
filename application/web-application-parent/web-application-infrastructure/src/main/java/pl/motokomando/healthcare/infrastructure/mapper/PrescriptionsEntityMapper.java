@@ -9,6 +9,10 @@ import java.util.Optional;
 @Component
 public class PrescriptionsEntityMapper {
 
+    public Prescription mapToPrescription(PrescriptionsEntity prescriptionsEntity) {
+        return createPrescription(prescriptionsEntity);
+    }
+
     public Optional<Prescription> mapToPrescription(Optional<PrescriptionsEntity> prescriptionsEntity) {
         return prescriptionsEntity.map(this::createPrescription);
     }

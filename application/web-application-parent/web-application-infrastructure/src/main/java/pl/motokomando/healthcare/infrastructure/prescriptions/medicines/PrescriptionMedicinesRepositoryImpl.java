@@ -11,6 +11,7 @@ import pl.motokomando.healthcare.infrastructure.mapper.BasicEntityMapper;
 import pl.motokomando.healthcare.infrastructure.mapper.PrescriptionMedicinesEntityMapper;
 import pl.motokomando.healthcare.infrastructure.model.PrescriptionMedicinesEntity;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,6 +21,12 @@ public class PrescriptionMedicinesRepositoryImpl implements PrescriptionMedicine
     private final PrescriptionMedicinesEntityDao dao;
     private final PrescriptionMedicinesEntityMapper prescriptionMedicinesEntityMapper;
     private final BasicEntityMapper basicEntityMapper;
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<PrescriptionMedicine> getAllPrescriptionMedicines(Integer prescriptionId) {
+        return prescriptionMedicinesEntityMapper.mapToPrescriptionMedicineList(dao.getAllByPrescriptionId(prescriptionId));
+    }
 
     @Override
     @Transactional(readOnly = true)

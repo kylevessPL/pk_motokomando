@@ -14,6 +14,10 @@ import java.util.stream.Collectors;
 @Component
 public class DoctorsEntityMapper {
 
+    public Doctor mapToDoctor(DoctorsEntity doctorsEntity) {
+        return createDoctor(doctorsEntity);
+    }
+
     public Optional<Doctor> mapToDoctor(Optional<DoctorsEntity> doctorsEntity) {
         return doctorsEntity.map(this::createDoctor);
     }

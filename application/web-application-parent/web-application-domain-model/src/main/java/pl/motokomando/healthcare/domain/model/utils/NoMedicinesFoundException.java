@@ -3,7 +3,7 @@ package pl.motokomando.healthcare.domain.model.utils;
 import lombok.Getter;
 
 @Getter
-public class NoMedicinesFoundException extends MyException {
+public class NoMedicinesFoundException extends BasicException {
 
     private final ErrorCode errorCode;
 

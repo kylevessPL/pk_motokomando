@@ -6,8 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.motokomando.healthcare.domain.model.doctors.Doctor;
 import pl.motokomando.healthcare.domain.model.doctors.DoctorBasicPage;
 import pl.motokomando.healthcare.domain.model.doctors.utils.DoctorRequestCommand;
+import pl.motokomando.healthcare.domain.model.utils.BasicException;
 import pl.motokomando.healthcare.domain.model.utils.BasicPagedQueryCommand;
-import pl.motokomando.healthcare.domain.model.utils.MyException;
 import pl.motokomando.healthcare.domain.model.utils.PageProperties;
 import pl.motokomando.healthcare.domain.model.utils.SortProperties;
 
@@ -33,7 +33,7 @@ public class DoctorsServiceImpl implements DoctorsService {
     @Transactional(readOnly = true)
     public Doctor getDoctor(Integer id) {
         return repository.getDoctorById(id)
-                .orElseThrow(() -> new MyException(DOCTOR_NOT_FOUND));
+                .orElseThrow(() -> new BasicException(DOCTOR_NOT_FOUND));
     }
 
     @Override
@@ -45,7 +45,7 @@ public class DoctorsServiceImpl implements DoctorsService {
 
     private void checkDoctorExistence(Integer id) {
         if (!repository.doctorExists(id)) {
-            throw new MyException(DOCTOR_NOT_FOUND);
+            throw new BasicException(DOCTOR_NOT_FOUND);
         }
     }
 

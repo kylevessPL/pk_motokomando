@@ -1,12 +1,12 @@
-package pl.motokomando.healthcare.infrastructure.patientrecords;
+package pl.motokomando.healthcare.infrastructure.patients.records;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.motokomando.healthcare.domain.model.patientrecords.PatientRecord;
-import pl.motokomando.healthcare.domain.model.patientrecords.utils.PatientBasicInfo;
-import pl.motokomando.healthcare.domain.model.patientrecords.utils.PatientRecordPatchRequestCommand;
-import pl.motokomando.healthcare.domain.patientrecords.PatientRecordsRepository;
+import pl.motokomando.healthcare.domain.model.patients.records.PatientRecord;
+import pl.motokomando.healthcare.domain.model.patients.records.utils.PatientBasicInfo;
+import pl.motokomando.healthcare.domain.model.patients.records.utils.PatientRecordPatchRequestCommand;
+import pl.motokomando.healthcare.domain.patients.records.PatientRecordsRepository;
 import pl.motokomando.healthcare.infrastructure.dao.PatientRecordsEntityDao;
 import pl.motokomando.healthcare.infrastructure.mapper.PatientRecordsEntityMapper;
 import pl.motokomando.healthcare.infrastructure.model.PatientRecordsEntity;
@@ -23,8 +23,8 @@ public class PatientRecordsRepositoryImpl implements PatientRecordsRepository {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<PatientRecord> getPatientRecordById(Integer id) {
-        return patientRecordsEntityMapper.mapToPatientRecord(dao.findById(id));
+    public Optional<PatientRecord> getPatientRecordByPatientId(Integer patientId) {
+        return patientRecordsEntityMapper.mapToPatientRecord(dao.findByPatientId(patientId));
     }
 
     @Override

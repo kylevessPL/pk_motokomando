@@ -1,4 +1,4 @@
-package pl.motokomando.healthcare.api.patientrecords;
+package pl.motokomando.healthcare.api.patients.records;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -13,19 +13,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import pl.motokomando.healthcare.api.patientrecords.mapper.PatientRecordsMapper;
-import pl.motokomando.healthcare.api.patientrecords.utils.PatientRecordPatchRequest;
+import pl.motokomando.healthcare.api.patients.records.mapper.PatientRecordsMapper;
+import pl.motokomando.healthcare.api.patients.records.utils.PatientRecordPatchRequest;
 import pl.motokomando.healthcare.api.utils.JsonPatchHandler;
-import pl.motokomando.healthcare.domain.model.patientrecords.utils.PatientRecordPatchRequestCommand;
-import pl.motokomando.healthcare.domain.patientrecords.PatientRecordsService;
-import pl.motokomando.healthcare.dto.patientrecords.PatientRecordResponse;
+import pl.motokomando.healthcare.domain.model.patients.records.utils.PatientRecordPatchRequestCommand;
+import pl.motokomando.healthcare.domain.patients.records.PatientRecordsService;
+import pl.motokomando.healthcare.dto.patients.records.PatientRecordResponse;
 
 import javax.json.JsonPatch;
+import javax.validation.constraints.Min;
 
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 @RestController
-@RequestMapping("/api/v1/patientrecords")
+@RequestMapping("/api/v1/patients")
 @Tag(name = "Patients API", description = "API performing operations on patient resources")
 @Validated
 @RequiredArgsConstructor
@@ -46,9 +47,9 @@ public class PatientRecordsServiceController {
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @ResponseStatus(NO_CONTENT)
-    @PatchMapping(path = "/{id}", consumes = "application/json-patch+json")
+    @PatchMapping(path = "/{id}/record", consumes = "application/json-patch+json")
     public void update(
-            @Parameter(description = "Patient record ID") @PathVariable Integer id,
+            @Parameter(description = "Patient ID") @PathVariable @Min(value = 1, message = "Patient ID must be a positive integer value") Integer id,
             @RequestBody JsonPatch patchDocument) {
         PatientRecordResponse response = patientRecordsMapper.mapToResponse(patientRecordsService.getPatientRecord(id));
         PatientRecordPatchRequest request = patientRecordsMapper.mapToRequest(response);

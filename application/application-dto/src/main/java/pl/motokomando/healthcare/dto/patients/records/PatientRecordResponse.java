@@ -1,10 +1,10 @@
-package pl.motokomando.healthcare.dto.patientrecords;
+package pl.motokomando.healthcare.dto.patients.records;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import pl.motokomando.healthcare.dto.patientrecords.utils.HealthStatus;
+import pl.motokomando.healthcare.dto.patients.records.utils.HealthStatus;
 
 import java.time.LocalDateTime;
 

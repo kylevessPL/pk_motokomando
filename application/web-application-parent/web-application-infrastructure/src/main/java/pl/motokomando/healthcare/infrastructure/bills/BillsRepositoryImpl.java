@@ -27,6 +27,12 @@ public class BillsRepositoryImpl implements BillsRepository {
 
     @Override
     @Transactional(readOnly = true)
+    public Bill getBillFullById(Integer id) {
+        return billsEntityMapper.mapToBill(dao.getOne(id));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public Optional<Bill> getBillById(Integer id) {
         return billsEntityMapper.mapToBill(dao.findById(id));
     }

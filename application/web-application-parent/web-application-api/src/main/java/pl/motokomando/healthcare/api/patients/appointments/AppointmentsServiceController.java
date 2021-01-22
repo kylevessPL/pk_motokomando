@@ -33,8 +33,9 @@ import pl.motokomando.healthcare.domain.model.patients.appointments.utils.Appoin
 import pl.motokomando.healthcare.domain.model.utils.BasicPagedQueryCommand;
 import pl.motokomando.healthcare.domain.patients.appointments.AppointmentsService;
 import pl.motokomando.healthcare.dto.patients.appointments.AppointmentBasicPageResponse;
+import pl.motokomando.healthcare.dto.patients.appointments.AppointmentBasicPagedResponse;
+import pl.motokomando.healthcare.dto.patients.appointments.AppointmentFullResponse;
 import pl.motokomando.healthcare.dto.patients.appointments.AppointmentResponse;
-import pl.motokomando.healthcare.dto.patients.appointments.utils.AppointmentBasicPaged;
 import pl.motokomando.healthcare.dto.utils.BasicResponse;
 
 import javax.json.JsonPatch;
@@ -47,7 +48,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping("/api/v1/patients")
-@Tag(name = "Patient appointments API", description = "API performing operations on patient appointment resources")
+@Tag(name = "Patients API", description = "API performing operations on patient resources")
 @Validated
 @RequiredArgsConstructor
 public class AppointmentsServiceController {
@@ -66,13 +67,13 @@ public class AppointmentsServiceController {
             @ApiResponse(
                     responseCode = "200",
                     description = "Successfully fetched patient appointments data",
-                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = AppointmentBasicPaged.class)))),
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = AppointmentBasicPagedResponse.class)))),
             @ApiResponse(responseCode = "204", description = "Patient appointments data is empty", content = @Content),
             @ApiResponse(responseCode = "400", description = "Parameters not valid", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
     @GetMapping(value = "/{id}/appointments", produces = APPLICATION_JSON_VALUE)
-    public PageResponse<AppointmentBasicPaged> getAll(
+    public PageResponse<AppointmentBasicPagedResponse> getAll(
             @Parameter(description = "Patient ID") @PathVariable @Min(value = 1, message = "Patient ID must be a positive integer value") Integer id,
             @Valid AppointmentPagedQuery query) {
         BasicPagedQueryCommand command = appointmentsMapper.mapToCommand(query);
@@ -82,6 +83,22 @@ public class AppointmentsServiceController {
                 query.getSize(),
                 response.getMeta(),
                 response.getContent());
+    }
+
+    @Operation(
+            summary = "Get appointment details by ID",
+            description = "You are required to pass appointment ID",
+            operationId = "getAppointment"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully fetched appointments details"),
+            @ApiResponse(responseCode = "400", description = "Parameters not valid or no such appointment with provided ID", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+    })
+    @GetMapping(value = "/{patientId}/appointments/{appointmentId}", produces = APPLICATION_JSON_VALUE)
+    public AppointmentFullResponse getById(@Valid AppointmentRequestParams params) {
+        AppointmentRequestParamsCommand paramsCommand = appointmentsMapper.mapToCommand(params);
+        return appointmentsMapper.mapToResponse(appointmentsService.getFullAppointment(paramsCommand));
     }
 
     @Operation(

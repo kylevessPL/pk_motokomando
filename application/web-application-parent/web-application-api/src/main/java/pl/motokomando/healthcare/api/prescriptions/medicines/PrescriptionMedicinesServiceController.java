@@ -36,7 +36,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping("/api/v1/prescriptions")
-@Tag(name = "Prescription medicines API", description = "API performing operations on prescription medicine resources")
+@Tag(name = "Prescriptions API", description = "API performing operations on prescription resources")
 @Validated
 @RequiredArgsConstructor
 public class PrescriptionMedicinesServiceController {

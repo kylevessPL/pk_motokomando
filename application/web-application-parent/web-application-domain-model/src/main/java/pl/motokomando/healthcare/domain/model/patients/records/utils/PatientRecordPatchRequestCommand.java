@@ -1,4 +1,4 @@
-package pl.motokomando.healthcare.domain.model.patientrecords.utils;
+package pl.motokomando.healthcare.domain.model.patients.records.utils;
 
 import com.sun.istack.internal.Nullable;
 import lombok.Getter;
