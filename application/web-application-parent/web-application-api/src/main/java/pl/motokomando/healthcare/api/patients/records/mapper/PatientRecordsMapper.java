@@ -14,6 +14,7 @@ public interface PatientRecordsMapper {
     PatientRecordResponse mapToResponse(PatientRecord patient);
     PatientRecordPatchRequest mapToRequest(PatientRecordResponse response);
     PatientRecordPatchRequestCommand mapToCommand(PatientRecordResponse request);
+
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "patientId", ignore = true)
     @Mapping(target = "registrationDate", ignore = true)

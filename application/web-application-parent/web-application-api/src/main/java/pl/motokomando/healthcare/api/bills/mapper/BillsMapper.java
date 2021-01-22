@@ -16,6 +16,7 @@ public interface BillsMapper {
     BillRequest mapToRequest(BillResponse response);
     BillRequestCommand mapToCommand(BillRequest request);
     BillPatchRequestCommand mapToCommand(BillResponse response);
+
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "issueDate", ignore = true)
     void update(BillRequest request, @MappingTarget BillPatchRequestCommand command);

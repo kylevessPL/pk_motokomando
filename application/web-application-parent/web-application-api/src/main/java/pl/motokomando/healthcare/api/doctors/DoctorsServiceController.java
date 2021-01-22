@@ -68,7 +68,7 @@ public class DoctorsServiceController {
     }
 
     @Operation(
-            summary = "Get doctor details by ID",
+            summary = "Get doctor details",
             description = "You are required to pass doctor ID",
             operationId = "getDoctor"
     )

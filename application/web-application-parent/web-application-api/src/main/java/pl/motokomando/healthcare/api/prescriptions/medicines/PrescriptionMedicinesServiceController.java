@@ -46,7 +46,7 @@ public class PrescriptionMedicinesServiceController {
     private final BasicMapper basicMapper;
 
     @Operation(
-            summary = "Get prescription medicine details by ID",
+            summary = "Get prescription medicine details",
             description = "You are required to pass prescription ID and prescription medicine ID",
             operationId = "getPrescriptionMedicine"
     )

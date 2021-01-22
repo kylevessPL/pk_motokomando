@@ -1,6 +1,7 @@
 package pl.motokomando.healthcare.infrastructure.mapper;
 
 import org.springframework.stereotype.Component;
+import pl.motokomando.healthcare.domain.model.patients.records.CurrentHealth;
 import pl.motokomando.healthcare.domain.model.patients.records.PatientRecord;
 import pl.motokomando.healthcare.domain.model.patients.records.utils.PatientBasicInfo;
 import pl.motokomando.healthcare.infrastructure.model.PatientRecordsEntity;
@@ -14,6 +15,14 @@ public class PatientRecordsEntityMapper {
         return patientRecordsEntity.map(this::createPatientRecord);
     }
 
+    public PatientBasicInfo mapToPatientBasicInfo(PatientRecordsEntity patientRecordsEntity) {
+        return createPatientBasicInfo(patientRecordsEntity);
+    }
+
+    public Optional<CurrentHealth> mapToCurrentHealth(Optional<PatientRecordsEntity> patientRecordsEntity) {
+        return patientRecordsEntity.map(this::createCurrentHealth);
+    }
+
     private PatientRecord createPatientRecord(PatientRecordsEntity patientRecordsEntity) {
         return new PatientRecord(
                 patientRecordsEntity.getId(),
@@ -23,14 +32,16 @@ public class PatientRecordsEntityMapper {
                 patientRecordsEntity.getRegistrationDate().toLocalDateTime());
     }
 
-    public PatientBasicInfo mapToPatientBasicInfo(PatientRecordsEntity patientRecordsEntity) {
-        return createPatientBasicInfo(patientRecordsEntity);
-    }
-
     private PatientBasicInfo createPatientBasicInfo(PatientRecordsEntity patientRecordsEntity) {
         return new PatientBasicInfo(
                 patientRecordsEntity.getPatientId(),
                 patientRecordsEntity.getRegistrationDate().toLocalDateTime());
+    }
+
+    private CurrentHealth createCurrentHealth(PatientRecordsEntity patientRecordsEntity) {
+        return new CurrentHealth(
+                patientRecordsEntity.getHealthStatus(),
+                patientRecordsEntity.getNotes());
     }
 
 }

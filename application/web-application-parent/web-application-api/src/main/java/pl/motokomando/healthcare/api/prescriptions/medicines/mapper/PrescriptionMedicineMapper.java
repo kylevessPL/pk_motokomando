@@ -15,5 +15,4 @@ public interface PrescriptionMedicineMapper {
     PrescriptionMedicineBasicRequestCommand mapToCommand(PrescriptionMedicineBasicRequest request);
     PrescriptionMedicineResponse mapToResponse(PrescriptionMedicine prescription);
 
-
 }
