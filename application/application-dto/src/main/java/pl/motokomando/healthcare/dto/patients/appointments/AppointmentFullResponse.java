@@ -1,6 +1,5 @@
 package pl.motokomando.healthcare.dto.patients.appointments;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,10 +20,8 @@ public class AppointmentFullResponse {
     @Schema(description = "Appointment ID", example = "1")
     private Integer id;
     @Schema(description = "Schedule date")
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
     private LocalDateTime scheduleDate;
     @Schema(description = "Appointment date")
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
     private LocalDateTime appointmentDate;
     @Schema(description = "Bill details")
     private BillResponse bill;
