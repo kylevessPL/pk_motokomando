@@ -1,12 +1,10 @@
 package pl.motokomando.healthcare.api.patients.utils;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.sun.istack.internal.Nullable;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
 import pl.motokomando.healthcare.domain.model.patients.utils.BloodType;
 import pl.motokomando.healthcare.domain.model.patients.utils.DocumentType;
 import pl.motokomando.healthcare.domain.model.patients.utils.Sex;
@@ -39,8 +37,6 @@ public class PatientRequest implements Serializable {
     private String lastName;
     @Schema(description = "Patient birth date")
     @NotNull(message = "Birth date is mandatory")
-    @DateTimeFormat(pattern = "dd-MM-yyyy")
-    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate birthDate;
     @Schema(description = "Patient sex", allowableValues = "MALE, FEMALE")
     @NotNull(message = "Sex is mandatory")
