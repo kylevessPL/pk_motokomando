@@ -11,6 +11,7 @@ import java.util.Optional;
 public interface DoctorsRepository {
 
     DoctorBasicPage getAllDoctors(PageProperties pageProperties, SortProperties sortProperties);
+    Doctor getDoctorFullById(Integer id);
     Optional<Doctor> getDoctorById(Integer id);
     boolean doctorExists(Integer id);
     void saveDoctor(DoctorRequestCommand data);

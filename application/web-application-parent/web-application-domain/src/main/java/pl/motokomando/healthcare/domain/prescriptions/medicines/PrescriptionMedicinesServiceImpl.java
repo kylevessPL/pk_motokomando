@@ -8,7 +8,7 @@ import pl.motokomando.healthcare.domain.model.prescriptions.medicines.Prescripti
 import pl.motokomando.healthcare.domain.model.prescriptions.medicines.utils.PrescriptionMedicineBasicRequestCommand;
 import pl.motokomando.healthcare.domain.model.prescriptions.medicines.utils.PrescriptionMedicineRequestCommand;
 import pl.motokomando.healthcare.domain.model.utils.Basic;
-import pl.motokomando.healthcare.domain.model.utils.MyException;
+import pl.motokomando.healthcare.domain.model.utils.BasicException;
 import pl.motokomando.healthcare.domain.model.utils.NoMedicinesFoundException;
 import pl.motokomando.healthcare.domain.prescriptions.PrescriptionsRepository;
 
@@ -31,7 +31,7 @@ public class PrescriptionMedicinesServiceImpl implements PrescriptionMedicinesSe
         Integer prescriptionMedicineId = command.getPrescriptionMedicineId();
         checkPrescriptionExistence(prescriptionId);
         return prescriptionMedicinesRepository.getPrescriptionMedicine(prescriptionId, prescriptionMedicineId)
-                .orElseThrow(() -> new MyException(PRESCRIPTION_MEDICINE_NOT_FOUND));
+                .orElseThrow(() -> new BasicException(PRESCRIPTION_MEDICINE_NOT_FOUND));
     }
 
     @Override
@@ -52,19 +52,19 @@ public class PrescriptionMedicinesServiceImpl implements PrescriptionMedicinesSe
         checkPrescriptionExistence(prescriptionId);
         boolean deleteResult = prescriptionMedicinesRepository.deletePrescriptionMedicine(prescriptionId, prescriptionMedicineId);
         if (!deleteResult) {
-            throw new MyException(PRESCRIPTION_MEDICINE_NOT_FOUND);
+            throw new BasicException(PRESCRIPTION_MEDICINE_NOT_FOUND);
         }
     }
 
     private void checkPrescriptionExistence(Integer prescriptionId) {
         if (!prescriptionsRepository.prescriptionExists(prescriptionId)) {
-            throw new MyException(PRESCRIPTION_NOT_FOUND);
+            throw new BasicException(PRESCRIPTION_NOT_FOUND);
         }
     }
 
     private void checkPrescriptionMedicineExistence(Integer prescriptionId, String productNDC) {
         if (prescriptionMedicinesRepository.prescriptionMedicineExists(prescriptionId, productNDC)) {
-            throw new MyException(PRESCRIPTION_MEDICINE_ALREADY_EXISTS);
+            throw new BasicException(PRESCRIPTION_MEDICINE_ALREADY_EXISTS);
         }
     }
 
@@ -72,7 +72,7 @@ public class PrescriptionMedicinesServiceImpl implements PrescriptionMedicinesSe
         try {
             medicinesService.getMedicine(productNDC);
         } catch (NoMedicinesFoundException ex) {
-            throw new MyException(ex.getErrorCode());
+            throw new BasicException(ex.getErrorCode());
         }
     }
 

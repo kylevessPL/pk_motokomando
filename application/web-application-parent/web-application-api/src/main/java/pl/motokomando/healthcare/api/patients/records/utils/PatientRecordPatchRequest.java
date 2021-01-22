@@ -1,11 +1,11 @@
-package pl.motokomando.healthcare.api.patientrecords.utils;
+package pl.motokomando.healthcare.api.patients.records.utils;
 
 import com.sun.istack.internal.Nullable;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import pl.motokomando.healthcare.domain.model.patientrecords.utils.HealthStatus;
+import pl.motokomando.healthcare.domain.model.patients.records.utils.HealthStatus;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;

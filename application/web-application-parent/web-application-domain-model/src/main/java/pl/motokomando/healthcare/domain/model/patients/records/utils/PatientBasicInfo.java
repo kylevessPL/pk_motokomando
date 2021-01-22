@@ -1,4 +1,4 @@
-package pl.motokomando.healthcare.domain.model.patientrecords.utils;
+package pl.motokomando.healthcare.domain.model.patients.records.utils;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 public final class PatientBasicInfo {
 
     private final Integer patientId;
-    private final Integer medicalRecordId;
     private final LocalDateTime registrationDate;
 
 }

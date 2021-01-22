@@ -1,10 +1,11 @@
-package pl.motokomando.healthcare.dto.patients.appointments.utils;
+package pl.motokomando.healthcare.dto.patients.appointments;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import pl.motokomando.healthcare.dto.patients.appointments.utils.AppointmentStatus;
 
 import java.time.LocalDateTime;
 
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Setter
-public class AppointmentBasicPaged {
+public class AppointmentBasicPagedResponse {
 
     @Schema(description = "Appointment ID", example = "1")
     private Integer id;

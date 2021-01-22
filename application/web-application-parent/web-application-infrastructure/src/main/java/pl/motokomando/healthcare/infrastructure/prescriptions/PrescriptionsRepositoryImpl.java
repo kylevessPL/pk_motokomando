@@ -27,6 +27,12 @@ public class PrescriptionsRepositoryImpl implements PrescriptionsRepository {
 
     @Override
     @Transactional(readOnly = true)
+    public Prescription getFullPrescriptionById(Integer id) {
+        return prescriptionsEntityMapper.mapToPrescription(dao.getOne(id));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public Optional<Prescription> getPrescriptionById(Integer id) {
         return prescriptionsEntityMapper.mapToPrescription(dao.findById(id));
     }

@@ -3,16 +3,16 @@ package pl.motokomando.healthcare.domain.patients;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.motokomando.healthcare.domain.model.patientrecords.utils.PatientBasicInfo;
 import pl.motokomando.healthcare.domain.model.patients.Patient;
 import pl.motokomando.healthcare.domain.model.patients.PatientBasicPage;
+import pl.motokomando.healthcare.domain.model.patients.records.utils.PatientBasicInfo;
 import pl.motokomando.healthcare.domain.model.patients.utils.PatientDetails;
 import pl.motokomando.healthcare.domain.model.patients.utils.PatientRequestCommand;
+import pl.motokomando.healthcare.domain.model.utils.BasicException;
 import pl.motokomando.healthcare.domain.model.utils.BasicPagedQueryCommand;
-import pl.motokomando.healthcare.domain.model.utils.MyException;
 import pl.motokomando.healthcare.domain.model.utils.PageProperties;
 import pl.motokomando.healthcare.domain.model.utils.SortProperties;
-import pl.motokomando.healthcare.domain.patientrecords.PatientRecordsRepository;
+import pl.motokomando.healthcare.domain.patients.records.PatientRecordsRepository;
 
 import java.util.Optional;
 
@@ -37,7 +37,7 @@ public class PatientsServiceImpl implements PatientsService {
     @Transactional(readOnly = true)
     public Patient getPatient(Integer id) {
         PatientDetails patientDetails = patientsRepository.getPatientById(id)
-                .orElseThrow(() -> new MyException(PATIENT_NOT_FOUND));
+                .orElseThrow(() -> new BasicException(PATIENT_NOT_FOUND));
         PatientBasicInfo basicInfo = patientRecordsRepository.getPatientRecordBasicByPatientId(id);
         return new Patient(basicInfo, patientDetails);
     }
@@ -55,7 +55,7 @@ public class PatientsServiceImpl implements PatientsService {
 
     private void checkPatientExistence(Integer id) {
         if (!patientsRepository.patientExists(id)) {
-            throw new MyException(PATIENT_NOT_FOUND);
+            throw new BasicException(PATIENT_NOT_FOUND);
         }
     }
 

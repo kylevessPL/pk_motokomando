@@ -7,7 +7,7 @@ import pl.motokomando.healthcare.domain.model.prescriptions.Prescription;
 import pl.motokomando.healthcare.domain.model.prescriptions.utils.PrescriptionPatchRequestCommand;
 import pl.motokomando.healthcare.domain.model.prescriptions.utils.PrescriptionRequestCommand;
 import pl.motokomando.healthcare.domain.model.utils.Basic;
-import pl.motokomando.healthcare.domain.model.utils.MyException;
+import pl.motokomando.healthcare.domain.model.utils.BasicException;
 
 import static pl.motokomando.healthcare.domain.model.utils.ErrorCode.PRESCRIPTION_NOT_FOUND;
 
@@ -21,7 +21,7 @@ public class PrescriptionsServiceImpl implements PrescriptionsService {
     @Transactional(readOnly = true)
     public Prescription getPrescription(Integer id) {
         return prescriptionsRepository.getPrescriptionById(id)
-                .orElseThrow(() -> new MyException(PRESCRIPTION_NOT_FOUND));
+                .orElseThrow(() -> new BasicException(PRESCRIPTION_NOT_FOUND));
     }
 
     @Override
@@ -41,7 +41,7 @@ public class PrescriptionsServiceImpl implements PrescriptionsService {
     public void deletePrescription(Integer id) {
         boolean deleteResult = prescriptionsRepository.deletePrescription(id);
         if (!deleteResult) {
-            throw new MyException(PRESCRIPTION_NOT_FOUND);
+            throw new BasicException(PRESCRIPTION_NOT_FOUND);
         }
     }
 

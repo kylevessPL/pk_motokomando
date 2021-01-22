@@ -9,6 +9,7 @@ import java.util.Optional;
 
 public interface BillsRepository {
 
+    Bill getBillFullById(Integer id);
     Optional<Bill> getBillById(Integer id);
     void updateBill(BillPatchRequestCommand data);
     Basic createBill(BigDecimal amount);

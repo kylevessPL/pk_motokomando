@@ -3,11 +3,11 @@ package pl.motokomando.healthcare.domain.model.utils;
 import lombok.Getter;
 
 @Getter
-public class MyException extends RuntimeException {
+public class BasicException extends RuntimeException {
 
     private final ErrorCode errorCode;
 
-    public MyException(ErrorCode errorCode) {
+    public BasicException(ErrorCode errorCode) {
         super(errorCode.getMessage());
         this.errorCode = errorCode;
     }

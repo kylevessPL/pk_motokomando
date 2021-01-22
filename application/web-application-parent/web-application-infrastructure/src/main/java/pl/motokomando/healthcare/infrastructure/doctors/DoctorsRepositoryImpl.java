@@ -49,6 +49,12 @@ public class DoctorsRepositoryImpl implements DoctorsRepository {
 
     @Override
     @Transactional(readOnly = true)
+    public Doctor getDoctorFullById(Integer id) {
+        return doctorsEntityMapper.mapToDoctor(dao.getOne(id));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public Optional<Doctor> getDoctorById(Integer id) {
         return doctorsEntityMapper.mapToDoctor(dao.findById(id));
     }

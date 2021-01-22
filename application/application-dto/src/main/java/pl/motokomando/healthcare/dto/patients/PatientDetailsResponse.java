@@ -1,9 +1,12 @@
-package pl.motokomando.healthcare.dto.patients.utils;
+package pl.motokomando.healthcare.dto.patients;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import pl.motokomando.healthcare.dto.patients.utils.BloodType;
+import pl.motokomando.healthcare.dto.patients.utils.DocumentType;
+import pl.motokomando.healthcare.dto.patients.utils.Sex;
 
 import java.time.LocalDate;
 
@@ -11,7 +14,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Getter
 @Setter
-public class PatientDetails {
+public class PatientDetailsResponse {
 
     @Schema(description = "Patient first name", example = "James")
     private String firstName;

@@ -24,8 +24,8 @@ import pl.motokomando.healthcare.api.utils.PageResponse;
 import pl.motokomando.healthcare.domain.model.utils.BasicPagedQueryCommand;
 import pl.motokomando.healthcare.domain.patients.PatientsService;
 import pl.motokomando.healthcare.dto.patients.PatientBasicPageResponse;
+import pl.motokomando.healthcare.dto.patients.PatientBasicPagedResponse;
 import pl.motokomando.healthcare.dto.patients.PatientResponse;
-import pl.motokomando.healthcare.dto.patients.utils.PatientBasicPaged;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
@@ -52,13 +52,13 @@ public class PatientsServiceController {
             @ApiResponse(
                     responseCode = "200",
                     description = "Successfully fetched patients data",
-                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = PatientBasicPaged.class)))),
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = PatientBasicPagedResponse.class)))),
             @ApiResponse(responseCode = "204", description = "Patients data is empty", content = @Content),
             @ApiResponse(responseCode = "400", description = "Parameters not valid", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
     @GetMapping(produces = APPLICATION_JSON_VALUE)
-    public PageResponse<PatientBasicPaged> getAll(@Valid PatientPagedQuery query) {
+    public PageResponse<PatientBasicPagedResponse> getAll(@Valid PatientPagedQuery query) {
         BasicPagedQueryCommand command = patientsMapper.mapToCommand(query);
         PatientBasicPageResponse response = patientsMapper.mapToResponse(patientsService.getAllPatients(command));
         return new PageResponse<>(

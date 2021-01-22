@@ -1,4 +1,4 @@
-package pl.motokomando.healthcare.dto.patients.utils;
+package pl.motokomando.healthcare.dto.patients;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class PatientBasicPaged {
+public class PatientBasicPagedResponse {
 
     @Schema(description = "Patient ID", example = "1")
     private Integer id;

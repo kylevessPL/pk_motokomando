@@ -7,7 +7,7 @@ import pl.motokomando.healthcare.domain.model.bills.Bill;
 import pl.motokomando.healthcare.domain.model.bills.utils.BillPatchRequestCommand;
 import pl.motokomando.healthcare.domain.model.bills.utils.BillRequestCommand;
 import pl.motokomando.healthcare.domain.model.utils.Basic;
-import pl.motokomando.healthcare.domain.model.utils.MyException;
+import pl.motokomando.healthcare.domain.model.utils.BasicException;
 
 import static pl.motokomando.healthcare.domain.model.utils.ErrorCode.BILL_NOT_FOUND;
 
@@ -21,7 +21,7 @@ public class BillsServiceImpl implements BillsService {
     @Transactional(readOnly = true)
     public Bill getBill(Integer id) {
         return repository.getBillById(id)
-                .orElseThrow(() -> new MyException(BILL_NOT_FOUND));
+                .orElseThrow(() -> new BasicException(BILL_NOT_FOUND));
     }
 
     @Override
@@ -40,7 +40,7 @@ public class BillsServiceImpl implements BillsService {
     public void deleteBill(Integer id) {
         boolean deleteResult = repository.deleteBill(id);
         if (!deleteResult) {
-            throw new MyException(BILL_NOT_FOUND);
+            throw new BasicException(BILL_NOT_FOUND);
         }
     }
 

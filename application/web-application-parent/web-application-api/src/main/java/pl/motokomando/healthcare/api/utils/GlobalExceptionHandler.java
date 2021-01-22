@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import pl.motokomando.healthcare.domain.model.utils.MyException;
+import pl.motokomando.healthcare.domain.model.utils.BasicException;
 import pl.motokomando.healthcare.domain.model.utils.NoMedicinesFoundException;
 
 import javax.json.JsonException;
@@ -40,8 +40,8 @@ public final class GlobalExceptionHandler extends ResponseEntityExceptionHandler
         return new ResponseEntity<>(errorResponse, new HttpHeaders(), status);
     }
 
-    @ExceptionHandler(value = MyException.class)
-    protected ResponseEntity<Object> handleCustomError(MyException ex) {
+    @ExceptionHandler(value = BasicException.class)
+    protected ResponseEntity<Object> handleCustomError(BasicException ex) {
         HttpStatus status = BAD_REQUEST;
         logger.warn(status.toString(), ex);
         ErrorResponse errorResponse = new ErrorResponse(
