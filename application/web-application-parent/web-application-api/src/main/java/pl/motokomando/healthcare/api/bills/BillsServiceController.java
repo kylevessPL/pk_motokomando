@@ -49,7 +49,7 @@ public class BillsServiceController {
     private final JsonPatchHandler jsonPatchHandler;
 
     @Operation(
-            summary = "Get bill details by ID",
+            summary = "Get bill details",
             description = "You are required to pass bill ID",
             operationId = "getBill"
     )

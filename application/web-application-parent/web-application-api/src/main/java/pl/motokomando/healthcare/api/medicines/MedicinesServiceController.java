@@ -35,7 +35,7 @@ public class MedicinesServiceController {
     private final MedicinesMapper medicinesMapper;
 
     @Operation(
-            summary = "Search medicines by query string",
+            summary = "Search medicines",
             description = "You are required to pass query string as a parameter; optional ASC/DESC sorting by medicine name & results limit available",
             operationId = "searchMedicines"
     )
@@ -52,7 +52,7 @@ public class MedicinesServiceController {
     }
 
     @Operation(
-            summary = "Find medicine by FDA product NDC",
+            summary = "Find medicine information",
             description = "You are required to pass product NDC as a parameter",
             operationId = "getMedicine"
     )

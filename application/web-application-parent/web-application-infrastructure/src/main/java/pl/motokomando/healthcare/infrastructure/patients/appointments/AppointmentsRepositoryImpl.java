@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.motokomando.healthcare.domain.model.patients.appointments.Appointment;
 import pl.motokomando.healthcare.domain.model.patients.appointments.AppointmentBasicPage;
+import pl.motokomando.healthcare.domain.model.patients.appointments.LatestAppointment;
 import pl.motokomando.healthcare.domain.model.patients.appointments.utils.AppointmentPatchRequestCommand;
 import pl.motokomando.healthcare.domain.model.patients.appointments.utils.AppointmentRequestCommand;
 import pl.motokomando.healthcare.domain.model.utils.Basic;
@@ -75,6 +76,13 @@ public class AppointmentsRepositoryImpl implements AppointmentsRepository {
     @Transactional(readOnly = true)
     public boolean isDateAvailable(LocalDateTime date) {
         return !dao.existsByAppointmentDateAndAndAppointmentStatusEqualsValid(date);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public LatestAppointment getLatestAppointment(List<Integer> appointmentIdList) {
+        AppointmentsEntity appointmentsEntity = dao.findFirstByIdInOrderByAppointmentDateDesc(appointmentIdList);
+        return appointmentsEntityMapper.mapToLatestAppointment(appointmentsEntity);
     }
 
     private Sort createSortProperty(SortProperties sortProperties) {

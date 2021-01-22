@@ -86,7 +86,7 @@ public class AppointmentsServiceController {
     }
 
     @Operation(
-            summary = "Get appointment details by ID",
+            summary = "Get appointment details",
             description = "You are required to pass appointment ID",
             operationId = "getAppointment"
     )

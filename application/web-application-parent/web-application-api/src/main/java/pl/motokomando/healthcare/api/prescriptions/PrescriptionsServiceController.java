@@ -49,7 +49,7 @@ public class PrescriptionsServiceController {
     private final JsonPatchHandler jsonPatchHandler;
 
     @Operation(
-            summary = "Get prescription details by ID",
+            summary = "Get prescription details",
             description = "You are required to pass prescription ID",
             operationId = "getPrescription"
     )

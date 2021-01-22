@@ -3,6 +3,7 @@ package pl.motokomando.healthcare.infrastructure.patients.records;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.motokomando.healthcare.domain.model.patients.records.CurrentHealth;
 import pl.motokomando.healthcare.domain.model.patients.records.PatientRecord;
 import pl.motokomando.healthcare.domain.model.patients.records.utils.PatientBasicInfo;
 import pl.motokomando.healthcare.domain.model.patients.records.utils.PatientRecordPatchRequestCommand;
@@ -45,6 +46,12 @@ public class PatientRecordsRepositoryImpl implements PatientRecordsRepository {
     public void createPatientRecord(Integer patientId) {
         PatientRecordsEntity patientRecordsEntity = createEntity(patientId);
         dao.save(patientRecordsEntity);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<CurrentHealth> getCurrentHealth(Integer patientId) {
+        return patientRecordsEntityMapper.mapToCurrentHealth(dao.findByPatientId(patientId));
     }
 
     private PatientRecordsEntity createEntity(Integer patientId) {

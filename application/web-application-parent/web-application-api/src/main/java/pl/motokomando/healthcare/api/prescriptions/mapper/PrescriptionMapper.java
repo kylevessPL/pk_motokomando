@@ -20,6 +20,7 @@ public interface PrescriptionMapper {
     PrescriptionRequest mapToRequest(PrescriptionResponse response);
     PrescriptionRequestCommand mapToCommand(PrescriptionRequest request);
     PrescriptionPatchRequestCommand mapToCommand(PrescriptionResponse response);
+
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "issueDate", ignore = true)
     void update(PrescriptionRequest request, @MappingTarget PrescriptionPatchRequestCommand command);

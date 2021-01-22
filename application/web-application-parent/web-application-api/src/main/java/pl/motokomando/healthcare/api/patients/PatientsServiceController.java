@@ -25,6 +25,7 @@ import pl.motokomando.healthcare.domain.model.utils.BasicPagedQueryCommand;
 import pl.motokomando.healthcare.domain.patients.PatientsService;
 import pl.motokomando.healthcare.dto.patients.PatientBasicPageResponse;
 import pl.motokomando.healthcare.dto.patients.PatientBasicPagedResponse;
+import pl.motokomando.healthcare.dto.patients.PatientHealthInfoResponse;
 import pl.motokomando.healthcare.dto.patients.PatientResponse;
 
 import javax.validation.Valid;
@@ -68,7 +69,7 @@ public class PatientsServiceController {
     }
 
     @Operation(
-            summary = "Get patient details by ID",
+            summary = "Get patient details",
             description = "You are required to pass patient ID",
             operationId = "getPatient"
     )
@@ -96,6 +97,21 @@ public class PatientsServiceController {
     @PutMapping(produces = APPLICATION_JSON_VALUE)
     public void save(@RequestBody @Valid PatientRequest request) {
         patientsService.savePatient(patientsMapper.mapToCommand(request));
+    }
+
+    @Operation(
+            summary = "Get patient current health information",
+            description = "You are required to pass patient ID",
+            operationId = "getCurrentHealthInfo"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successfully fetched patient current healt information"),
+            @ApiResponse(responseCode = "400", description = "Parameters not valid or no such patient with provided ID", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
+    })
+    @GetMapping(value = "/{id}/health", produces = APPLICATION_JSON_VALUE)
+    public PatientHealthInfoResponse getHealthInfo(@Parameter(description = "Patient ID") @PathVariable @Min(value = 1, message = "Patient ID must be a positive integer value") Integer id) {
+        return patientsMapper.mapToResponse(patientsService.getHealthInfo(id));
     }
 
 }

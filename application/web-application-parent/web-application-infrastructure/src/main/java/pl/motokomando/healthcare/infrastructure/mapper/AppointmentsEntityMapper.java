@@ -3,6 +3,7 @@ package pl.motokomando.healthcare.infrastructure.mapper;
 import org.springframework.stereotype.Component;
 import pl.motokomando.healthcare.domain.model.patients.appointments.Appointment;
 import pl.motokomando.healthcare.domain.model.patients.appointments.AppointmentBasicPage;
+import pl.motokomando.healthcare.domain.model.patients.appointments.LatestAppointment;
 import pl.motokomando.healthcare.domain.model.patients.appointments.utils.AppointmentBasicPaged;
 import pl.motokomando.healthcare.domain.model.utils.PageMeta;
 import pl.motokomando.healthcare.infrastructure.model.AppointmentsEntity;
@@ -27,6 +28,10 @@ public class AppointmentsEntityMapper {
                 appointmentBasicPagedList);
     }
 
+    public LatestAppointment mapToLatestAppointment(AppointmentsEntity appointmentsEntity) {
+        return createLatestAppointment(appointmentsEntity);
+    }
+
     private AppointmentBasicPaged createAppointmentBasicPaged(AppointmentsEntity appointmentsEntity) {
         return new AppointmentBasicPaged(
                 appointmentsEntity.getId(),
@@ -44,6 +49,13 @@ public class AppointmentsEntityMapper {
                 appointmentsEntity.getPrescriptionId(),
                 appointmentsEntity.getGiagnosis(),
                 appointmentsEntity.getAppointmentStatus()
+        );
+    }
+
+    private LatestAppointment createLatestAppointment(AppointmentsEntity appointmentsEntity) {
+        return new LatestAppointment(
+                appointmentsEntity.getAppointmentDate(),
+                appointmentsEntity.getGiagnosis()
         );
     }
 

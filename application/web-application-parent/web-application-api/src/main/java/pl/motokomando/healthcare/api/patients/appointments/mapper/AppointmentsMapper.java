@@ -33,6 +33,7 @@ public interface AppointmentsMapper {
     AppointmentRequestCommand mapToCommand(AppointmentRequest request);
     AppointmentPatchRequestCommand mapToCommand(AppointmentResponse response);
     AppointmentBasicPageResponse mapToResponse(AppointmentBasicPage appointmentBasicPage);
+
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "scheduleDate", ignore = true)
     @Mapping(target = "appointmentDate", ignore = true)
