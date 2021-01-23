@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 import pl.motokomando.healthcare.domain.model.patients.utils.BloodType;
 import pl.motokomando.healthcare.domain.model.patients.utils.DocumentType;
 import pl.motokomando.healthcare.domain.model.patients.utils.Sex;
@@ -16,6 +17,8 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.LocalDate;
+
+import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
 
 @Schema
 @NoArgsConstructor
@@ -37,6 +40,7 @@ public class PatientRequest implements Serializable {
     private String lastName;
     @Schema(description = "Patient birth date")
     @NotNull(message = "Birth date is mandatory")
+    @DateTimeFormat(iso = DATE)
     private LocalDate birthDate;
     @Schema(description = "Patient sex", allowableValues = "MALE, FEMALE")
     @NotNull(message = "Sex is mandatory")

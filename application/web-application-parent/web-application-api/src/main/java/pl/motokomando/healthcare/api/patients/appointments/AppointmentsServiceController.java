@@ -74,7 +74,9 @@ public class AppointmentsServiceController {
     })
     @GetMapping(value = "/{id}/appointments", produces = APPLICATION_JSON_VALUE)
     public PageResponse<AppointmentBasicPagedResponse> getAll(
-            @Parameter(description = "Patient ID") @PathVariable @Min(value = 1, message = "Patient ID must be a positive integer value") Integer id,
+            @Parameter(description = "Patient ID")
+            @Min(value = 1, message = "Patient ID must be a positive integer value")
+            @PathVariable Integer id,
             @Valid AppointmentPagedQuery query) {
         BasicPagedQueryCommand command = appointmentsMapper.mapToCommand(query);
         AppointmentBasicPageResponse response = appointmentsMapper.mapToResponse(
@@ -114,7 +116,9 @@ public class AppointmentsServiceController {
     @ResponseStatus(CREATED)
     @PostMapping(value = "/{id}/appointments", produces = APPLICATION_JSON_VALUE)
     public ResourceCreatedResponse create(
-            @Parameter(description = "Patient ID") @PathVariable @Min(value = 1, message = "Patient ID must be a positive integer value") Integer id,
+            @Parameter(description = "Patient ID")
+            @Min(value = 1, message = "Patient ID must be a positive integer value")
+            @PathVariable Integer id,
             @RequestBody @Valid AppointmentRequest request) {
         AppointmentRequestCommand command = appointmentsMapper.mapToCommand(request);
         BasicResponse response = basicMapper.mapToBasicResponse(appointmentsService.createAppointment(id, command));

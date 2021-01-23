@@ -3,8 +3,8 @@ package pl.motokomando.healthcare.infrastructure.mapper;
 import org.springframework.stereotype.Component;
 import pl.motokomando.healthcare.domain.model.patients.appointments.Appointment;
 import pl.motokomando.healthcare.domain.model.patients.appointments.AppointmentBasicPage;
-import pl.motokomando.healthcare.domain.model.patients.appointments.LatestAppointmentBasic;
 import pl.motokomando.healthcare.domain.model.patients.appointments.utils.AppointmentBasicPaged;
+import pl.motokomando.healthcare.domain.model.patients.appointments.utils.LatestAppointmentBasic;
 import pl.motokomando.healthcare.domain.model.utils.PageMeta;
 import pl.motokomando.healthcare.infrastructure.model.AppointmentsEntity;
 
