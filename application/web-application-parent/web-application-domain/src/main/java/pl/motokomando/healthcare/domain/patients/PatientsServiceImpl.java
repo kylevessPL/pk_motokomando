@@ -9,7 +9,7 @@ import pl.motokomando.healthcare.domain.model.patients.Patient;
 import pl.motokomando.healthcare.domain.model.patients.PatientBasicPage;
 import pl.motokomando.healthcare.domain.model.patients.PatientHealthInfo;
 import pl.motokomando.healthcare.domain.model.patients.appointments.LatestAppointment;
-import pl.motokomando.healthcare.domain.model.patients.appointments.LatestAppointmentBasic;
+import pl.motokomando.healthcare.domain.model.patients.appointments.utils.LatestAppointmentBasic;
 import pl.motokomando.healthcare.domain.model.patients.records.CurrentHealth;
 import pl.motokomando.healthcare.domain.model.patients.records.utils.PatientBasicInfo;
 import pl.motokomando.healthcare.domain.model.patients.utils.PatientDetails;

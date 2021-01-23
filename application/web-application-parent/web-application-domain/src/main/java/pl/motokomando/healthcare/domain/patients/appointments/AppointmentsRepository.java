@@ -2,9 +2,9 @@ package pl.motokomando.healthcare.domain.patients.appointments;
 
 import pl.motokomando.healthcare.domain.model.patients.appointments.Appointment;
 import pl.motokomando.healthcare.domain.model.patients.appointments.AppointmentBasicPage;
-import pl.motokomando.healthcare.domain.model.patients.appointments.LatestAppointmentBasic;
 import pl.motokomando.healthcare.domain.model.patients.appointments.utils.AppointmentPatchRequestCommand;
 import pl.motokomando.healthcare.domain.model.patients.appointments.utils.AppointmentRequestCommand;
+import pl.motokomando.healthcare.domain.model.patients.appointments.utils.LatestAppointmentBasic;
 import pl.motokomando.healthcare.domain.model.utils.Basic;
 import pl.motokomando.healthcare.domain.model.utils.PageProperties;
 import pl.motokomando.healthcare.domain.model.utils.SortProperties;

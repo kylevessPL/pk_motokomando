@@ -78,7 +78,10 @@ public class DoctorsServiceController {
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
     @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
-    public DoctorResponse getById(@Parameter(description = "Doctor ID") @PathVariable @Min(value = 1, message = "Doctor ID must be a positive integer value") Integer id) {
+    public DoctorResponse getById(
+            @Parameter(description = "Doctor ID")
+            @Min(value = 1, message = "Doctor ID must be a positive integer value")
+            @PathVariable Integer id) {
         return doctorsMapper.mapToResponse(doctorsService.getDoctor(id));
     }
 

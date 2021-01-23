@@ -59,7 +59,10 @@ public class PrescriptionsServiceController {
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
     @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
-    public PrescriptionResponse getById(@Parameter(description = "Prescription ID") @PathVariable @Min(value = 1, message = "Prescription ID must be a positive integer value") Integer id) {
+    public PrescriptionResponse getById(
+            @Parameter(description = "Prescription ID")
+            @Min(value = 1, message = "Prescription ID must be a positive integer value")
+            @PathVariable Integer id) {
         return prescriptionMapper.mapToResponse(prescriptionsService.getPrescription(id));
     }
 
@@ -94,7 +97,9 @@ public class PrescriptionsServiceController {
     @ResponseStatus(NO_CONTENT)
     @PatchMapping(path = "/{id}", consumes = "application/json-patch+json")
     public void update(
-            @Parameter(description = "Prescription ID") @PathVariable @Min(value = 1, message = "Prescription ID must be a positive integer value") Integer id,
+            @Parameter(description = "Prescription ID")
+            @Min(value = 1, message = "Prescription ID must be a positive integer value")
+            @PathVariable Integer id,
             @RequestBody JsonPatch patchDocument) {
         PrescriptionResponse response = prescriptionMapper.mapToResponse(prescriptionsService.getPrescription(id));
         PrescriptionRequest request = prescriptionMapper.mapToRequest(response);
@@ -116,7 +121,10 @@ public class PrescriptionsServiceController {
     })
     @ResponseStatus(NO_CONTENT)
     @DeleteMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
-    public void delete(@Parameter(description = "Prescription ID") @PathVariable @Min(value = 1, message = "Prescription ID must be a positive integer value") Integer id) {
+    public void delete(
+            @Parameter(description = "Prescription ID")
+            @Min(value = 1, message = "Prescription ID must be a positive integer value")
+            @PathVariable Integer id) {
         prescriptionsService.deletePrescription(id);
     }
 

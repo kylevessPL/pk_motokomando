@@ -49,7 +49,9 @@ public class PatientRecordsServiceController {
     @ResponseStatus(NO_CONTENT)
     @PatchMapping(path = "/{id}/record", consumes = "application/json-patch+json")
     public void update(
-            @Parameter(description = "Patient ID") @PathVariable @Min(value = 1, message = "Patient ID must be a positive integer value") Integer id,
+            @Parameter(description = "Patient ID")
+            @Min(value = 1, message = "Patient ID must be a positive integer value")
+            @PathVariable Integer id,
             @RequestBody JsonPatch patchDocument) {
         PatientRecordResponse response = patientRecordsMapper.mapToResponse(patientRecordsService.getPatientRecord(id));
         PatientRecordPatchRequest request = patientRecordsMapper.mapToRequest(response);

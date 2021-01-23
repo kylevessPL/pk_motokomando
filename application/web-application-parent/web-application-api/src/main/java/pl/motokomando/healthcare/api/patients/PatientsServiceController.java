@@ -79,7 +79,10 @@ public class PatientsServiceController {
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
     @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
-    public PatientResponse getById(@Parameter(description = "Patient ID") @PathVariable @Min(value = 1, message = "Patient ID must be a positive integer value") Integer id) {
+    public PatientResponse getById(
+            @Parameter(description = "Patient ID")
+            @Min(value = 1, message = "Patient ID must be a positive integer value")
+            @PathVariable Integer id) {
         return patientsMapper.mapToResponse(patientsService.getPatient(id));
     }
 
@@ -110,7 +113,10 @@ public class PatientsServiceController {
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
     @GetMapping(value = "/{id}/health", produces = APPLICATION_JSON_VALUE)
-    public PatientHealthInfoResponse getHealthInfo(@Parameter(description = "Patient ID") @PathVariable @Min(value = 1, message = "Patient ID must be a positive integer value") Integer id) {
+    public PatientHealthInfoResponse getHealthInfo(
+            @Parameter(description = "Patient ID")
+            @Min(value = 1, message = "Patient ID must be a positive integer value")
+            @PathVariable Integer id) {
         return patientsMapper.mapToResponse(patientsService.getHealthInfo(id));
     }
 

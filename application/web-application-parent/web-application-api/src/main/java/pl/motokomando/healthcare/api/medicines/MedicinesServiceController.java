@@ -63,7 +63,10 @@ public class MedicinesServiceController {
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
     @GetMapping(value = "/{productNDC}", produces = APPLICATION_JSON_VALUE)
-    public MedicineResponse getByProductNDC(@Parameter(description = "Product NDC") @PathVariable @NotBlank(message = "Product NDC is mandatory") String productNDC) {
+    public MedicineResponse getByProductNDC(
+            @Parameter(description = "Product NDC")
+            @NotBlank(message = "Product NDC is mandatory")
+            @PathVariable String productNDC) {
         return medicinesMapper.mapToResponse(medicinesService.getMedicine(productNDC));
     }
 

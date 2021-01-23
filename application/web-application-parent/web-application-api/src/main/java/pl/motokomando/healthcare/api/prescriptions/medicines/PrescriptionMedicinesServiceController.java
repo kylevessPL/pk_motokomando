@@ -74,7 +74,9 @@ public class PrescriptionMedicinesServiceController {
     @ResponseStatus(CREATED)
     @PostMapping(value = "/{id}/medicines", produces = APPLICATION_JSON_VALUE)
     public ResourceCreatedResponse create(
-            @Parameter(description = "Prescription ID") @PathVariable @Min(value = 1, message = "Prescription ID must be a positive integer value") Integer id,
+            @Parameter(description = "Prescription ID")
+            @Min(value = 1, message = "Prescription ID must be a positive integer value")
+            @PathVariable Integer id,
             @RequestBody @Valid PrescriptionMedicineRequest request) {
         PrescriptionMedicineRequestCommand command = prescriptionMedicineMapper.mapToCommand(request);
         BasicResponse response = basicMapper.mapToBasicResponse(prescriptionMedicinesService.createPrescriptionMedicine(id, command));
