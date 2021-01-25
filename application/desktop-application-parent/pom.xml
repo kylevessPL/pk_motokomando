@@ -7,10 +7,16 @@
         <groupId>pl.motokomando.healthcare</groupId>
         <version>1.0</version>
     </parent>
-	
+
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>desktop-application-parent</artifactId>
+    <packaging>pom</packaging>
 
+    <modules>
+        <module>desktop-application-model</module>
+        <module>desktop-application-controller</module>
+        <module>desktop-application-view</module>
+    </modules>
 
 </project>
