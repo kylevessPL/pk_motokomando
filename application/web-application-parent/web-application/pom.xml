@@ -27,6 +27,14 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>pl.motokomando.healthcare</groupId>
+            <artifactId>desktop-application-view</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>pl.motokomando.healthcare</groupId>
+            <artifactId>desktop-application-controller</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-test</artifactId>
             <scope>test</scope>
