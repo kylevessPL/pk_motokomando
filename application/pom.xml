@@ -63,6 +63,21 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
+                <groupId>pl.motokomando.healthcare</groupId>
+                <artifactId>desktop-application-model</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>pl.motokomando.healthcare</groupId>
+                <artifactId>desktop-application-controller</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>pl.motokomando.healthcare</groupId>
+                <artifactId>desktop-application-view</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.postgresql</groupId>
                 <artifactId>postgresql</artifactId>
                 <version>42.2.18</version>
