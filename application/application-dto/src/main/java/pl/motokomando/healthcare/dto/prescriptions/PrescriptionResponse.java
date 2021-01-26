@@ -20,7 +20,7 @@ public class PrescriptionResponse {
     private LocalDateTime issueDate;
     @Schema(description = "Prescription expiration date")
     private LocalDate expirationDate;
-    @Schema(description = "Prescription additional notes")
+    @Schema(description = "Prescription additional notes", example = "Take 5ml orally at 8 a.m., 12 noon and 8 p.m. daily for 7 days")
     private String notes;
 
 }

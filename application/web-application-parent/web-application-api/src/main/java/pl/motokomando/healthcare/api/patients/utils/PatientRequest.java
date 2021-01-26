@@ -42,10 +42,10 @@ public class PatientRequest implements Serializable {
     @NotNull(message = "Birth date is mandatory")
     @DateTimeFormat(iso = DATE)
     private LocalDate birthDate;
-    @Schema(description = "Patient sex", allowableValues = "MALE, FEMALE")
+    @Schema(description = "Patient sex", example = "MALE")
     @NotNull(message = "Sex is mandatory")
     private Sex sex;
-    @Schema(description = "Patient blood type", allowableValues = "0+, 0-, A+, A-, B+, B-, AB+, AB-")
+    @Schema(description = "Patient blood type", example = "AB-")
     @NotNull(message = "Blood type is mandatory")
     private BloodType bloodType;
     @Schema(description = "Patient street name", example = "Ethels Lane")
@@ -65,7 +65,7 @@ public class PatientRequest implements Serializable {
     @NotBlank(message = "City is mandatory")
     @Size(min = 2, max = 30, message = "City must be between 2 and 30 characters long")
     private String city;
-    @Schema(description = "Patient document type", allowableValues = "IDCARD, PASSPORT")
+    @Schema(description = "Patient document type", example = "IDCARD")
     @NotNull(message = "Document type is mandatory")
     private DocumentType documentType;
     @Schema(description = "Patient document ID", example = "SB1565402")

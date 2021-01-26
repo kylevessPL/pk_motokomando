@@ -17,7 +17,7 @@ import java.io.Serializable;
 @Setter
 public class PatientRecordPatchRequest implements Serializable {
 
-    @Schema(description = "Patient health status")
+    @Schema(description = "Patient health status", example = "GOOD")
     @NotNull(message = "Patient health status is mandatory")
     private HealthStatus healthStatus;
     @Schema(description = "Health status notes")

@@ -12,7 +12,9 @@ import pl.motokomando.healthcare.dto.patients.records.utils.HealthStatus;
 @Setter
 public class CurrentHealthResponse {
 
+    @Schema(description = "Health status", example = "GOOD")
     private HealthStatus healthStatus;
+    @Schema(description = "Patient record notes", example = "Patient gets better day by day")
     private String notes;
 
 }

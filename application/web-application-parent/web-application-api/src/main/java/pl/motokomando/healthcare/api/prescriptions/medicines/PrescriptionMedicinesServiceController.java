@@ -2,11 +2,14 @@ package pl.motokomando.healthcare.api.prescriptions.medicines;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +33,7 @@ import pl.motokomando.healthcare.dto.utils.BasicResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 
+import static org.springframework.http.HttpHeaders.LOCATION;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -56,7 +60,7 @@ public class PrescriptionMedicinesServiceController {
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
     @GetMapping(value = "/{prescriptionId}/medicines/{prescriptionMedicineId}", produces = APPLICATION_JSON_VALUE)
-    public PrescriptionMedicineResponse getById(@Valid PrescriptionMedicineBasicRequest request) {
+    public PrescriptionMedicineResponse getById(@ParameterObject @Valid PrescriptionMedicineBasicRequest request) {
         PrescriptionMedicineBasicRequestCommand command = prescriptionMedicineMapper.mapToCommand(request);
         return prescriptionMedicineMapper.mapToResponse(prescriptionMedicinesService.getPrescriptionMedicine(command));
     }
@@ -67,9 +71,13 @@ public class PrescriptionMedicinesServiceController {
             operationId = "addPrescriptionMedicine"
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Successfully added medicine to prescription"),
-            @ApiResponse(responseCode = "400", description = "Parameters not valid"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "Successfully added medicine to prescription",
+                    content = @Content,
+                    headers = @Header(name = LOCATION, description = "Location of the created resource", schema = @Schema(type = "string"))),
+            @ApiResponse(responseCode = "400", description = "Parameters not valid", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
     @ResponseStatus(CREATED)
     @PostMapping(value = "/{id}/medicines", produces = APPLICATION_JSON_VALUE)
@@ -95,7 +103,7 @@ public class PrescriptionMedicinesServiceController {
     })
     @ResponseStatus(NO_CONTENT)
     @DeleteMapping(value = "/{prescriptionId}/medicines/{prescriptionMedicineId}", produces = APPLICATION_JSON_VALUE)
-    public void remove(@Valid PrescriptionMedicineBasicRequest request) {
+    public void remove(@ParameterObject @Valid PrescriptionMedicineBasicRequest request) {
         PrescriptionMedicineBasicRequestCommand command = prescriptionMedicineMapper.mapToCommand(request);
         prescriptionMedicinesService.deletePrescriptionMedicine(command);
     }
