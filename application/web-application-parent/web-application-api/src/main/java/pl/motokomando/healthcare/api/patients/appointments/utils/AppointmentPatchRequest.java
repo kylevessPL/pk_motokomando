@@ -34,7 +34,7 @@ public class AppointmentPatchRequest implements Serializable {
     @Size(min = 5, max = 200, message = "Diagnosis notes must be between 5 and 200 characters long")
     @Nullable
     private String diagnosis;
-    @Schema(description = "Appointment status", allowableValues = "VALID, CANCELLED")
+    @Schema(description = "Appointment status", example = "VALID")
     @NotNull(message = "Appointment status is mandatory")
     private AppointmentStatus appointmentStatus;
 

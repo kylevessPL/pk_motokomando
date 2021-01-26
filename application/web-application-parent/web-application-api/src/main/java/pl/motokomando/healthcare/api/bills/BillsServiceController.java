@@ -72,7 +72,7 @@ public class BillsServiceController {
             operationId = "createBill"
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Successfully created bill"),
+            @ApiResponse(responseCode = "201", description = "Successfully created bill", content = @Content),
             @ApiResponse(responseCode = "400", description = "Parameters not valid", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })

@@ -25,7 +25,7 @@ public class PrescriptionRequest {
     @Future(message = "Expiration date must be in the future")
     @DateTimeFormat(iso = DATE)
     private LocalDate expirationDate;
-    @Schema(description = "Prescription additional notes")
+    @Schema(description = "Prescription additional notes", example = "Take 5ml orally at 8 a.m., 12 noon and 8 p.m. daily for 7 days")
     @Size(min = 5, max = 100, message = "Notes must be between 5 and 100 characters long")
     @Nullable
     private String notes;

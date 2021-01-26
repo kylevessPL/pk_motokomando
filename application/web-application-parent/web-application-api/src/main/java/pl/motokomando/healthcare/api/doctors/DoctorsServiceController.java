@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -58,7 +59,7 @@ public class DoctorsServiceController {
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
     @GetMapping(produces = APPLICATION_JSON_VALUE)
-    public PageResponse<DoctorBasicPagedResponse> getAll(@Valid DoctorPagedQuery query) {
+    public PageResponse<DoctorBasicPagedResponse> getAll(@ParameterObject @Valid DoctorPagedQuery query) {
         BasicPagedQueryCommand command = doctorsMapper.mapToCommand(query);
         DoctorBasicPageResponse response = doctorsMapper.mapToResponse(doctorsService.getAllDoctors(command));
         return new PageResponse<>(

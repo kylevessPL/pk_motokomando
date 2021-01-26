@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -77,7 +78,7 @@ public class AppointmentsServiceController {
             @Parameter(description = "Patient ID")
             @Min(value = 1, message = "Patient ID must be a positive integer value")
             @PathVariable Integer id,
-            @Valid AppointmentPagedQuery query) {
+            @ParameterObject @Valid AppointmentPagedQuery query) {
         BasicPagedQueryCommand command = appointmentsMapper.mapToCommand(query);
         AppointmentBasicPageResponse response = appointmentsMapper.mapToResponse(
                 appointmentsService.getAllAppointments(id, command));
@@ -98,7 +99,7 @@ public class AppointmentsServiceController {
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
     @GetMapping(value = "/{patientId}/appointments/{appointmentId}", produces = APPLICATION_JSON_VALUE)
-    public AppointmentFullResponse getById(@Valid AppointmentRequestParams params) {
+    public AppointmentFullResponse getById(@ParameterObject @Valid AppointmentRequestParams params) {
         AppointmentRequestParamsCommand paramsCommand = appointmentsMapper.mapToCommand(params);
         return appointmentsMapper.mapToResponse(appointmentsService.getFullAppointment(paramsCommand));
     }
@@ -109,7 +110,7 @@ public class AppointmentsServiceController {
             operationId = "scheduleAppointment"
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Successfully scheduled appointment"),
+            @ApiResponse(responseCode = "201", description = "Successfully scheduled appointment", content = @Content),
             @ApiResponse(responseCode = "400", description = "Parameters not valid", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
@@ -138,7 +139,7 @@ public class AppointmentsServiceController {
     @ResponseStatus(NO_CONTENT)
     @PatchMapping(path = "/{patientId}/appointments/{appointmentId}", consumes = "application/json-patch+json")
     public void update(
-            @Valid AppointmentRequestParams params,
+            @ParameterObject @Valid AppointmentRequestParams params,
             @RequestBody JsonPatch patchDocument) {
         AppointmentRequestParamsCommand paramsCommand = appointmentsMapper.mapToCommand(params);
         AppointmentResponse response = appointmentsMapper.mapToResponse(appointmentsService.getAppointment(paramsCommand));

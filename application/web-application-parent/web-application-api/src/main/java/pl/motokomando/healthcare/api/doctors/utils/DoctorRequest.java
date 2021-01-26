@@ -32,7 +32,7 @@ public class DoctorRequest implements Serializable {
     @NotBlank(message = "Last name is mandatory")
     @Size(min = 2, max = 30, message = "Last name must be between 2 and 30 characters long")
     private String lastName;
-    @Schema(description = "Doctor medical specialty")
+    @Schema(description = "Doctor medical specialty", example = "ANESTHESIA")
     @NotNull(message = "Medical specialty is mandatory")
     private MedicalSpecialty specialty;
     @Schema(description = "Doctor phone number", example = "+48502672107")

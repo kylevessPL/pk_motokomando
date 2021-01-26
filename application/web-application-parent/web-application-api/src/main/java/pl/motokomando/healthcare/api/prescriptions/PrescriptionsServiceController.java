@@ -72,7 +72,7 @@ public class PrescriptionsServiceController {
             operationId = "createPrescription"
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Successfully created prescription"),
+            @ApiResponse(responseCode = "201", description = "Successfully created prescription", content = @Content),
             @ApiResponse(responseCode = "400", description = "Parameters not valid", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
