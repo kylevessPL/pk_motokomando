@@ -2,6 +2,7 @@ package pl.motokomando.healthcare.api.patients.appointments;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -25,6 +26,7 @@ import pl.motokomando.healthcare.api.patients.appointments.utils.AppointmentPage
 import pl.motokomando.healthcare.api.patients.appointments.utils.AppointmentPatchRequest;
 import pl.motokomando.healthcare.api.patients.appointments.utils.AppointmentRequest;
 import pl.motokomando.healthcare.api.patients.appointments.utils.AppointmentRequestParams;
+import pl.motokomando.healthcare.api.utils.JsonPatchExample;
 import pl.motokomando.healthcare.api.utils.JsonPatchHandler;
 import pl.motokomando.healthcare.api.utils.PageResponse;
 import pl.motokomando.healthcare.api.utils.ResourceCreatedResponse;
@@ -43,6 +45,8 @@ import javax.json.JsonPatch;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 
+import static org.springframework.http.HttpHeaders.LINK;
+import static org.springframework.http.HttpHeaders.LOCATION;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -68,7 +72,14 @@ public class AppointmentsServiceController {
             @ApiResponse(
                     responseCode = "200",
                     description = "Successfully fetched patient appointments data",
-                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = AppointmentBasicPagedResponse.class)))),
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = AppointmentBasicPagedResponse.class))),
+                    headers = {
+                            @Header(name = LINK, description = "Pagination links", schema = @Schema(type = "string")),
+                            @Header(name = "X-Count-Per-Page", description = "Number of results per page", schema = @Schema(type = "integer")),
+                            @Header(name = "X-Current-Page", description = "Current page", schema = @Schema(type = "integer")),
+                            @Header(name = "X-Total-Count", description = "Total number of results", schema = @Schema(type = "integer")),
+                            @Header(name = "X-Total-Pages", description = "Total number of pages", schema = @Schema(type = "integer"))
+                    }),
             @ApiResponse(responseCode = "204", description = "Patient appointments data is empty", content = @Content),
             @ApiResponse(responseCode = "400", description = "Parameters not valid", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
@@ -110,7 +121,11 @@ public class AppointmentsServiceController {
             operationId = "scheduleAppointment"
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Successfully scheduled appointment", content = @Content),
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "Successfully scheduled appointment",
+                    content = @Content,
+                    headers = @Header(name = LOCATION, description = "Location of the created resource", schema = @Schema(type = "string"))),
             @ApiResponse(responseCode = "400", description = "Parameters not valid", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
@@ -140,7 +155,7 @@ public class AppointmentsServiceController {
     @PatchMapping(path = "/{patientId}/appointments/{appointmentId}", consumes = "application/json-patch+json")
     public void update(
             @ParameterObject @Valid AppointmentRequestParams params,
-            @RequestBody JsonPatch patchDocument) {
+            @ArraySchema(schema = @Schema(implementation = JsonPatchExample.class)) @RequestBody JsonPatch patchDocument) {
         AppointmentRequestParamsCommand paramsCommand = appointmentsMapper.mapToCommand(params);
         AppointmentResponse response = appointmentsMapper.mapToResponse(appointmentsService.getAppointment(paramsCommand));
         AppointmentPatchRequest request = appointmentsMapper.mapToRequest(response);

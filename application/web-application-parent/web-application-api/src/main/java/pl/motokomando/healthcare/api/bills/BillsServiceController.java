@@ -2,7 +2,10 @@ package pl.motokomando.healthcare.api.bills;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.headers.Header;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.motokomando.healthcare.api.bills.mapper.BillsMapper;
 import pl.motokomando.healthcare.api.bills.utils.BillRequest;
 import pl.motokomando.healthcare.api.mapper.BasicMapper;
+import pl.motokomando.healthcare.api.utils.JsonPatchExample;
 import pl.motokomando.healthcare.api.utils.JsonPatchHandler;
 import pl.motokomando.healthcare.api.utils.ResourceCreatedResponse;
 import pl.motokomando.healthcare.domain.bills.BillsService;
@@ -32,6 +36,7 @@ import javax.json.JsonPatch;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 
+import static org.springframework.http.HttpHeaders.LOCATION;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -72,7 +77,11 @@ public class BillsServiceController {
             operationId = "createBill"
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Successfully created bill", content = @Content),
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "Successfully created bill",
+                    content = @Content,
+                    headers = @Header(name = LOCATION, description = "Location of the created resource", schema = @Schema(type = "string"))),
             @ApiResponse(responseCode = "400", description = "Parameters not valid", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
@@ -100,7 +109,7 @@ public class BillsServiceController {
             @Parameter(description = "Bill ID")
             @Min(value = 1, message = "Bill ID must be a positive integer value")
             @PathVariable Integer id,
-            @RequestBody JsonPatch patchDocument) {
+            @ArraySchema(schema = @Schema(implementation = JsonPatchExample.class)) @RequestBody JsonPatch patchDocument) {
         BillResponse response = billsMapper.mapToResponse(billsService.getBill(id));
         BillRequest request = billsMapper.mapToRequest(response);
         request = jsonPatchHandler.patch(patchDocument, request, BillRequest.class);

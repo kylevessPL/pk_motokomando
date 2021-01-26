@@ -2,6 +2,7 @@ package pl.motokomando.healthcare.api.patients;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -32,6 +33,7 @@ import pl.motokomando.healthcare.dto.patients.PatientResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 
+import static org.springframework.http.HttpHeaders.LINK;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -54,7 +56,14 @@ public class PatientsServiceController {
             @ApiResponse(
                     responseCode = "200",
                     description = "Successfully fetched patients data",
-                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = PatientBasicPagedResponse.class)))),
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = PatientBasicPagedResponse.class))),
+                    headers = {
+                            @Header(name = LINK, description = "Pagination links", schema = @Schema(type = "string")),
+                            @Header(name = "X-Count-Per-Page", description = "Number of results per page", schema = @Schema(type = "integer")),
+                            @Header(name = "X-Current-Page", description = "Current page", schema = @Schema(type = "integer")),
+                            @Header(name = "X-Total-Count", description = "Total number of results", schema = @Schema(type = "integer")),
+                            @Header(name = "X-Total-Pages", description = "Total number of pages", schema = @Schema(type = "integer"))
+                    }),
             @ApiResponse(responseCode = "204", description = "Patients data is empty", content = @Content),
             @ApiResponse(responseCode = "400", description = "Parameters not valid", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
