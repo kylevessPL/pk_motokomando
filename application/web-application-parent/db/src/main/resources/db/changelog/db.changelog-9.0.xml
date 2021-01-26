@@ -1,0 +1,39 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+
+    <changeSet author="geekon" id="9.0-1">
+        <createSequence sequenceName="seq_doctors_specialties" cycle="false" minValue="1" maxValue="9223372036854775807" startValue="1" incrementBy="1"/>
+        <createSequence sequenceName="seq_specialties" cycle="false" minValue="1" maxValue="9223372036854775807" startValue="1" incrementBy="1"/>
+    </changeSet>
+    <changeSet author="geekon" id="9.0-2">
+        <createTable tableName="specialties">
+            <column name="id" type="INTEGER" defaultValueComputed="nextval('seq_specialties')">
+                <constraints nullable="false" unique="true" primaryKey="true" primaryKeyName="specialties_pk"/>
+            </column>
+            <column name="specialty" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="geekon" id="9.0-3">
+        <createTable tableName="doctors_specialties">
+            <column name="id" type="INTEGER" defaultValueComputed="nextval('seq_doctors_specialties')">
+                <constraints nullable="false" unique="true" primaryKey="true" primaryKeyName="doctors_specialties_pk"/>
+            </column>
+            <column name="doctor_id" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="specialty_id" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="geekon" id="9.0-4">
+        <addForeignKeyConstraint baseColumnNames="doctor_id" baseTableName="doctors_specialties" constraintName="doctors_specialties_fk0" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="doctors"/>
+        <addForeignKeyConstraint baseColumnNames="specialty_id" baseTableName="doctors_specialties" constraintName="doctors_specialties_fk1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="specialties"/>
+    </changeSet>
+
+</databaseChangeLog>
