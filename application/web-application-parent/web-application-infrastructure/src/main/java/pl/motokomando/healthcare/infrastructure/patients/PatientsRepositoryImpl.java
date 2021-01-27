@@ -96,8 +96,7 @@ public class PatientsRepositoryImpl implements PatientsRepository {
         patientsEntity.setHouseNumber(data.getHouseNumber());
         patientsEntity.setZipCode(data.getZipCode());
         patientsEntity.setCity(data.getCity());
-        patientsEntity.setDocumentType(data.getDocumentType());
-        patientsEntity.setDocumentId(data.getDocumentId());
+        patientsEntity.setPesel(data.getPesel());
         patientsEntity.setPhoneNumber(data.getPhoneNumber());
         return patientsEntity;
     }
