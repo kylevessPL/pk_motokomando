@@ -5,9 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pl.motokomando.healthcare.dto.patients.utils.BloodType;
-import pl.motokomando.healthcare.dto.patients.utils.DocumentType;
 import pl.motokomando.healthcare.dto.patients.utils.Sex;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Schema
@@ -34,10 +34,8 @@ public class PatientDetailsResponse {
     private String zipCode;
     @Schema(description = "Patient city", example = "Farmingdale")
     private String city;
-    @Schema(description = "Patient document type", allowableValues = "IDCARD, PASSPORT")
-    private DocumentType documentType;
-    @Schema(description = "Patient document ID", example = "SB1565402")
-    private String documentId;
+    @Schema(description = "Patient PESEL number", example = "12310188859")
+    private BigDecimal pesel;
     @Schema(description = "Patient phone number", example = "+48502672107")
     private String phoneNumber;
 

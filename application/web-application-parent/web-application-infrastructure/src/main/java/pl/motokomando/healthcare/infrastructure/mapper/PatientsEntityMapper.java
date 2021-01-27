@@ -46,8 +46,7 @@ public class PatientsEntityMapper {
                 patientsEntity.getHouseNumber(),
                 patientsEntity.getZipCode(),
                 patientsEntity.getCity(),
-                patientsEntity.getDocumentType(),
-                patientsEntity.getDocumentId(),
+                patientsEntity.getPesel(),
                 patientsEntity.getPhoneNumber());
     }
 
