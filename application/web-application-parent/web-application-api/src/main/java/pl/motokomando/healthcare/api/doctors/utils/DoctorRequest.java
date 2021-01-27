@@ -13,6 +13,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.List;
 
 @Schema
 @NoArgsConstructor
@@ -32,9 +33,9 @@ public class DoctorRequest implements Serializable {
     @NotBlank(message = "Last name is mandatory")
     @Size(min = 2, max = 30, message = "Last name must be between 2 and 30 characters long")
     private String lastName;
-    @Schema(description = "Doctor medical specialty", example = "ANESTHESIA")
-    @NotNull(message = "Medical specialty is mandatory")
-    private MedicalSpecialty specialty;
+    @Schema(description = "Doctor medical specialties", example = "[\"ANESTHESIA\", \"PEDIATRIC\"]")
+    @NotNull(message = "Medical specialties are mandatory")
+    private List<MedicalSpecialty> specialties;
     @Schema(description = "Doctor phone number", example = "+48502672107")
     @NotBlank(message = "Phone number is mandatory")
     @Pattern(regexp = "^\\+[- 0-9]+$", message = "Phone number must start with country code and contain only numbers, spaces or dashes")
