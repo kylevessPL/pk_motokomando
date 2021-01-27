@@ -31,8 +31,8 @@ public class JsonPatchHttpMessageConverter extends AbstractHttpMessageConverter<
     protected JsonPatch readInternal(@NonNull Class<? extends JsonPatch> clazz, @NonNull HttpInputMessage inputMessage) {
         try (JsonReader reader = Json.createReader(inputMessage.getBody())) {
             return Json.createPatch(reader.readArray());
-        } catch (Exception e) {
-            throw new HttpMessageNotReadableException(e.getMessage(), inputMessage);
+        } catch (Exception ex) {
+            throw new HttpMessageNotReadableException(ex.getMessage(), inputMessage);
         }
     }
 
@@ -40,8 +40,8 @@ public class JsonPatchHttpMessageConverter extends AbstractHttpMessageConverter<
     protected void writeInternal(@NonNull JsonPatch jsonPatch, @NonNull HttpOutputMessage outputMessage) {
         try (JsonWriter writer = Json.createWriter(outputMessage.getBody())) {
             writer.write(jsonPatch.toJsonArray());
-        } catch (Exception e) {
-            throw new HttpMessageNotWritableException(e.getMessage(), e);
+        } catch (Exception ex) {
+            throw new HttpMessageNotWritableException(ex.getMessage(), ex);
         }
     }
 

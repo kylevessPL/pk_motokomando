@@ -50,6 +50,7 @@ public class DoctorsEntityMapper {
                 doctorsEntity.getId(),
                 doctorsEntity.getFirstName(),
                 doctorsEntity.getLastName(),
+                doctorsEntity.getAcademicTitle(),
                 specialties,
                 doctorsEntity.getPhoneNumber());
     }

@@ -30,7 +30,7 @@ public class PatientPagedQuery {
     @Parameter(
             description = "Value to sort by",
             schema = @Schema(type = "string", allowableValues = { "id", "firstName", "lastName", "sex", "bloodType" }, defaultValue = "id"))
-    @ValidateString(acceptedValues = {"id", "firstName", "lastName", "sex", "bloodType"}, message = "Sort by property not valid")
+    @ValidateString(acceptedValues = { "id", "firstName", "lastName", "sex", "bloodType" }, message = "Sort by property not valid")
     private String sortBy = "id";
     @Parameter(description = "Sort direction", example = "ASC")
     private SortDirection sortDir = ASC;

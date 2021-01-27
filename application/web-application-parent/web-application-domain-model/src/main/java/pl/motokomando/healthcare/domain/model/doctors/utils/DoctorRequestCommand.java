@@ -16,6 +16,7 @@ public class DoctorRequestCommand {
     private Integer id;
     private String firstName;
     private String lastName;
+    private AcademicTitle academicTitle;
     private List<MedicalSpecialty> specialties;
     private String phoneNumber;
 
