@@ -2,9 +2,11 @@ package pl.motokomando.healthcare.infrastructure.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import pl.motokomando.healthcare.domain.model.doctors.utils.AcademicTitle;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -14,6 +16,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import java.util.Set;
 
+import static javax.persistence.EnumType.STRING;
 import static javax.persistence.GenerationType.SEQUENCE;
 
 @Entity
@@ -30,6 +33,9 @@ public class DoctorsEntity {
     private String firstName;
     @Column(name = "last_name", nullable = false, length = 30)
     private String lastName;
+    @Column(name = "academic_title", nullable = false, length = 10)
+    @Enumerated(STRING)
+    private AcademicTitle academicTitle;
     @Column(name = "phone_number", nullable = false, length = 15)
     private String phoneNumber;
 

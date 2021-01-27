@@ -30,7 +30,7 @@ public class AppointmentPagedQuery {
     @Parameter(
             description = "Value to sort by",
             schema = @Schema(type = "string", allowableValues = { "id", "appointmentDate", "appointmentStatus" }, defaultValue = "id"))
-    @ValidateString(acceptedValues = {"id", "appointmentDate", "appointmentStatus"}, message = "Sort by property not valid")
+    @ValidateString(acceptedValues = { "id", "appointmentDate", "appointmentStatus" }, message = "Sort by property not valid")
     private String sortBy = "id";
     @Parameter(description = "Sort direction", example = "ASC")
     private SortDirection sortDir = ASC;

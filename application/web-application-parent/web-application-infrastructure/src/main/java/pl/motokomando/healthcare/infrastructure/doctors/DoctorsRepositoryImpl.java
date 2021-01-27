@@ -100,6 +100,7 @@ public class DoctorsRepositoryImpl implements DoctorsRepository {
         doctorsEntity.setId(data.getId());
         doctorsEntity.setFirstName(data.getFirstName());
         doctorsEntity.setLastName(data.getLastName());
+        doctorsEntity.setAcademicTitle(data.getAcademicTitle());
         doctorsEntity.setSpecialties(specialtiesEntities);
         doctorsEntity.setPhoneNumber(data.getPhoneNumber());
         return doctorsEntity;
