@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pl.motokomando.healthcare.dto.doctors.utils.MedicalSpecialty;
 
+import java.util.List;
+
 @Schema
 @NoArgsConstructor
 @Getter
@@ -18,8 +20,8 @@ public class DoctorResponse {
     private String firstName;
     @Schema(description = "Doctor last name", example = "Smith")
     private String lastName;
-    @Schema(description = "Doctor medical specialty")
-    private MedicalSpecialty specialty;
+    @Schema(description = "Doctor medical specialties", example = "[\"ANESTHESIA\", \"PEDIATRIC\"]")
+    private List<MedicalSpecialty> specialties;
     @Schema(description = "Doctor phone number", example = "+48502672107")
     private String phoneNumber;
 

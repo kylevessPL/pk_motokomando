@@ -35,5 +35,134 @@
         <addForeignKeyConstraint baseColumnNames="doctor_id" baseTableName="doctors_specialties" constraintName="doctors_specialties_fk0" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="doctors"/>
         <addForeignKeyConstraint baseColumnNames="specialty_id" baseTableName="doctors_specialties" constraintName="doctors_specialties_fk1" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="specialties"/>
     </changeSet>
+    <changeSet author="geekon" id="9.0-5">
+        <dropColumn schemaName="public" tableName="doctors"
+                    columnName="specialty"/>
+    </changeSet>
+    <changeSet author="geekon" id="9.0-6">
+        <insert schemaName="public" tableName="specialties">
+            <column name="specialty" value="ANESTHESIA"/>
+        </insert>
+        <insert schemaName="public" tableName="specialties">
+            <column name="specialty" value="CARDIOVASCULAR"/>
+        </insert>
+        <insert schemaName="public" tableName="specialties">
+            <column name="specialty" value="COMMUNITYHEALTH"/>
+        </insert>
+        <insert schemaName="public" tableName="specialties">
+            <column name="specialty" value="DENTISTRY"/>
+        </insert>
+        <insert schemaName="public" tableName="specialties">
+            <column name="specialty" value="DERMATOLOGY"/>
+        </insert>
+        <insert schemaName="public" tableName="specialties">
+            <column name="specialty" value="DIETNUTRITION"/>
+        </insert>
+        <insert schemaName="public" tableName="specialties">
+            <column name="specialty" value="EMERGENCY"/>
+        </insert>
+        <insert schemaName="public" tableName="specialties">
+            <column name="specialty" value="ENDOCRINE"/>
+        </insert>
+        <insert schemaName="public" tableName="specialties">
+            <column name="specialty" value="GASTROENTEROLOGIC"/>
+        </insert>
+        <insert schemaName="public" tableName="specialties">
+            <column name="specialty" value="GENETIC"/>
+        </insert>
+        <insert schemaName="public" tableName="specialties">
+            <column name="specialty" value="GERIATRIC"/>
+        </insert>
+        <insert schemaName="public" tableName="specialties">
+            <column name="specialty" value="GYNECOLOGIC"/>
+        </insert>
+        <insert schemaName="public" tableName="specialties">
+            <column name="specialty" value="HEMATOLOGIC"/>
+        </insert>
+        <insert schemaName="public" tableName="specialties">
+            <column name="specialty" value="INFECTIOUS"/>
+        </insert>
+        <insert schemaName="public" tableName="specialties">
+            <column name="specialty" value="LABORATORYSCIENCE"/>
+        </insert>
+        <insert schemaName="public" tableName="specialties">
+            <column name="specialty" value="MIDWIFERY"/>
+        </insert>
+        <insert schemaName="public" tableName="specialties">
+            <column name="specialty" value="MUSCULOSKELETAL"/>
+        </insert>
+        <insert schemaName="public" tableName="specialties">
+            <column name="specialty" value="NEUROLOGIC"/>
+        </insert>
+        <insert schemaName="public" tableName="specialties">
+            <column name="specialty" value="NURSING"/>
+        </insert>
+        <insert schemaName="public" tableName="specialties">
+            <column name="specialty" value="OBSTETRIC"/>
+        </insert>
+        <insert schemaName="public" tableName="specialties">
+            <column name="specialty" value="ONCOLOGIC"/>
+        </insert>
+        <insert schemaName="public" tableName="specialties">
+            <column name="specialty" value="OPTOMETRIC"/>
+        </insert>
+        <insert schemaName="public" tableName="specialties">
+            <column name="specialty" value="OTOLARYNGOLOGIC"/>
+        </insert>
+        <insert schemaName="public" tableName="specialties">
+            <column name="specialty" value="PATHOLOGY"/>
+        </insert>
+        <insert schemaName="public" tableName="specialties">
+            <column name="specialty" value="PEDIATRIC"/>
+        </insert>
+        <insert schemaName="public" tableName="specialties">
+            <column name="specialty" value="PHARMACYSPECIALTY"/>
+        </insert>
+        <insert schemaName="public" tableName="specialties">
+            <column name="specialty" value="PHYSIOTHERAPY"/>
+        </insert>
+        <insert schemaName="public" tableName="specialties">
+            <column name="specialty" value="PLASTICSURGERY"/>
+        </insert>
+        <insert schemaName="public" tableName="specialties">
+            <column name="specialty" value="PODIATRIC"/>
+        </insert>
+        <insert schemaName="public" tableName="specialties">
+            <column name="specialty" value="PRIMARYCARE"/>
+        </insert>
+        <insert schemaName="public" tableName="specialties">
+            <column name="specialty" value="PSYCHIATRIC"/>
+        </insert>
+        <insert schemaName="public" tableName="specialties">
+            <column name="specialty" value="PUBLICHEALTH"/>
+        </insert>
+        <insert schemaName="public" tableName="specialties">
+            <column name="specialty" value="PULMONARY"/>
+        </insert>
+        <insert schemaName="public" tableName="specialties">
+            <column name="specialty" value="RADIOGRAPHY"/>
+        </insert>
+        <insert schemaName="public" tableName="specialties">
+            <column name="specialty" value="RENAL"/>
+        </insert>
+        <insert schemaName="public" tableName="specialties">
+            <column name="specialty" value="RESPIRATORYTHERAPY"/>
+        </insert>
+        <insert schemaName="public" tableName="specialties">
+            <column name="specialty" value="RHEUMATOLOGIC"/>
+        </insert>
+        <insert schemaName="public" tableName="specialties">
+            <column name="specialty" value="SPEECHPATHOLOGY"/>
+        </insert>
+        <insert schemaName="public" tableName="specialties">
+            <column name="specialty" value="SURGICAL"/>
+        </insert>
+        <insert schemaName="public" tableName="specialties">
+            <column name="specialty" value="TOXICOLOGIC"/>
+        </insert>
+        <insert schemaName="public" tableName="specialties">
+            <column name="specialty" value="UROLOGIC"/>
+        </insert>
+    </changeSet>
 
 </databaseChangeLog>
