@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import pl.motokomando.healthcare.dto.doctors.utils.AcademicTitle;
 import pl.motokomando.healthcare.dto.doctors.utils.MedicalSpecialty;
 
 import java.util.List;
@@ -20,6 +21,8 @@ public class DoctorResponse {
     private String firstName;
     @Schema(description = "Doctor last name", example = "Smith")
     private String lastName;
+    @Schema(description = "Doctor academic title", example = "MD")
+    private AcademicTitle academicTitle;
     @Schema(description = "Doctor medical specialties", example = "[\"ANESTHESIA\", \"PEDIATRIC\"]")
     private List<MedicalSpecialty> specialties;
     @Schema(description = "Doctor phone number", example = "+48502672107")

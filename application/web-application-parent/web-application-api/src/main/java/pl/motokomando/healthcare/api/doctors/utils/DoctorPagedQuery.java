@@ -29,8 +29,8 @@ public class DoctorPagedQuery {
     private Integer size = 20;
     @Parameter(
             description = "Value to sort by",
-            schema = @Schema(type = "string", allowableValues = { "id", "firstName", "lastName", "specialty" }, defaultValue = "id"))
-    @ValidateString(acceptedValues = {"id", "firstName", "lastName", "specialty"}, message = "Sort by property not valid")
+            schema = @Schema(type = "string", allowableValues = { "id", "firstName", "lastName", "academicTitle" }, defaultValue = "id"))
+    @ValidateString(acceptedValues = { "id", "firstName", "lastName", "academicTitle" }, message = "Sort by property not valid")
     private String sortBy = "id";
     @Parameter(description = "Sort direction", example = "ASC")
     private SortDirection sortDir = ASC;
