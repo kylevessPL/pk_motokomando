@@ -8,7 +8,6 @@ import pl.motokomando.healthcare.controller.base.BaseController;
 import pl.motokomando.healthcare.model.base.utils.DoctorRecord;
 import pl.motokomando.healthcare.model.base.utils.PatientRecord;
 import pl.motokomando.healthcare.view.base.utils.patient.*;
-import pl.motokomando.healthcare.view.base.utils.doctor.MedicalSpecialty;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -37,7 +36,7 @@ public class BaseView {
     private Button button_add_new_doctor;
     private TextField textField_new_doctor_surname;
     private TextField textField_new_doctor_phone_number;
-    private ComboBox<String> choiceBox_doctor_specialisations;
+    private ComboBox<String> comboBox_doctor_specialisations;
     private Label label_new_doctor_specialisation;
     private Tab tab_patients;
     private TabPane tabPane_patients;
@@ -54,13 +53,13 @@ public class BaseView {
     private TextField textField_new_patient_name;
     private TextField textField_new_patient_surname;
     private DatePicker datePicker_new_patient_birthday;
-    private ComboBox<String> choiceBox_new_patient_sex;
-    private ComboBox<String> choiceBox_new_patient_blood_group;
+    private ComboBox<String> comboBox_new_patient_sex;
+    private ComboBox<String> comboBox_new_patient_blood_group;
     private TextField textField_new_patient_street;
     private TextField textField_new_patient_house_number;
     private TextField textField_new_patient_zip_code;
     private TextField textField_new_patient_city;
-    private ComboBox<String> choiceBox_new_patient_id_type;
+    private ComboBox<String> comboBox_new_patient_id_type;
     private TextField textField_new_patient_id_number;
     private TextField textField_new_patient_phone_number;
     private Button button_add_new_patient;
@@ -105,7 +104,7 @@ public class BaseView {
         button_add_new_doctor = new Button();
         textField_new_doctor_surname = new TextField();
         textField_new_doctor_phone_number = new TextField();
-        choiceBox_doctor_specialisations = new ComboBox<>();
+        comboBox_doctor_specialisations = new ComboBox<>();
         label_new_doctor_specialisation = new Label();
         tab_patients = new Tab();
         tabPane_patients = new TabPane();
@@ -122,13 +121,13 @@ public class BaseView {
         textField_new_patient_name = new TextField();
         textField_new_patient_surname = new TextField();
         datePicker_new_patient_birthday = new DatePicker();
-        choiceBox_new_patient_sex = new ComboBox<>();
-        choiceBox_new_patient_blood_group = new ComboBox<>();
+        comboBox_new_patient_sex = new ComboBox<>();
+        comboBox_new_patient_blood_group = new ComboBox<>();
         textField_new_patient_street = new TextField();
         textField_new_patient_house_number = new TextField();
         textField_new_patient_zip_code = new TextField();
         textField_new_patient_city = new TextField();
-        choiceBox_new_patient_id_type = new ComboBox<>();
+        comboBox_new_patient_id_type = new ComboBox<>();
         textField_new_patient_id_number = new TextField();
         textField_new_patient_phone_number = new TextField();
         button_add_new_patient = new Button();
@@ -201,10 +200,10 @@ public class BaseView {
         textField_new_doctor_phone_number.setPromptText("Numer telefonu");
         textField_new_doctor_phone_number.setFont(new Font(16.0));
 
-        choiceBox_doctor_specialisations.setLayoutX(650.0);
-        choiceBox_doctor_specialisations.setLayoutY(371.0);
-        choiceBox_doctor_specialisations.setPrefHeight(40.0);
-        choiceBox_doctor_specialisations.setPrefWidth(300.0);
+        comboBox_doctor_specialisations.setLayoutX(650.0);
+        comboBox_doctor_specialisations.setLayoutY(371.0);
+        comboBox_doctor_specialisations.setPrefHeight(40.0);
+        comboBox_doctor_specialisations.setPrefWidth(300.0);
         //choiceBox_doctor_specialisations.getItems().setAll(Arrays.stream(MedicalSpecialty.values()).map(MedicalSpecialty::getName).collect(Collectors.toList()));
 
         label_new_doctor_specialisation.setLayoutX(650.0);
@@ -275,17 +274,17 @@ public class BaseView {
         datePicker_new_patient_birthday.setPrefWidth(300.0);
         datePicker_new_patient_birthday.setPromptText("Data urodzenia");
 
-        choiceBox_new_patient_sex.setLayoutX(350.0);
-        choiceBox_new_patient_sex.setLayoutY(290.0);
-        choiceBox_new_patient_sex.setPrefHeight(40.0);
-        choiceBox_new_patient_sex.setPrefWidth(300.0);
-        choiceBox_new_patient_sex.getItems().setAll(Arrays.stream(Sex.values()).map(Sex::getName).collect(Collectors.toList()));
+        comboBox_new_patient_sex.setLayoutX(350.0);
+        comboBox_new_patient_sex.setLayoutY(290.0);
+        comboBox_new_patient_sex.setPrefHeight(40.0);
+        comboBox_new_patient_sex.setPrefWidth(300.0);
+        comboBox_new_patient_sex.getItems().setAll(Arrays.stream(Sex.values()).map(Sex::getName).collect(Collectors.toList()));
 
-        choiceBox_new_patient_blood_group.setLayoutX(350.0);
-        choiceBox_new_patient_blood_group.setLayoutY(370.0);
-        choiceBox_new_patient_blood_group.setPrefHeight(40.0);
-        choiceBox_new_patient_blood_group.setPrefWidth(300.0);
-        choiceBox_new_patient_blood_group.getItems().setAll(Arrays.stream(BloodType.values()).map(BloodType::getName).collect(Collectors.toList()));
+        comboBox_new_patient_blood_group.setLayoutX(350.0);
+        comboBox_new_patient_blood_group.setLayoutY(370.0);
+        comboBox_new_patient_blood_group.setPrefHeight(40.0);
+        comboBox_new_patient_blood_group.setPrefWidth(300.0);
+        comboBox_new_patient_blood_group.getItems().setAll(Arrays.stream(BloodType.values()).map(BloodType::getName).collect(Collectors.toList()));
 
         textField_new_patient_street.setLayoutX(950.0);
         textField_new_patient_street.setLayoutY(50.0);
@@ -315,11 +314,11 @@ public class BaseView {
         textField_new_patient_city.setPromptText("Miejscowo��");
         textField_new_patient_city.setFont(new Font(16.0));
 
-        choiceBox_new_patient_id_type.setLayoutX(950.0);
-        choiceBox_new_patient_id_type.setLayoutY(370.0);
-        choiceBox_new_patient_id_type.setPrefHeight(40.0);
-        choiceBox_new_patient_id_type.setPrefWidth(300.0);
-        choiceBox_new_patient_id_type.getItems().setAll(Arrays.stream(DocumentType.values()).map(DocumentType::getName).collect(Collectors.toList()));
+        comboBox_new_patient_id_type.setLayoutX(950.0);
+        comboBox_new_patient_id_type.setLayoutY(370.0);
+        comboBox_new_patient_id_type.setPrefHeight(40.0);
+        comboBox_new_patient_id_type.setPrefWidth(300.0);
+        comboBox_new_patient_id_type.getItems().setAll(Arrays.stream(DocumentType.values()).map(DocumentType::getName).collect(Collectors.toList()));
 
         textField_new_patient_id_number.setLayoutX(950.0);
         textField_new_patient_id_number.setLayoutY(450.0);
@@ -370,7 +369,7 @@ public class BaseView {
         anchorPane_add_new_doctor.getChildren().add(button_add_new_doctor);
         anchorPane_add_new_doctor.getChildren().add(textField_new_doctor_surname);
         anchorPane_add_new_doctor.getChildren().add(textField_new_doctor_phone_number);
-        anchorPane_add_new_doctor.getChildren().add(choiceBox_doctor_specialisations);
+        anchorPane_add_new_doctor.getChildren().add(comboBox_doctor_specialisations);
         anchorPane_add_new_doctor.getChildren().add(label_new_doctor_specialisation);
         tabPane_doctors.getTabs().add(tab_add_new_doctor);
         mainPane.getTabs().add(tab_doctors);
@@ -384,13 +383,13 @@ public class BaseView {
         anchorPane_add_new_patient.getChildren().add(textField_new_patient_name);
         anchorPane_add_new_patient.getChildren().add(textField_new_patient_surname);
         anchorPane_add_new_patient.getChildren().add(datePicker_new_patient_birthday);
-        anchorPane_add_new_patient.getChildren().add(choiceBox_new_patient_sex);
-        anchorPane_add_new_patient.getChildren().add(choiceBox_new_patient_blood_group);
+        anchorPane_add_new_patient.getChildren().add(comboBox_new_patient_sex);
+        anchorPane_add_new_patient.getChildren().add(comboBox_new_patient_blood_group);
         anchorPane_add_new_patient.getChildren().add(textField_new_patient_street);
         anchorPane_add_new_patient.getChildren().add(textField_new_patient_house_number);
         anchorPane_add_new_patient.getChildren().add(textField_new_patient_zip_code);
         anchorPane_add_new_patient.getChildren().add(textField_new_patient_city);
-        anchorPane_add_new_patient.getChildren().add(choiceBox_new_patient_id_type);
+        anchorPane_add_new_patient.getChildren().add(comboBox_new_patient_id_type);
         anchorPane_add_new_patient.getChildren().add(textField_new_patient_id_number);
         anchorPane_add_new_patient.getChildren().add(textField_new_patient_phone_number);
         anchorPane_add_new_patient.getChildren().add(button_add_new_patient);
