@@ -1,15 +1,7 @@
 package pl.motokomando.healthcare.view.base;
 
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
 import pl.motokomando.healthcare.controller.base.BaseController;
@@ -40,7 +32,7 @@ public class BaseView {
     private Button button_add_new_doctor;
     private TextField textField_new_doctor_surname;
     private TextField textField_new_doctor_phone_number;
-    private ChoiceBox<String> choiceBox_doctor_specialisations;
+    private ComboBox<String> choiceBox_doctor_specialisations;
     private Label label_new_doctor_specialisation;
     private Tab tab_patients;
     private TabPane tabPane_patients;
@@ -57,13 +49,13 @@ public class BaseView {
     private TextField textField_new_patient_name;
     private TextField textField_new_patient_surname;
     private DatePicker datePicker_new_patient_birthday;
-    private ChoiceBox<String> choiceBox_new_patient_sex;
-    private ChoiceBox<String> choiceBox_new_patient_blood_group;
+    private ComboBox<String> choiceBox_new_patient_sex;
+    private ComboBox<String> choiceBox_new_patient_blood_group;
     private TextField textField_new_patient_street;
     private TextField textField_new_patient_house_number;
     private TextField textField_new_patient_zip_code;
     private TextField textField_new_patient_city;
-    private ChoiceBox<String> choiceBox_new_patient_id_type;
+    private ComboBox<String> choiceBox_new_patient_id_type;
     private TextField textField_new_patient_id_number;
     private TextField textField_new_patient_phone_number;
     private Button button_add_new_patient;
@@ -108,7 +100,7 @@ public class BaseView {
         button_add_new_doctor = new Button();
         textField_new_doctor_surname = new TextField();
         textField_new_doctor_phone_number = new TextField();
-        choiceBox_doctor_specialisations = new ChoiceBox<>();
+        choiceBox_doctor_specialisations = new ComboBox<>();
         label_new_doctor_specialisation = new Label();
         tab_patients = new Tab();
         tabPane_patients = new TabPane();
@@ -125,13 +117,13 @@ public class BaseView {
         textField_new_patient_name = new TextField();
         textField_new_patient_surname = new TextField();
         datePicker_new_patient_birthday = new DatePicker();
-        choiceBox_new_patient_sex = new ChoiceBox<>();
-        choiceBox_new_patient_blood_group = new ChoiceBox<>();
+        choiceBox_new_patient_sex = new ComboBox<>();
+        choiceBox_new_patient_blood_group = new ComboBox<>();
         textField_new_patient_street = new TextField();
         textField_new_patient_house_number = new TextField();
         textField_new_patient_zip_code = new TextField();
         textField_new_patient_city = new TextField();
-        choiceBox_new_patient_id_type = new ChoiceBox<>();
+        choiceBox_new_patient_id_type = new ComboBox<>();
         textField_new_patient_id_number = new TextField();
         textField_new_patient_phone_number = new TextField();
         button_add_new_patient = new Button();
