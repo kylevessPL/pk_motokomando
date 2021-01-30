@@ -7,6 +7,11 @@ import javafx.scene.text.Font;
 import pl.motokomando.healthcare.controller.base.BaseController;
 import pl.motokomando.healthcare.model.base.utils.DoctorRecord;
 import pl.motokomando.healthcare.model.base.utils.PatientRecord;
+import pl.motokomando.healthcare.view.base.utils.patient.*;
+import pl.motokomando.healthcare.view.base.utils.doctor.MedicalSpecialty;
+
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 import static javafx.scene.control.TabPane.TabClosingPolicy.UNAVAILABLE;
 import static javafx.scene.layout.Region.USE_PREF_SIZE;
@@ -200,6 +205,7 @@ public class BaseView {
         choiceBox_doctor_specialisations.setLayoutY(371.0);
         choiceBox_doctor_specialisations.setPrefHeight(40.0);
         choiceBox_doctor_specialisations.setPrefWidth(300.0);
+        //choiceBox_doctor_specialisations.getItems().setAll(Arrays.stream(MedicalSpecialty.values()).map(MedicalSpecialty::getName).collect(Collectors.toList()));
 
         label_new_doctor_specialisation.setLayoutX(650.0);
         label_new_doctor_specialisation.setLayoutY(340.0);
@@ -273,11 +279,13 @@ public class BaseView {
         choiceBox_new_patient_sex.setLayoutY(290.0);
         choiceBox_new_patient_sex.setPrefHeight(40.0);
         choiceBox_new_patient_sex.setPrefWidth(300.0);
+        choiceBox_new_patient_sex.getItems().setAll(Arrays.stream(Sex.values()).map(Sex::getName).collect(Collectors.toList()));
 
         choiceBox_new_patient_blood_group.setLayoutX(350.0);
         choiceBox_new_patient_blood_group.setLayoutY(370.0);
         choiceBox_new_patient_blood_group.setPrefHeight(40.0);
         choiceBox_new_patient_blood_group.setPrefWidth(300.0);
+        choiceBox_new_patient_blood_group.getItems().setAll(Arrays.stream(BloodType.values()).map(BloodType::getName).collect(Collectors.toList()));
 
         textField_new_patient_street.setLayoutX(950.0);
         textField_new_patient_street.setLayoutY(50.0);
@@ -311,6 +319,7 @@ public class BaseView {
         choiceBox_new_patient_id_type.setLayoutY(370.0);
         choiceBox_new_patient_id_type.setPrefHeight(40.0);
         choiceBox_new_patient_id_type.setPrefWidth(300.0);
+        choiceBox_new_patient_id_type.getItems().setAll(Arrays.stream(DocumentType.values()).map(DocumentType::getName).collect(Collectors.toList()));
 
         textField_new_patient_id_number.setLayoutX(950.0);
         textField_new_patient_id_number.setLayoutY(450.0);
