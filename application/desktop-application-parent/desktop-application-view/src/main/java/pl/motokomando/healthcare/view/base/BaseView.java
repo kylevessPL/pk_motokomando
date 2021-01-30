@@ -139,7 +139,7 @@ public class BaseView {
 
         tabPaneDoctors.setTabClosingPolicy(UNAVAILABLE);
 
-        tabFindDoctor.setText("Znajdź doktora");
+        tabFindDoctor.setText("Znajdź lekarza");
 
         anchorPaneFindDoctor.setMinHeight(0.0);
         anchorPaneFindDoctor.setMinWidth(0.0);
@@ -166,7 +166,7 @@ public class BaseView {
 
         tabFindDoctor.setContent(anchorPaneFindDoctor);
 
-        tabAddNewDoctor.setText("Dodaj Doktora");
+        tabAddNewDoctor.setText("Dodaj lekarza");
 
         anchorPaneAddNewDoctor.setMinHeight(0.0);
         anchorPaneAddNewDoctor.setMinWidth(0.0);
@@ -183,7 +183,7 @@ public class BaseView {
         buttonAddNewDoctor.setLayoutX(738.0);
         buttonAddNewDoctor.setLayoutY(472.0);
         buttonAddNewDoctor.setMnemonicParsing(false);
-        buttonAddNewDoctor.setText("Dodaj doktora");
+        buttonAddNewDoctor.setText("Dodaj lekarza");
         buttonAddNewDoctor.setFont(new Font(16.0));
 
         textFieldNewDoctorSurname.setLayoutX(650.0);
@@ -311,7 +311,7 @@ public class BaseView {
         textFieldNewPatientCity.setLayoutY(290.0);
         textFieldNewPatientCity.setPrefHeight(40.0);
         textFieldNewPatientCity.setPrefWidth(300.0);
-        textFieldNewPatientCity.setPromptText("Miejscowo��");
+        textFieldNewPatientCity.setPromptText("Miejscowość");
         textFieldNewPatientCity.setFont(new Font(16.0));
 
         comboBoxNewPatientIdType.setLayoutX(950.0);
@@ -344,7 +344,7 @@ public class BaseView {
 
         labelNewPatientSex.setLayoutX(350.0);
         labelNewPatientSex.setLayoutY(260.0);
-        labelNewPatientSex.setText("P�e�:");
+        labelNewPatientSex.setText("Płeć:");
         labelNewPatientSex.setFont(new Font(16.0));
 
         labelNewPatientBloodGroup.setLayoutX(350.0);
