@@ -14,7 +14,7 @@ public enum MedicalSpecialty {
     DENTISTRY ("Dentystyka"),
     DERMATOLOGY ("Dermatologia"),
     DIETNUTRITION ("Dietetyk"),
-    EMERGENCY ("Wypadek"),
+    EMERGENCY ("Lekarz pierwszego kontaktu"),
     ENDOCRINE ("Hormonalny"),
     GASTROENTEROLOGIC ("Gastroenterologia"),
     GENETIC ("Genetyczny"),
