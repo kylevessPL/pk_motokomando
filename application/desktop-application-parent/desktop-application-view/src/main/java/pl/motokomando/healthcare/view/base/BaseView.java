@@ -7,6 +7,7 @@ import javafx.scene.text.Font;
 import pl.motokomando.healthcare.controller.base.BaseController;
 import pl.motokomando.healthcare.model.base.utils.DoctorRecord;
 import pl.motokomando.healthcare.model.base.utils.PatientRecord;
+import pl.motokomando.healthcare.view.base.utils.doctor.MedicalSpecialty;
 import pl.motokomando.healthcare.view.base.utils.patient.*;
 
 import java.util.Arrays;
@@ -204,7 +205,7 @@ public class BaseView {
         comboBoxDoctorSpecialisations.setLayoutY(371.0);
         comboBoxDoctorSpecialisations.setPrefHeight(40.0);
         comboBoxDoctorSpecialisations.setPrefWidth(300.0);
-        //choiceBox_doctor_specialisations.getItems().setAll(Arrays.stream(MedicalSpecialty.values()).map(MedicalSpecialty::getName).collect(Collectors.toList()));
+        comboBoxDoctorSpecialisations.getItems().setAll(Arrays.stream(MedicalSpecialty.values()).map(MedicalSpecialty::getName).collect(Collectors.toList()));
 
         labelNewDoctorSpecialisation.setLayoutX(650.0);
         labelNewDoctorSpecialisation.setLayoutY(340.0);
