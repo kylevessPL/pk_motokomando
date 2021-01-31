@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.lang.Nullable;
-import pl.motokomando.healthcare.domain.model.patients.appointments.utils.AppointmentStatus;
+import pl.motokomando.healthcare.domain.model.utils.AppointmentStatus;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;

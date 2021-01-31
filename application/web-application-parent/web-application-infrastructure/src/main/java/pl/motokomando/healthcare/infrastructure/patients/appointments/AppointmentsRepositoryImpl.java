@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.motokomando.healthcare.domain.model.doctors.appointments.DoctorAppointment;
 import pl.motokomando.healthcare.domain.model.patients.appointments.Appointment;
 import pl.motokomando.healthcare.domain.model.patients.appointments.AppointmentBasicPage;
 import pl.motokomando.healthcare.domain.model.patients.appointments.utils.AppointmentPatchRequestCommand;
@@ -21,6 +22,7 @@ import pl.motokomando.healthcare.infrastructure.mapper.BasicEntityMapper;
 import pl.motokomando.healthcare.infrastructure.model.AppointmentsEntity;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -58,6 +60,15 @@ public class AppointmentsRepositoryImpl implements AppointmentsRepository {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<DoctorAppointment> getAllAppointmentsByDoctorIdAndDateRange(Integer doctorId, LocalDate startDate, LocalDate endDate) {
+        LocalDateTime start = startDate.atStartOfDay();
+        LocalDateTime end = endDate.atStartOfDay();
+        List<AppointmentsEntity> appointmentsEntityList = dao.findAllByDoctorIdAndAppointmentDateBetween(doctorId, start, end);
+        return appointmentsEntityMapper.mapToDoctorAppointmentList(appointmentsEntityList);
+    }
+
+    @Override
     @Transactional
     public void updateAppointment(AppointmentPatchRequestCommand data) {
         AppointmentsEntity appointmentsEntity = createEntity(data);
@@ -74,8 +85,8 @@ public class AppointmentsRepositoryImpl implements AppointmentsRepository {
 
     @Override
     @Transactional(readOnly = true)
-    public boolean isDateAvailable(LocalDateTime date) {
-        return !dao.existsByAppointmentDateAndAndAppointmentStatusEqualsValid(date);
+    public boolean isDateAvailable(Integer doctorId, LocalDateTime date) {
+        return !dao.existsByDoctorIdAndAppointmentDateAndAppointmentStatusEqualsValid(doctorId, date);
     }
 
     @Override
