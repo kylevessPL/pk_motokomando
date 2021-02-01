@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Getter
-
 public enum MedicalSpecialty {
 
     ANESTHESIA ("Znieczulenie"),
@@ -51,4 +50,5 @@ public enum MedicalSpecialty {
     UROLOGIC ("Urologiczny");
 
     private final String name;
+
 }
