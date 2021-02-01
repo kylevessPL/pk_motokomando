@@ -1,14 +1,24 @@
 package pl.motokomando.healthcare.view.base;
 
 import javafx.scene.Parent;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
 import pl.motokomando.healthcare.controller.base.BaseController;
 import pl.motokomando.healthcare.model.base.utils.DoctorRecord;
 import pl.motokomando.healthcare.model.base.utils.PatientRecord;
 import pl.motokomando.healthcare.view.base.utils.doctor.MedicalSpecialty;
-import pl.motokomando.healthcare.view.base.utils.patient.*;
+import pl.motokomando.healthcare.view.base.utils.patient.BloodType;
+import pl.motokomando.healthcare.view.base.utils.patient.DocumentType;
+import pl.motokomando.healthcare.view.base.utils.patient.Sex;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;

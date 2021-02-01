@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Getter
-
 public enum BloodType {
 
     O_POS("0+"),
@@ -18,4 +17,5 @@ public enum BloodType {
     AB_NEG("AB-");
 
     private final String name;
+
 }

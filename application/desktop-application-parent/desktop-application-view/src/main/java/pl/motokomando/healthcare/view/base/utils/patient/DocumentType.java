@@ -5,11 +5,11 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Getter
-
 public enum DocumentType {
 
     ID_CARD("Dowód osobisty"),
     PASSPORT("Paszport");
 
     private final String name;
+
 }
