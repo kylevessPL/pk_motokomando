@@ -47,6 +47,7 @@ public class PatientView {
     private TableView<AppointmentRecord> tableView;
     private TableColumn<AppointmentRecord, String> tableColumn;
     private TableColumn<AppointmentRecord, String> tableColumn0;
+    private TableColumn<AppointmentRecord, String> tableColumnDoctor;
     private Tab tab1;
     private AnchorPane anchorPane1;
     private DatePicker datePicker0;
@@ -101,6 +102,7 @@ public class PatientView {
         tableView = new TableView<>();
         tableColumn = new TableColumn<>();
         tableColumn0 = new TableColumn<>();
+        tableColumnDoctor = new TableColumn<>();
         tab1 = new Tab();
         anchorPane1 = new AnchorPane();
         datePicker0 = new DatePicker();
@@ -228,11 +230,15 @@ public class PatientView {
         tableView.setPrefHeight(500.0);
         tableView.setPrefWidth(800.0);
 
-        tableColumn.setPrefWidth(400.0);
+        tableColumn.setPrefWidth(266.0);
         tableColumn.setText("Data");
 
-        tableColumn0.setPrefWidth(400.0);
+        tableColumn0.setPrefWidth(266.0);
         tableColumn0.setText("Status");
+
+        tableColumnDoctor.setPrefWidth(268.0);
+        tableColumnDoctor.setText("Lekarz");
+
         tab0.setContent(anchorPane0);
 
         tab1.setText("Zarezerwuj wizytę");
@@ -294,6 +300,7 @@ public class PatientView {
         patientPane.getTabs().add(tab);
         tableView.getColumns().add(tableColumn);
         tableView.getColumns().add(tableColumn0);
+        tableView.getColumns().add(tableColumnDoctor);
         anchorPane0.getChildren().add(tableView);
         patientPane.getTabs().add(tab0);
         anchorPane1.getChildren().add(datePicker0);
