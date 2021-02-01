@@ -235,7 +235,7 @@ public class AppointmentView {
         tab1.setContent(anchorPane0);
         tab.setContent(tabPane);
 
-        tab2.setText("Doktor");
+        tab2.setText("Lekarz");
 
         anchorPane1.setMinHeight(0.0);
         anchorPane1.setMinWidth(0.0);
