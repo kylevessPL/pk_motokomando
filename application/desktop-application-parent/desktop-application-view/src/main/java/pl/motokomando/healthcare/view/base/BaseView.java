@@ -38,7 +38,9 @@ public class BaseView {
     private TextField textFieldNewDoctorSurname;
     private TextField textFieldNewDoctorPhoneNumber;
     private ComboBox<String> comboBoxDoctorSpecialisations;
+    private ComboBox<String> comboBoxDoctorAcademicTittle;
     private Label labelNewDoctorSpecialisation;
+    private Label labelNewDoctorAcademicTittle;
     private Tab tabPatients;
     private TabPane tabPanePatients;
     private Tab tabFindPatient;
@@ -106,7 +108,9 @@ public class BaseView {
         textFieldNewDoctorSurname = new TextField();
         textFieldNewDoctorPhoneNumber = new TextField();
         comboBoxDoctorSpecialisations = new ComboBox<>();
+        comboBoxDoctorAcademicTittle = new ComboBox<>();
         labelNewDoctorSpecialisation = new Label();
+        labelNewDoctorAcademicTittle = new Label();
         tabPatients = new Tab();
         tabPanePatients = new TabPane();
         tabFindPatient = new Tab();
@@ -182,7 +186,7 @@ public class BaseView {
         textFieldNewDoctorName.setFont(new Font(16.0));
 
         buttonAddNewDoctor.setLayoutX(738.0);
-        buttonAddNewDoctor.setLayoutY(472.0);
+        buttonAddNewDoctor.setLayoutY(590.0);
         buttonAddNewDoctor.setMnemonicParsing(false);
         buttonAddNewDoctor.setText("Dodaj lekarza");
         buttonAddNewDoctor.setFont(new Font(16.0));
@@ -202,15 +206,27 @@ public class BaseView {
         textFieldNewDoctorPhoneNumber.setFont(new Font(16.0));
 
         comboBoxDoctorSpecialisations.setLayoutX(650.0);
-        comboBoxDoctorSpecialisations.setLayoutY(371.0);
+        comboBoxDoctorSpecialisations.setLayoutY(370.0);
         comboBoxDoctorSpecialisations.setPrefHeight(40.0);
         comboBoxDoctorSpecialisations.setPrefWidth(300.0);
         comboBoxDoctorSpecialisations.getItems().setAll(Arrays.stream(MedicalSpecialty.values()).map(MedicalSpecialty::getName).collect(Collectors.toList()));
+
+        comboBoxDoctorAcademicTittle.setLayoutX(650.0);
+        comboBoxDoctorAcademicTittle.setLayoutY(490.0);
+        comboBoxDoctorAcademicTittle.setPrefHeight(40.0);
+        comboBoxDoctorAcademicTittle.setPrefWidth(300.0);
+        //comboBoxDoctorAcademicTittle.getItems().setAll(Arrays.stream(AcademicTittle.values()).map(AcademicTittle::getName).collect(Collectors.toList()));
 
         labelNewDoctorSpecialisation.setLayoutX(650.0);
         labelNewDoctorSpecialisation.setLayoutY(340.0);
         labelNewDoctorSpecialisation.setText("Specjalizacja:");
         labelNewDoctorSpecialisation.setFont(new Font(16.0));
+
+        labelNewDoctorAcademicTittle.setLayoutX(650.0);
+        labelNewDoctorAcademicTittle.setLayoutY(460.0);
+        labelNewDoctorAcademicTittle.setText("Tytuł naukowy:");
+        labelNewDoctorAcademicTittle.setFont(new Font(16.0));
+
         tabAddNewDoctor.setContent(anchorPaneAddNewDoctor);
         tabDoctors.setContent(tabPaneDoctors);
 
@@ -371,7 +387,9 @@ public class BaseView {
         anchorPaneAddNewDoctor.getChildren().add(textFieldNewDoctorSurname);
         anchorPaneAddNewDoctor.getChildren().add(textFieldNewDoctorPhoneNumber);
         anchorPaneAddNewDoctor.getChildren().add(comboBoxDoctorSpecialisations);
+        anchorPaneAddNewDoctor.getChildren().add(comboBoxDoctorAcademicTittle);
         anchorPaneAddNewDoctor.getChildren().add(labelNewDoctorSpecialisation);
+        anchorPaneAddNewDoctor.getChildren().add(labelNewDoctorAcademicTittle);
         tabPaneDoctors.getTabs().add(tabAddNewDoctor);
         mainPane.getTabs().add(tabDoctors);
         tableViewPatients.getColumns().add(tableColumnPatientName);
