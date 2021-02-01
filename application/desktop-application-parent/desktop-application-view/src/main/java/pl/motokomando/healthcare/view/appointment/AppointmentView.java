@@ -221,10 +221,10 @@ public class AppointmentView {
         textField.setPrefWidth(1500.0);
         textField.setPromptText("Wprowadź nazwe leku");
 
-        textAreaDoctorNotes.setLayoutX(100.0);
-        textAreaDoctorNotes.setLayoutY(60.0);
-        textAreaDoctorNotes.setPrefHeight(550.0);
-        textAreaDoctorNotes.setPrefWidth(1000.0);
+        textAreaDoctorNotes.setLayoutX(50.0);
+        textAreaDoctorNotes.setLayoutY(50.0);
+        textAreaDoctorNotes.setPrefHeight(500.0);
+        textAreaDoctorNotes.setPrefWidth(1100.0);
         textAreaDoctorNotes.setPromptText("Dolegliwości, badania, zalecenia");
 
         button.setLayoutX(528.0);
@@ -285,7 +285,7 @@ public class AppointmentView {
         button1.setFont(new Font(16.0));
 
         buttonSaveNotes.setLayoutX(575.0);
-        buttonSaveNotes.setLayoutY(640.0);
+        buttonSaveNotes.setLayoutY(600.0);
         buttonSaveNotes.setMnemonicParsing(false);
         buttonSaveNotes.setText("Zapisz");
         buttonSaveNotes.setFont(new Font(16.0));
@@ -327,8 +327,8 @@ public class AppointmentView {
         anchorPane2.getChildren().add(button1);
         anchorPaneDoctorNotes.getChildren().add(textAreaDoctorNotes);
         anchorPaneDoctorNotes.getChildren().add(buttonSaveNotes);
-        appointmentPane.getTabs().add(tab3);
         appointmentPane.getTabs().add(tabDoctorNotes);
+        appointmentPane.getTabs().add(tab3);
     }
 
 }
