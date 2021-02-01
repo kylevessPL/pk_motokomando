@@ -1,11 +1,23 @@
 package pl.motokomando.healthcare.view.patient;
 
 import javafx.scene.Parent;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
 import pl.motokomando.healthcare.controller.patient.PatientController;
 import pl.motokomando.healthcare.model.patient.utils.AppointmentRecord;
+
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 import static javafx.scene.control.TabPane.TabClosingPolicy.UNAVAILABLE;
 import static javafx.scene.layout.Region.USE_PREF_SIZE;
@@ -43,8 +55,8 @@ public class PatientView {
     private Tab tab1;
     private AnchorPane anchorPane1;
     private DatePicker datePicker0;
-    private ComboBox<String> choiceBox2;
-    private ChoiceBox<String> choiceBox3;
+    private ComboBox<String> comboBox2;
+    private ComboBox<String> comboBox3;
     private Button button0;
     private Button buttonUnlockChanging;
     private Label label2;
@@ -99,8 +111,8 @@ public class PatientView {
         tab1 = new Tab();
         anchorPane1 = new AnchorPane();
         datePicker0 = new DatePicker();
-        choiceBox2 = new ComboBox<>();
-        choiceBox3 = new ChoiceBox<>();
+        comboBox2 = new ComboBox<>();
+        comboBox3 = new ComboBox<>();
         button0 = new Button();
         buttonUnlockChanging = new Button();
         label2 = new Label();
@@ -253,16 +265,16 @@ public class PatientView {
         datePicker0.setPrefWidth(300.0);
         datePicker0.setPromptText("Wybierz datę");
 
-        choiceBox2.setLayoutX(300.0);
-        choiceBox2.setLayoutY(80.0);
-        choiceBox2.setPrefHeight(40.0);
-        choiceBox2.setPrefWidth(300.0);
-        setWorkingHours(choiceBox2);
+        comboBox2.setLayoutX(300.0);
+        comboBox2.setLayoutY(80.0);
+        comboBox2.setPrefHeight(40.0);
+        comboBox2.setPrefWidth(300.0);
 
-        choiceBox3.setLayoutX(300.0);
-        choiceBox3.setLayoutY(280.0);
-        choiceBox3.setPrefHeight(40.0);
-        choiceBox3.setPrefWidth(300.0);
+        comboBox3.setLayoutX(300.0);
+        comboBox3.setLayoutY(280.0);
+        comboBox3.setPrefHeight(40.0);
+        comboBox3.setPrefWidth(300.0);
+        setWorkingHours(comboBox3);
 
         button0.setLayoutX(401.0);
         button0.setLayoutY(400.0);
@@ -318,31 +330,21 @@ public class PatientView {
         anchorPane0.getChildren().add(tableView);
         patientPane.getTabs().add(tab0);
         anchorPane1.getChildren().add(datePicker0);
-        anchorPane1.getChildren().add(choiceBox2);
-        anchorPane1.getChildren().add(choiceBox3);
+        anchorPane1.getChildren().add(comboBox2);
+        anchorPane1.getChildren().add(comboBox3);
         anchorPane1.getChildren().add(button0);
         anchorPane1.getChildren().add(label2);
         anchorPane1.getChildren().add(label3);
         patientPane.getTabs().add(tab1);
     }
 
-    void setWorkingHours(ComboBox<String> comboBoxHour){
-        comboBoxHour.getItems().add("08:00");
-        comboBoxHour.getItems().add("08:30");
-        comboBoxHour.getItems().add("09:00");
-        comboBoxHour.getItems().add("09:30");
-        comboBoxHour.getItems().add("10:00");
-        comboBoxHour.getItems().add("10:30");
-        comboBoxHour.getItems().add("11:00");
-        comboBoxHour.getItems().add("11:30");
-        comboBoxHour.getItems().add("12:00");
-        comboBoxHour.getItems().add("12:30");
-        comboBoxHour.getItems().add("13:00");
-        comboBoxHour.getItems().add("13:30");
-        comboBoxHour.getItems().add("14:00");
-        comboBoxHour.getItems().add("14:30");
-        comboBoxHour.getItems().add("15:00");
-        comboBoxHour.getItems().add("15:30");
+    void setWorkingHours(ComboBox<String> comboBoxHour) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+        LocalTime workingHours = LocalTime.of(8, 0, 0);
+        while (!workingHours.isAfter(LocalTime.of(18, 0, 0))) {
+            comboBoxHour.getItems().add(workingHours.format(formatter));
+            workingHours = workingHours.plusMinutes(30);
+        }
     }
 
 }
