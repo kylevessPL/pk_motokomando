@@ -1,6 +1,7 @@
 package pl.motokomando.healthcare.api.patients.utils;
 
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,16 +17,22 @@ import static pl.motokomando.healthcare.domain.model.utils.SortDirection.ASC;
 @Setter
 public class PatientPagedQuery {
 
-    @Parameter(description = "Page number, default: 1", example = "5")
+    @Parameter(
+            description = "Page number",
+            schema = @Schema(type = "integer", defaultValue = "1"))
     @Min(value = 1, message = "Page number must be a positive integer value")
     private Integer page = 1;
-    @Parameter(description = "Page size, default: 10", example = "50")
+    @Parameter(
+            description = "Page size",
+            schema = @Schema(type = "integer", defaultValue = "20"))
     @Min(value = 1, message = "Page size must be a positive integer value")
     private Integer size = 20;
-    @Parameter(description = "Value to sort by, default: id, allowable values: id, firstName, lastName, sex, bloodType", example = "lastName")
-    @ValidateString(acceptedValues = {"id", "firstName", "lastName", "sex", "bloodType"}, message = "Sort by property not valid")
+    @Parameter(
+            description = "Value to sort by",
+            schema = @Schema(type = "string", allowableValues = { "id", "firstName", "lastName", "sex", "bloodType" }, defaultValue = "id"))
+    @ValidateString(acceptedValues = { "id", "firstName", "lastName", "sex", "bloodType" }, message = "Sort by property not valid")
     private String sortBy = "id";
-    @Parameter(description = "Sort direction, default value = ASC, allowable values: ASC, DESC")
+    @Parameter(description = "Sort direction", example = "ASC")
     private SortDirection sortDir = ASC;
 
 }

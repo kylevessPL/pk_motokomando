@@ -12,10 +12,11 @@ import java.util.List;
 public interface AppointmentsEntityDao extends JpaRepository<AppointmentsEntity, Integer> {
 
     Page<AppointmentsEntity> findAllByIdIn(List<Integer> appointmentIdList, Pageable pageable);
+    List<AppointmentsEntity> findAllByDoctorIdAndAppointmentDateBetween(Integer doctorId, LocalDateTime start, LocalDateTime end);
     AppointmentsEntity findFirstByIdInOrderByAppointmentDateDesc(List<Integer> appointmentIdList);
     @Query("SELECT CASE WHEN count(e) > 0 THEN true ELSE false END FROM AppointmentsEntity e " +
-            "WHERE e.appointmentDate = ?1 AND e.appointmentStatus = " +
-            "pl.motokomando.healthcare.domain.model.patients.appointments.utils.AppointmentStatus.VALID")
-    boolean existsByAppointmentDateAndAndAppointmentStatusEqualsValid(LocalDateTime date);
+            "WHERE e.doctorId = ?1 AND e.appointmentDate = ?2 AND e.appointmentStatus = " +
+            "pl.motokomando.healthcare.domain.model.utils.AppointmentStatus.VALID")
+    boolean existsByDoctorIdAndAppointmentDateAndAppointmentStatusEqualsValid(Integer doctorId, LocalDateTime date);
 
 }

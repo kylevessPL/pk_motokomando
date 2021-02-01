@@ -7,15 +7,17 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 import pl.motokomando.healthcare.domain.model.patients.utils.BloodType;
-import pl.motokomando.healthcare.domain.model.patients.utils.DocumentType;
 import pl.motokomando.healthcare.domain.model.patients.utils.Sex;
 
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import static org.springframework.format.annotation.DateTimeFormat.ISO.DATE;
@@ -42,10 +44,10 @@ public class PatientRequest implements Serializable {
     @NotNull(message = "Birth date is mandatory")
     @DateTimeFormat(iso = DATE)
     private LocalDate birthDate;
-    @Schema(description = "Patient sex", allowableValues = "MALE, FEMALE")
+    @Schema(description = "Patient sex", example = "MALE")
     @NotNull(message = "Sex is mandatory")
     private Sex sex;
-    @Schema(description = "Patient blood type", allowableValues = "0+, 0-, A+, A-, B+, B-, AB+, AB-")
+    @Schema(description = "Patient blood type", example = "AB_NEG")
     @NotNull(message = "Blood type is mandatory")
     private BloodType bloodType;
     @Schema(description = "Patient street name", example = "Ethels Lane")
@@ -65,14 +67,11 @@ public class PatientRequest implements Serializable {
     @NotBlank(message = "City is mandatory")
     @Size(min = 2, max = 30, message = "City must be between 2 and 30 characters long")
     private String city;
-    @Schema(description = "Patient document type", allowableValues = "IDCARD, PASSPORT")
-    @NotNull(message = "Document type is mandatory")
-    private DocumentType documentType;
-    @Schema(description = "Patient document ID", example = "SB1565402")
-    @NotBlank(message = "Document id is mandatory")
-    @Pattern(regexp = "^[A-Z0-9 -]*$", message = "Document ID must contain only capital letters, digits or a dash")
-    @Size(min = 7, max = 14, message = "Document ID must be between 7 and 14 characters long")
-    private String documentId;
+    @Schema(description = "Patient PESEL number", example = "12310188859")
+    @NotNull(message = "PESEL number is mandatory")
+    @DecimalMin(value = "10000000000.0", inclusive = false, message = "PESEL must be 11 digits long")
+    @Digits(integer = 11, fraction = 0, message = "Not a valid PESEL number")
+    private BigDecimal pesel;
     @Schema(description = "Patient phone number", example = "+48502672107")
     @NotBlank(message = "Phone number is mandatory")
     @Pattern(regexp = "^\\+[- 0-9]+$", message = "Phone number must start with country code and contain only numbers, spaces or dashes")

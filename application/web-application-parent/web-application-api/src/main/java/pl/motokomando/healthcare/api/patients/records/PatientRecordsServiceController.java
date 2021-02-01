@@ -2,6 +2,8 @@ package pl.motokomando.healthcare.api.patients.records;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import pl.motokomando.healthcare.api.patients.records.mapper.PatientRecordsMapper;
 import pl.motokomando.healthcare.api.patients.records.utils.PatientRecordPatchRequest;
+import pl.motokomando.healthcare.api.utils.JsonPatchExample;
 import pl.motokomando.healthcare.api.utils.JsonPatchHandler;
 import pl.motokomando.healthcare.domain.model.patients.records.utils.PatientRecordPatchRequestCommand;
 import pl.motokomando.healthcare.domain.patients.records.PatientRecordsService;
@@ -52,7 +55,7 @@ public class PatientRecordsServiceController {
             @Parameter(description = "Patient ID")
             @Min(value = 1, message = "Patient ID must be a positive integer value")
             @PathVariable Integer id,
-            @RequestBody JsonPatch patchDocument) {
+            @ArraySchema(schema = @Schema(implementation = JsonPatchExample.class)) @RequestBody JsonPatch patchDocument) {
         PatientRecordResponse response = patientRecordsMapper.mapToResponse(patientRecordsService.getPatientRecord(id));
         PatientRecordPatchRequest request = patientRecordsMapper.mapToRequest(response);
         request = jsonPatchHandler.patch(patchDocument, request, PatientRecordPatchRequest.class);

@@ -3,7 +3,6 @@ package pl.motokomando.healthcare.infrastructure.model;
 import lombok.Getter;
 import lombok.Setter;
 import pl.motokomando.healthcare.domain.model.patients.utils.BloodType;
-import pl.motokomando.healthcare.domain.model.patients.utils.DocumentType;
 import pl.motokomando.healthcare.domain.model.patients.utils.Sex;
 
 import javax.persistence.Column;
@@ -13,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import static javax.persistence.EnumType.STRING;
@@ -26,7 +26,7 @@ public class PatientsEntity {
 
     @Id @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = SEQUENCE, generator = "patients_generator")
-    @SequenceGenerator(name="patients_generator", sequenceName = "seq_patients", allocationSize = 1)
+    @SequenceGenerator(name = "patients_generator", sequenceName = "seq_patients", allocationSize = 1)
     private Integer id;
     @Column(name = "first_name", nullable = false, length = 30)
     private String firstName;
@@ -37,7 +37,7 @@ public class PatientsEntity {
     @Column(name = "sex", nullable = false, length = 6)
     @Enumerated(STRING)
     private Sex sex;
-    @Column(name = "blood_type", nullable = false, length = 5)
+    @Column(name = "blood_type", nullable = false, length = 6)
     @Enumerated(STRING)
     private BloodType bloodType;
     @Column(name = "street_name", nullable = false, length = 30)
@@ -48,11 +48,8 @@ public class PatientsEntity {
     private String zipCode;
     @Column(name = "city", nullable = false, length = 30)
     private String city;
-    @Column(name = "document_type", nullable = false, length = 10)
-    @Enumerated(STRING)
-    private DocumentType documentType;
-    @Column(name = "document_id", nullable = false, length = 10)
-    private String documentId;
+    @Column(name = "pesel", nullable = false, length = 11)
+    private BigDecimal pesel;
     @Column(name = "phone_number", nullable = false, length = 15)
     private String phoneNumber;
 

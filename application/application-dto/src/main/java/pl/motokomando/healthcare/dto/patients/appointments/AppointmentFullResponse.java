@@ -6,8 +6,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pl.motokomando.healthcare.dto.bills.BillResponse;
 import pl.motokomando.healthcare.dto.doctors.DoctorResponse;
-import pl.motokomando.healthcare.dto.patients.appointments.utils.AppointmentStatus;
 import pl.motokomando.healthcare.dto.prescriptions.PrescriptionFullResponse;
+import pl.motokomando.healthcare.dto.utils.AppointmentStatus;
 
 import java.time.LocalDateTime;
 

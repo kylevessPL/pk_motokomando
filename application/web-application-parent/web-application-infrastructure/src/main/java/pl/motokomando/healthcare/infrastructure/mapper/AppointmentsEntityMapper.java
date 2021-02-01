@@ -1,6 +1,7 @@
 package pl.motokomando.healthcare.infrastructure.mapper;
 
 import org.springframework.stereotype.Component;
+import pl.motokomando.healthcare.domain.model.doctors.appointments.DoctorAppointment;
 import pl.motokomando.healthcare.domain.model.patients.appointments.Appointment;
 import pl.motokomando.healthcare.domain.model.patients.appointments.AppointmentBasicPage;
 import pl.motokomando.healthcare.domain.model.patients.appointments.utils.AppointmentBasicPaged;
@@ -18,6 +19,13 @@ public class AppointmentsEntityMapper {
         return createAppointment(appointmentsEntity);
     }
 
+    public List<DoctorAppointment> mapToDoctorAppointmentList(List<AppointmentsEntity> appointmentsEntityList) {
+        return appointmentsEntityList
+                .stream()
+                .map(this::createDoctorAppointment)
+                .collect(Collectors.toList());
+    }
+
     public AppointmentBasicPage mapToAppointmentBasicPage(List<AppointmentsEntity> appointmentsEntityList, boolean isFirst, boolean isLast, boolean hasPrev, boolean hasNext, Integer currentPage, Integer totalPage, Long totalCount) {
         List<AppointmentBasicPaged> appointmentBasicPagedList = appointmentsEntityList
                 .stream()
@@ -30,6 +38,10 @@ public class AppointmentsEntityMapper {
 
     public LatestAppointmentBasic mapToLatestAppointmentBasic(AppointmentsEntity appointmentsEntity) {
         return createLatestAppointmentBasic(appointmentsEntity);
+    }
+
+    private DoctorAppointment createDoctorAppointment(AppointmentsEntity appointmentsEntity) {
+        return new DoctorAppointment(appointmentsEntity.getAppointmentDate(), appointmentsEntity.getAppointmentStatus());
     }
 
     private AppointmentBasicPaged createAppointmentBasicPaged(AppointmentsEntity appointmentsEntity) {

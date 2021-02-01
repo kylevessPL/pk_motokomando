@@ -13,20 +13,24 @@ import pl.motokomando.healthcare.domain.model.doctors.utils.DoctorRequestCommand
 import pl.motokomando.healthcare.domain.model.utils.PageProperties;
 import pl.motokomando.healthcare.domain.model.utils.SortProperties;
 import pl.motokomando.healthcare.infrastructure.dao.DoctorsEntityDao;
+import pl.motokomando.healthcare.infrastructure.dao.SpecialtiesEntityDao;
 import pl.motokomando.healthcare.infrastructure.mapper.DoctorsEntityMapper;
 import pl.motokomando.healthcare.infrastructure.model.DoctorsEntity;
+import pl.motokomando.healthcare.infrastructure.model.SpecialtiesEntity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class DoctorsRepositoryImpl implements DoctorsRepository {
 
-    private final DoctorsEntityDao dao;
+    private final DoctorsEntityDao doctorsEntityDao;
+    private final SpecialtiesEntityDao specialtiesEntityDao;
     private final DoctorsEntityMapper doctorsEntityMapper;
 
     @Override
@@ -50,25 +54,26 @@ public class DoctorsRepositoryImpl implements DoctorsRepository {
     @Override
     @Transactional(readOnly = true)
     public Doctor getDoctorFullById(Integer id) {
-        return doctorsEntityMapper.mapToDoctor(dao.getOne(id));
+        return doctorsEntityMapper.mapToDoctor(doctorsEntityDao.getOne(id));
     }
 
     @Override
     @Transactional(readOnly = true)
     public Optional<Doctor> getDoctorById(Integer id) {
-        return doctorsEntityMapper.mapToDoctor(dao.findById(id));
+        return doctorsEntityMapper.mapToDoctor(doctorsEntityDao.findById(id));
     }
 
     @Override
     public boolean doctorExists(Integer id) {
-        return dao.existsById(id);
+        return doctorsEntityDao.existsById(id);
     }
 
     @Override
     @Transactional
     public void saveDoctor(DoctorRequestCommand data) {
-        DoctorsEntity doctorsEntity = createEntity(data);
-        dao.save(doctorsEntity);
+        Set<SpecialtiesEntity> specialtiesEntities = specialtiesEntityDao.getAllBySpecialtyIn(data.getSpecialties());
+        DoctorsEntity doctorsEntity = createEntity(data, specialtiesEntities);
+        doctorsEntityDao.save(doctorsEntity);
     }
 
     private Sort createSortProperty(SortProperties sortProperties) {
@@ -83,19 +88,20 @@ public class DoctorsRepositoryImpl implements DoctorsRepository {
     }
 
     private Page<DoctorsEntity> getAllPaged(Integer page, Integer size, Sort sort) {
-        Page<DoctorsEntity> result = dao.findAll(PageRequest.of(page - 1, size, sort));
+        Page<DoctorsEntity> result = doctorsEntityDao.findAll(PageRequest.of(page - 1, size, sort));
         if (!result.hasContent() && result.getTotalPages() > 0) {
-            result = dao.findAll(PageRequest.of(result.getTotalPages() - 1, size, sort));
+            result = doctorsEntityDao.findAll(PageRequest.of(result.getTotalPages() - 1, size, sort));
         }
         return result;
     }
 
-    private DoctorsEntity createEntity(DoctorRequestCommand data) {
+    private DoctorsEntity createEntity(DoctorRequestCommand data, Set<SpecialtiesEntity> specialtiesEntities) {
         DoctorsEntity doctorsEntity = new DoctorsEntity();
         doctorsEntity.setId(data.getId());
         doctorsEntity.setFirstName(data.getFirstName());
         doctorsEntity.setLastName(data.getLastName());
-        doctorsEntity.setSpecialty(data.getSpecialty());
+        doctorsEntity.setAcademicTitle(data.getAcademicTitle());
+        doctorsEntity.setSpecialties(specialtiesEntities);
         doctorsEntity.setPhoneNumber(data.getPhoneNumber());
         return doctorsEntity;
     }
