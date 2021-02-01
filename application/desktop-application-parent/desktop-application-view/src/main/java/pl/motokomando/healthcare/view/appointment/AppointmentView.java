@@ -126,7 +126,7 @@ public class AppointmentView {
         tab.setText("Recepta");
 
         tab0.setClosable(false);
-        tab0.setText("Leki");
+        tab0.setText("Leki na recepcie");
 
         anchorPane.setPrefHeight(200.0);
         anchorPane.setPrefWidth(200.0);
