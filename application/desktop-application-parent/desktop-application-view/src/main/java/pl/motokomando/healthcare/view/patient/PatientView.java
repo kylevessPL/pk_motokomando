@@ -1,15 +1,7 @@
 package pl.motokomando.healthcare.view.patient;
 
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
 import pl.motokomando.healthcare.controller.patient.PatientController;
@@ -51,7 +43,7 @@ public class PatientView {
     private Tab tab1;
     private AnchorPane anchorPane1;
     private DatePicker datePicker0;
-    private ChoiceBox<String> choiceBox2;
+    private ComboBox<String> choiceBox2;
     private ChoiceBox<String> choiceBox3;
     private Button button0;
     private Button buttonUnlockChanging;
@@ -107,7 +99,7 @@ public class PatientView {
         tab1 = new Tab();
         anchorPane1 = new AnchorPane();
         datePicker0 = new DatePicker();
-        choiceBox2 = new ChoiceBox<>();
+        choiceBox2 = new ComboBox<>();
         choiceBox3 = new ChoiceBox<>();
         button0 = new Button();
         buttonUnlockChanging = new Button();
@@ -265,12 +257,12 @@ public class PatientView {
         choiceBox2.setLayoutY(180.0);
         choiceBox2.setPrefHeight(40.0);
         choiceBox2.setPrefWidth(300.0);
+        setWorkingHours(choiceBox2);
 
         choiceBox3.setLayoutX(300.0);
         choiceBox3.setLayoutY(280.0);
         choiceBox3.setPrefHeight(40.0);
         choiceBox3.setPrefWidth(300.0);
-        
 
         button0.setLayoutX(401.0);
         button0.setLayoutY(400.0);
@@ -332,6 +324,25 @@ public class PatientView {
         anchorPane1.getChildren().add(label2);
         anchorPane1.getChildren().add(label3);
         patientPane.getTabs().add(tab1);
+    }
+
+    void setWorkingHours(ComboBox<String> comboBoxHour){
+        comboBoxHour.getItems().add("08:00");
+        comboBoxHour.getItems().add("08:30");
+        comboBoxHour.getItems().add("09:00");
+        comboBoxHour.getItems().add("09:30");
+        comboBoxHour.getItems().add("10:00");
+        comboBoxHour.getItems().add("10:30");
+        comboBoxHour.getItems().add("11:00");
+        comboBoxHour.getItems().add("11:30");
+        comboBoxHour.getItems().add("12:00");
+        comboBoxHour.getItems().add("12:30");
+        comboBoxHour.getItems().add("13:00");
+        comboBoxHour.getItems().add("13:30");
+        comboBoxHour.getItems().add("14:00");
+        comboBoxHour.getItems().add("14:30");
+        comboBoxHour.getItems().add("15:00");
+        comboBoxHour.getItems().add("15:30");
     }
 
 }
