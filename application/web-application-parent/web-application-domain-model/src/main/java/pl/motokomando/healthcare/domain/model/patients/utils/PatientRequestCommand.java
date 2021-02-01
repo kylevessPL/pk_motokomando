@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @NoArgsConstructor
@@ -23,8 +24,7 @@ public class PatientRequestCommand {
     private String houseNumber;
     private String zipCode;
     private String city;
-    private DocumentType documentType;
-    private String documentId;
+    private BigDecimal pesel;
     private String phoneNumber;
 
 }

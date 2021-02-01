@@ -1,0 +1,24 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+
+    <changeSet author="geekon" id="11.0-1">
+        <dropColumn schemaName="public" tableName="patients"
+                    columnName="document_type"/>
+    </changeSet>
+    <changeSet author="geekon" id="11.0-2">
+        <modifyDataType schemaName="public" tableName="patients"
+                        columnName="document_id" newDataType="DECIMAL(11, 0)"/>
+    </changeSet>
+    <changeSet author="geekon" id="11.0-3">
+        <renameColumn schemaName="public" tableName="patients"
+                      oldColumnName="document_id" newColumnName="pesel"/>
+    </changeSet>
+    <changeSet author="geekon" id="11.0-4">
+        <modifyDataType schemaName="public" tableName="patients"
+                        columnName="blood_type" newDataType="VARCHAR(6)"/>
+    </changeSet>
+
+</databaseChangeLog>

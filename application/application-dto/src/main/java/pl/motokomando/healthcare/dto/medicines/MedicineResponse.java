@@ -27,11 +27,11 @@ public class MedicineResponse {
     private ProductType productType;
     @Schema(description = "Active ingredients")
     private List<ActiveIngredient> activeIngredients;
-    @Schema(description = "Administration route", example = "[\"ORAL\"]")
+    @Schema(description = "Administration route", example = "[\"ORAL\", \"TOPICAL\"]")
     private String[] administrationRoute;
     @Schema(description = "Dosage form", example = "TABLET")
     private String dosageForm;
-    @Schema(description = "Packaging variants")
+    @Schema(description = "Packaging variants", example = "[\"148 mL in 1 bottle, dispensing (0536-1261-63)\", \"150 mL in 1 tube (49967-047-01)\"]")
     private String[] packagingVariants;
 
 }

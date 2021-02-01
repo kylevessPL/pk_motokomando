@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.lang.Nullable;
-import pl.motokomando.healthcare.domain.model.patients.appointments.utils.AppointmentStatus;
+import pl.motokomando.healthcare.domain.model.utils.AppointmentStatus;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -34,7 +34,7 @@ public class AppointmentPatchRequest implements Serializable {
     @Size(min = 5, max = 200, message = "Diagnosis notes must be between 5 and 200 characters long")
     @Nullable
     private String diagnosis;
-    @Schema(description = "Appointment status", allowableValues = "VALID, CANCELLED")
+    @Schema(description = "Appointment status", example = "VALID")
     @NotNull(message = "Appointment status is mandatory")
     private AppointmentStatus appointmentStatus;
 

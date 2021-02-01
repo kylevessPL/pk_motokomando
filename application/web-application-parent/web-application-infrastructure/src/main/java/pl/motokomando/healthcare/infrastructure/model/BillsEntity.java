@@ -23,7 +23,7 @@ public class BillsEntity {
 
     @Id @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = SEQUENCE, generator = "bills_generator")
-    @SequenceGenerator(name="bills_generator", sequenceName = "seq_bills", allocationSize = 1)
+    @SequenceGenerator(name = "bills_generator", sequenceName = "seq_bills", allocationSize = 1)
     private Integer id;
     @Column(name = "issue_date", nullable = false)
     @CreationTimestamp
