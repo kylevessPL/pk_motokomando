@@ -54,6 +54,7 @@ public class PatientView {
     private ChoiceBox<String> choiceBox2;
     private ChoiceBox<String> choiceBox3;
     private Button button0;
+    private Button buttonUnlockChanging;
     private Label label2;
     private Label label3;
 
@@ -109,6 +110,7 @@ public class PatientView {
         choiceBox2 = new ChoiceBox<>();
         choiceBox3 = new ChoiceBox<>();
         button0 = new Button();
+        buttonUnlockChanging = new Button();
         label2 = new Label();
         label3 = new Label();
 
@@ -125,6 +127,7 @@ public class PatientView {
         textField.setPrefWidth(200.0);
         textField.setPromptText("Imie");
         textField.setFont(new Font(14.0));
+        textField.setDisable(true);
 
         textField0.setLayoutX(650.0);
         textField0.setLayoutY(60.0);
@@ -132,6 +135,7 @@ public class PatientView {
         textField0.setPrefWidth(200.0);
         textField0.setPromptText("Numer telefonu");
         textField0.setFont(new Font(14.0));
+        textField0.setDisable(true);
 
         textField1.setLayoutX(650.0);
         textField1.setLayoutY(220.0);
@@ -139,6 +143,7 @@ public class PatientView {
         textField1.setPrefWidth(200.0);
         textField1.setPromptText("Numer dokumentu");
         textField1.setFont(new Font(14.0));
+        textField1.setDisable(true);
 
         textField2.setLayoutX(50.0);
         textField2.setLayoutY(140.0);
@@ -146,6 +151,7 @@ public class PatientView {
         textField2.setPrefWidth(200.0);
         textField2.setPromptText("Nazwisko");
         textField2.setFont(new Font(14.0));
+        textField2.setDisable(true);
 
         textField3.setLayoutX(350.0);
         textField3.setLayoutY(300.0);
@@ -153,6 +159,7 @@ public class PatientView {
         textField3.setPrefWidth(200.0);
         textField3.setPromptText("Kod pocztowy");
         textField3.setFont(new Font(14.0));
+        textField3.setDisable(true);
 
         textField4.setLayoutX(350.0);
         textField4.setLayoutY(60.0);
@@ -160,6 +167,7 @@ public class PatientView {
         textField4.setPrefWidth(200.0);
         textField4.setPromptText("Ulica");
         textField4.setFont(new Font(14.0));
+        textField4.setDisable(true);
 
         textField5.setLayoutX(350.0);
         textField5.setLayoutY(220.0);
@@ -167,11 +175,13 @@ public class PatientView {
         textField5.setPrefWidth(200.0);
         textField5.setPromptText("Miejscowość");
         textField5.setFont(new Font(14.0));
+        textField5.setDisable(true);
 
         choiceBox.setLayoutX(50.0);
         choiceBox.setLayoutY(220.0);
         choiceBox.setPrefHeight(30.0);
         choiceBox.setPrefWidth(200.0);
+        choiceBox.setDisable(true);
 
         label.setLayoutX(50.0);
         label.setLayoutY(200.0);
@@ -182,11 +192,13 @@ public class PatientView {
         choiceBox0.setLayoutY(140.0);
         choiceBox0.setPrefHeight(30.0);
         choiceBox0.setPrefWidth(200.0);
+        choiceBox0.setDisable(true);
 
         choiceBox1.setLayoutX(650.0);
         choiceBox1.setLayoutY(300.0);
         choiceBox1.setPrefHeight(30.0);
         choiceBox1.setPrefWidth(200.0);
+        choiceBox1.setDisable(true);
 
         label0.setLayoutX(650.0);
         label0.setLayoutY(280.0);
@@ -203,6 +215,7 @@ public class PatientView {
         datePicker.setPrefHeight(30.0);
         datePicker.setPrefWidth(200.0);
         datePicker.setPromptText("Data urodzenia");
+        datePicker.setDisable(true);
 
         textField6.setLayoutX(350.0);
         textField6.setLayoutY(140.0);
@@ -210,13 +223,7 @@ public class PatientView {
         textField6.setPrefWidth(200.0);
         textField6.setPromptText("Numer domu");
         textField6.setFont(new Font(14.0));
-
-        button.setLayoutX(407.0);
-        button.setLayoutY(436.0);
-        button.setMnemonicParsing(false);
-        button.setText("Zaktualizuj");
-        button.setFont(new Font(14.0));
-        tab.setContent(anchorPane);
+        textField6.setDisable(true);
 
         tab0.setText("Wizyty");
 
@@ -263,12 +270,26 @@ public class PatientView {
         choiceBox3.setLayoutY(280.0);
         choiceBox3.setPrefHeight(40.0);
         choiceBox3.setPrefWidth(300.0);
+        
 
         button0.setLayoutX(401.0);
         button0.setLayoutY(400.0);
         button0.setMnemonicParsing(false);
         button0.setText("Zarezerwuj");
         button0.setFont(new Font(16.0));
+
+        button.setLayoutX(360.0);
+        button.setLayoutY(436.0);
+        button.setMnemonicParsing(false);
+        button.setText("Zaktualizuj");
+        button.setFont(new Font(14.0));
+        tab.setContent(anchorPane);
+
+        buttonUnlockChanging.setLayoutX(480.0);
+        buttonUnlockChanging.setLayoutY(436.0);
+        buttonUnlockChanging.setMnemonicParsing(false);
+        buttonUnlockChanging.setText("Edytuj");
+        buttonUnlockChanging.setFont(new Font(14.0));
 
         label2.setLayoutX(300.0);
         label2.setLayoutY(150.0);
@@ -297,6 +318,7 @@ public class PatientView {
         anchorPane.getChildren().add(datePicker);
         anchorPane.getChildren().add(textField6);
         anchorPane.getChildren().add(button);
+        anchorPane.getChildren().add(buttonUnlockChanging);
         patientPane.getTabs().add(tab);
         tableView.getColumns().add(tableColumn);
         tableView.getColumns().add(tableColumn0);
