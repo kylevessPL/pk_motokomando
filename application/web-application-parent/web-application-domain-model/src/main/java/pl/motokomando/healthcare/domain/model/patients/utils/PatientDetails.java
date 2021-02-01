@@ -3,6 +3,7 @@ package pl.motokomando.healthcare.domain.model.patients.utils;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @RequiredArgsConstructor
@@ -18,8 +19,7 @@ public final class PatientDetails {
     private final String houseNumber;
     private final String zipCode;
     private final String city;
-    private final DocumentType documentType;
-    private final String documentId;
+    private final BigDecimal pesel;
     private final String phoneNumber;
 
 }

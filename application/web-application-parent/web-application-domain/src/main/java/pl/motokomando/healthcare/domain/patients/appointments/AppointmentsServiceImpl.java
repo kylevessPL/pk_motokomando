@@ -91,9 +91,11 @@ public class AppointmentsServiceImpl implements AppointmentsService {
     @Override
     @Transactional
     public Basic createAppointment(Integer patientId, AppointmentRequestCommand command) {
+        Integer doctorId = command.getDoctorId();
+        LocalDateTime appointmentDate = command.getAppointmentDate();
         checkPatientExistence(patientId);
-        checkDoctorExistence(command.getDoctorId());
-        checkDateAvailability(command.getAppointmentDate());
+        checkDoctorExistence(doctorId);
+        checkDateAvailability(doctorId, appointmentDate);
         Basic appointmentBasic = appointmentsRepository.createAppointment(command);
         patientsAppointmentsRepository.createPatientAppointment(patientId, appointmentBasic.getId());
         return appointmentBasic;
@@ -154,8 +156,8 @@ public class AppointmentsServiceImpl implements AppointmentsService {
         return new PrescriptionFull(prescriptionDetails, medicines);
     }
 
-    private void checkDateAvailability(LocalDateTime date) {
-        if (!appointmentsRepository.isDateAvailable(date)) {
+    private void checkDateAvailability(Integer doctorId, LocalDateTime date) {
+        if (!appointmentsRepository.isDateAvailable(doctorId, date)) {
             throw new BasicException(DATE_NOT_AVAILABLE);
         }
     }

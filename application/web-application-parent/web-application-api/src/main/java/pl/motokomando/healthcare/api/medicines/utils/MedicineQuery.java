@@ -1,6 +1,7 @@
 package pl.motokomando.healthcare.api.medicines.utils;
 
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,7 +17,9 @@ public class MedicineQuery {
     @Parameter(description = "Query string", example = "Vicks VapoRub")
     @NotBlank(message = "Query string not supplied")
     private String query;
-    @Parameter(description = "Results limit, default: 1", example = "5")
+    @Parameter(
+            description = "Results limit",
+            schema = @Schema(type = "integer", defaultValue = "1"))
     @Min(value = 1, message = "Limit must be a positive integer value")
     private Integer limit;
 

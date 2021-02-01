@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import pl.motokomando.healthcare.dto.patients.appointments.utils.AppointmentStatus;
+import pl.motokomando.healthcare.dto.utils.AppointmentStatus;
 
 import java.time.LocalDateTime;
 

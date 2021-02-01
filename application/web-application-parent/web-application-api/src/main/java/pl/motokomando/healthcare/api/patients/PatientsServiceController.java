@@ -2,6 +2,7 @@ package pl.motokomando.healthcare.api.patients;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -9,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,6 +33,7 @@ import pl.motokomando.healthcare.dto.patients.PatientResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 
+import static org.springframework.http.HttpHeaders.LINK;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -53,13 +56,20 @@ public class PatientsServiceController {
             @ApiResponse(
                     responseCode = "200",
                     description = "Successfully fetched patients data",
-                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = PatientBasicPagedResponse.class)))),
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = PatientBasicPagedResponse.class))),
+                    headers = {
+                            @Header(name = LINK, description = "Pagination links", schema = @Schema(type = "string")),
+                            @Header(name = "X-Count-Per-Page", description = "Number of results per page", schema = @Schema(type = "integer")),
+                            @Header(name = "X-Current-Page", description = "Current page", schema = @Schema(type = "integer")),
+                            @Header(name = "X-Total-Count", description = "Total number of results", schema = @Schema(type = "integer")),
+                            @Header(name = "X-Total-Pages", description = "Total number of pages", schema = @Schema(type = "integer"))
+                    }),
             @ApiResponse(responseCode = "204", description = "Patients data is empty", content = @Content),
             @ApiResponse(responseCode = "400", description = "Parameters not valid", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
     @GetMapping(produces = APPLICATION_JSON_VALUE)
-    public PageResponse<PatientBasicPagedResponse> getAll(@Valid PatientPagedQuery query) {
+    public PageResponse<PatientBasicPagedResponse> getAll(@ParameterObject @Valid PatientPagedQuery query) {
         BasicPagedQueryCommand command = patientsMapper.mapToCommand(query);
         PatientBasicPageResponse response = patientsMapper.mapToResponse(patientsService.getAllPatients(command));
         return new PageResponse<>(

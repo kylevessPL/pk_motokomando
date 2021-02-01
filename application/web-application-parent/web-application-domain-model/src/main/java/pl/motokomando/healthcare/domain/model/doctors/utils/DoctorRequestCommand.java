@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @NoArgsConstructor
 @Getter
 @Setter
@@ -14,7 +16,8 @@ public class DoctorRequestCommand {
     private Integer id;
     private String firstName;
     private String lastName;
-    private MedicalSpecialty specialty;
+    private AcademicTitle academicTitle;
+    private List<MedicalSpecialty> specialties;
     private String phoneNumber;
 
 }

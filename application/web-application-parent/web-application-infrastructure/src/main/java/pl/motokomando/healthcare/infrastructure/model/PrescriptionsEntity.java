@@ -23,7 +23,7 @@ public class PrescriptionsEntity {
 
     @Id @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = SEQUENCE, generator = "prescriptions_generator")
-    @SequenceGenerator(name="prescriptions_generator", sequenceName = "seq_prescriptions", allocationSize = 1)
+    @SequenceGenerator(name = "prescriptions_generator", sequenceName = "seq_prescriptions", allocationSize = 1)
     private Integer id;
     @Column(name = "issue_date", nullable = false)
     @CreationTimestamp
