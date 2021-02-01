@@ -255,7 +255,7 @@ public class AppointmentView {
         button0.setLayoutX(555.0);
         button0.setLayoutY(361.0);
         button0.setMnemonicParsing(false);
-        button0.setText("Zatwierdź i drukuj");
+        button0.setText("Zatwierdź");
         button0.setFont(new Font(16.0));
         tab2.setContent(anchorPane1);
 
@@ -278,10 +278,10 @@ public class AppointmentView {
         label0.setText("Kwota (PLN):");
         label0.setFont(new Font(16.0));
 
-        button1.setLayoutX(555.0);
+        button1.setLayoutX(525.0);
         button1.setLayoutY(361.0);
         button1.setMnemonicParsing(false);
-        button1.setText("Zatwierdź");
+        button1.setText("Zatwierdź i drukuj");
         button1.setFont(new Font(16.0));
 
         buttonSaveNotes.setLayoutX(575.0);
