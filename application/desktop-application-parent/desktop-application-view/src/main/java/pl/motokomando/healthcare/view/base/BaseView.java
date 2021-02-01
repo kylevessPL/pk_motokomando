@@ -27,6 +27,7 @@ public class BaseView {
     private Tab tabFindDoctor;
     private AnchorPane anchorPaneFindDoctor;
     private TableView<DoctorRecord> tableViewDoctors;
+    private TableColumn<DoctorRecord, String> tableColumnAcademicTittle;
     private TableColumn<DoctorRecord, String> tableColumnDoctorName;
     private TableColumn<DoctorRecord, String> tableColumnDoctorSurname;
     private TableColumn<DoctorRecord, String> tableColumnDoctorPhoneNumber;
@@ -97,6 +98,7 @@ public class BaseView {
         tabFindDoctor = new Tab();
         anchorPaneFindDoctor = new AnchorPane();
         tableViewDoctors = new TableView<>();
+        tableColumnAcademicTittle = new TableColumn<>();
         tableColumnDoctorName = new TableColumn<>();
         tableColumnDoctorSurname = new TableColumn<>();
         tableColumnDoctorPhoneNumber = new TableColumn<>();
@@ -156,17 +158,20 @@ public class BaseView {
         tableViewDoctors.setPrefHeight(600.0);
         tableViewDoctors.setPrefWidth(1500.0);
 
-        tableColumnDoctorName.setPrefWidth(375.0);
+        tableColumnAcademicTittle.setPrefWidth(300.0);
+        tableColumnAcademicTittle.setText("Tytuł naukowy");
+
+        tableColumnDoctorName.setPrefWidth(300.0);
         tableColumnDoctorName.setText("Imie");
 
-        tableColumnDoctorSurname.setPrefWidth(375.0);
+        tableColumnDoctorSurname.setPrefWidth(300.0);
         tableColumnDoctorSurname.setText("Nazwisko");
 
-        tableColumnDoctorPhoneNumber.setPrefWidth(375.0);
+        tableColumnDoctorPhoneNumber.setPrefWidth(300.0);
         tableColumnDoctorPhoneNumber.setText("Numer Telefonu");
 
         tableColumnDoctorSpecialisation.setMinWidth(0.0);
-        tableColumnDoctorSpecialisation.setPrefWidth(375.0);
+        tableColumnDoctorSpecialisation.setPrefWidth(300.0);
         tableColumnDoctorSpecialisation.setText("Specjalizacja");
 
         tabFindDoctor.setContent(anchorPaneFindDoctor);
@@ -376,6 +381,7 @@ public class BaseView {
         tabAddNewPatient.setContent(anchorPaneAddNewPatient);
         tabPatients.setContent(tabPanePatients);
 
+        tableViewDoctors.getColumns().add(tableColumnAcademicTittle);
         tableViewDoctors.getColumns().add(tableColumnDoctorName);
         tableViewDoctors.getColumns().add(tableColumnDoctorSurname);
         tableViewDoctors.getColumns().add(tableColumnDoctorPhoneNumber);
