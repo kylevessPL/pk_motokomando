@@ -1,14 +1,7 @@
 package pl.motokomando.healthcare.view.appointment;
 
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
 import pl.motokomando.healthcare.controller.appointment.AppointmentController;
@@ -57,10 +50,14 @@ public class AppointmentView {
     private Label label;
     private Button button0;
     private Tab tab3;
+    private Tab tabDoctorNotes;
     private AnchorPane anchorPane2;
+    private AnchorPane anchorPaneDoctorNotes;
     private TextField textField0;
     private Label label0;
     private Button button1;
+    private Button buttonSaveNotes;
+    private TextArea textAreaDoctorNotes;
 
     public AppointmentView(AppointmentController controller) {
         this.controller = controller;
@@ -111,6 +108,7 @@ public class AppointmentView {
         tableColumn15 = new TableColumn<>();
         tableColumn16 = new TableColumn<>();
         textField = new TextField();
+        textAreaDoctorNotes = new TextArea();
         button = new Button();
         tab2 = new Tab();
         anchorPane1 = new AnchorPane();
@@ -118,10 +116,13 @@ public class AppointmentView {
         label = new Label();
         button0 = new Button();
         tab3 = new Tab();
+        tabDoctorNotes = new Tab();
         anchorPane2 = new AnchorPane();
+        anchorPaneDoctorNotes = new AnchorPane();
         textField0 = new TextField();
         label0 = new Label();
         button1 = new Button();
+        buttonSaveNotes = new Button();
 
         tab.setText("Recepta");
 
@@ -220,6 +221,12 @@ public class AppointmentView {
         textField.setPrefWidth(1500.0);
         textField.setPromptText("Wprowadź nazwe leku");
 
+        textAreaDoctorNotes.setLayoutX(100.0);
+        textAreaDoctorNotes.setLayoutY(60.0);
+        textAreaDoctorNotes.setPrefHeight(550.0);
+        textAreaDoctorNotes.setPrefWidth(1000.0);
+        textAreaDoctorNotes.setPromptText("Dolegliwości, badania, zalecenia");
+
         button.setLayoutX(528.0);
         button.setLayoutY(580.0);
         button.setMnemonicParsing(false);
@@ -253,9 +260,13 @@ public class AppointmentView {
         tab2.setContent(anchorPane1);
 
         tab3.setText("Rachunek");
+        tabDoctorNotes.setText("Notatki");
 
         anchorPane2.setPrefHeight(200.0);
         anchorPane2.setPrefWidth(200.0);
+
+        anchorPaneDoctorNotes.setPrefHeight(200.0);
+        anchorPaneDoctorNotes.setPrefWidth(200.0);
 
         textField0.setLayoutX(500.0);
         textField0.setLayoutY(193.0);
@@ -272,7 +283,15 @@ public class AppointmentView {
         button1.setMnemonicParsing(false);
         button1.setText("Zatwierdź");
         button1.setFont(new Font(16.0));
+
+        buttonSaveNotes.setLayoutX(575.0);
+        buttonSaveNotes.setLayoutY(640.0);
+        buttonSaveNotes.setMnemonicParsing(false);
+        buttonSaveNotes.setText("Zapisz");
+        buttonSaveNotes.setFont(new Font(16.0));
+
         tab3.setContent(anchorPane2);
+        tabDoctorNotes.setContent(anchorPaneDoctorNotes);
 
         tableView.getColumns().add(tableColumn);
         tableView.getColumns().add(tableColumn0);
@@ -306,7 +325,10 @@ public class AppointmentView {
         anchorPane2.getChildren().add(textField0);
         anchorPane2.getChildren().add(label0);
         anchorPane2.getChildren().add(button1);
+        anchorPaneDoctorNotes.getChildren().add(textAreaDoctorNotes);
+        anchorPaneDoctorNotes.getChildren().add(buttonSaveNotes);
         appointmentPane.getTabs().add(tab3);
+        appointmentPane.getTabs().add(tabDoctorNotes);
     }
 
 }
