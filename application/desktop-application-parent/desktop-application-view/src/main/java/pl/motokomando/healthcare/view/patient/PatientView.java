@@ -243,13 +243,13 @@ public class PatientView {
         anchorPane1.setPrefWidth(200.0);
 
         datePicker0.setLayoutX(300.0);
-        datePicker0.setLayoutY(80.0);
+        datePicker0.setLayoutY(170.0);
         datePicker0.setPrefHeight(40.0);
         datePicker0.setPrefWidth(300.0);
         datePicker0.setPromptText("Wybierz datę");
 
         choiceBox2.setLayoutX(300.0);
-        choiceBox2.setLayoutY(180.0);
+        choiceBox2.setLayoutY(80.0);
         choiceBox2.setPrefHeight(40.0);
         choiceBox2.setPrefWidth(300.0);
 
@@ -265,13 +265,13 @@ public class PatientView {
         button0.setFont(new Font(16.0));
 
         label2.setLayoutX(300.0);
-        label2.setLayoutY(150.0);
-        label2.setText("Godzina");
+        label2.setLayoutY(50.0);
+        label2.setText("Lekarz");
         label2.setFont(new Font(16.0));
 
         label3.setLayoutX(300.0);
         label3.setLayoutY(250.0);
-        label3.setText("Lekarz");
+        label3.setText("Godzina");
         label3.setFont(new Font(16.0));
         tab1.setContent(anchorPane1);
 
