@@ -1,7 +1,5 @@
 package pl.motokomando.healthcare.application;
 
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
-import io.swagger.v3.oas.annotations.info.Info;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -17,12 +15,6 @@ import pl.motokomando.healthcare.view.base.BaseView;
 @SpringBootApplication
 @ComponentScan("pl.motokomando.healthcare")
 @EntityScan("pl.motokomando.healthcare")
-@OpenAPIDefinition(
-        info = @Info(
-                title = "Healthcare Management OpenAPI",
-                description = "OpenAPI Documentation for Healthcare Management",
-                version = "1.0")
-)
 public class HealthcareApplication extends Application {
 
     private ConfigurableApplicationContext springContext;
