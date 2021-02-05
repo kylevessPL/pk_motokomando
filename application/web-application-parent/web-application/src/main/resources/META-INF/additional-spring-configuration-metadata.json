@@ -1,18 +1,18 @@
 {
   "properties": [
     {
-      "name": "okta.oauth2.authorization-url",
-      "type": "java.lang.String",
-      "description": "Description for okta.oauth2.authorization-url."
-    },
-    {
-      "name": "okta.oauth2.token-url",
-      "type": "java.lang.String",
-      "description": "Description for okta.oauth2.token-url."
-    },
-    {
       "name": "okta.oauth2.pkce-always",
       "type": "java.lang.String",
       "description": "Description for okta.oauth2.pkce-always."
+    },
+    {
+      "name": "okta.logout-url",
+      "type": "java.lang.String",
+      "description": "Description for okta.logout-url."
+    },
+    {
+      "name": "okta.login-url",
+      "type": "java.lang.String",
+      "description": "Description for okta.login-url."
     }
   ] }
