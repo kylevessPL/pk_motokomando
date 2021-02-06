@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.text.CaseUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -27,7 +28,6 @@ import pl.motokomando.healthcare.api.utils.UserInfoResponseExample;
 import reactor.core.publisher.Mono;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -38,6 +38,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RestController
 @Tag(name = "Authorization API", description = "API performing user authorization operations")
 @RequiredArgsConstructor
+@Slf4j
 public class AuthorizationServiceController {
 
     private final OAuth2AuthorizedClientService authorizedClientService;
@@ -48,6 +49,8 @@ public class AuthorizationServiceController {
     private String logoutUrl;
     @Value("${okta.oauth2.postLogoutRedirectUri}")
     private String logoutRedirectUrl;
+    @Value("${spring.security.oauth2.client.provider.okta.user-info-uri}")
+    private String userInfoUrl;
 
     @GetMapping("/")
     public ModelAndView home() {
@@ -85,21 +88,20 @@ public class AuthorizationServiceController {
             @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content)
     })
     @GetMapping(value = "/api/v1/userinfo", produces = APPLICATION_JSON_VALUE)
-    public Map<String, Object> userInfo(OAuth2AuthenticationToken authentication) {
-        OAuth2AuthorizedClient authorizedClient = this.getAuthorizedClient(authentication);
-        Map<String, Object> userAttributes = Collections.emptyMap();
-        String userInfoEndpointUri = authorizedClient.getClientRegistration()
-                .getProviderDetails().getUserInfoEndpoint().getUri();
-        if (!userInfoEndpointUri.isEmpty()) {
-            userAttributes = WebClient.builder()
-                    .filter(oauth2Credentials(authorizedClient)).build()
-                    .get().uri(userInfoEndpointUri)
-                    .retrieve()
-                    .bodyToMono(new ParameterizedTypeReference<LinkedHashMap<String, Object>>() {})
-                    .block();
+    public Map<String, Object> userInfo(HttpServletRequest request, @AuthenticationPrincipal OidcUser principal) {
+        Map<String, Object> userAttributes;
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader == null) {
+            return convertMapToCamelCase(principal.getUserInfo().getClaims());
         }
-        userAttributes = convertMapToCamelCase(userAttributes);
-        return userAttributes;
+        String tokenValue = authHeader.replace("Bearer", "").trim();
+        userAttributes = WebClient.builder()
+                .filter(oauth2Credentials(tokenValue)).build()
+                .get().uri(userInfoUrl)
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<LinkedHashMap<String, Object>>() {})
+                .block();
+        return convertMapToCamelCase(userAttributes);
     }
 
     private OAuth2AuthorizedClient getAuthorizedClient(OAuth2AuthenticationToken authentication) {
@@ -107,12 +109,12 @@ public class AuthorizationServiceController {
                 authentication.getAuthorizedClientRegistrationId(), authentication.getName());
     }
 
-    private ExchangeFilterFunction oauth2Credentials(OAuth2AuthorizedClient authorizedClient) {
+    private ExchangeFilterFunction oauth2Credentials(String tokenValue) {
         return ExchangeFilterFunction.ofRequestProcessor(
                 clientRequest -> {
                     ClientRequest authorizedRequest = ClientRequest.from(clientRequest)
                             .header(AUTHORIZATION,
-                                    "Bearer " + authorizedClient.getAccessToken().getTokenValue())
+                                    "Bearer " + tokenValue)
                             .build();
                     return Mono.just(authorizedRequest);
                 });
