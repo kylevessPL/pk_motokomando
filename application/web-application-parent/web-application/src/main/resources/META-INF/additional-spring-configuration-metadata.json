@@ -4,15 +4,5 @@
       "name": "okta.oauth2.pkce-always",
       "type": "java.lang.String",
       "description": "Description for okta.oauth2.pkce-always."
-    },
-    {
-      "name": "okta.logout-url",
-      "type": "java.lang.String",
-      "description": "Description for okta.logout-url."
-    },
-    {
-      "name": "okta.login-url",
-      "type": "java.lang.String",
-      "description": "Description for okta.login-url."
     }
   ] }
