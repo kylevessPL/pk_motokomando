@@ -1,23 +1,18 @@
 package pl.motokomando.healthcare.view.patient;
 
+import javafx.collections.FXCollections;
+import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import pl.motokomando.healthcare.controller.patient.PatientController;
 import pl.motokomando.healthcare.model.patient.utils.AppointmentRecord;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import static javafx.scene.control.TabPane.TabClosingPolicy.UNAVAILABLE;
 import static javafx.scene.layout.Region.USE_PREF_SIZE;
@@ -62,10 +57,32 @@ public class PatientView {
     private Label labelBookAppointmentDoctor;
     private Label labelBookAppointmentHour;
 
+    public List<AppointmentRecord> listAppointments;
+    int recordsPerPage = 4;
+
     public PatientView(PatientController controller) {
         this.controller = controller;
         createPane();
         addContent();
+
+        //neeto to fill up with data
+        //addPaginationToDoctorsTable();
+    }
+
+    private void addPaginationToDoctorsTable() {
+        Pagination pagination = new Pagination((listAppointments.size() / recordsPerPage + 1), 0);
+        pagination.setPageFactory(this::createAppointmentPage);
+        anchorPaneAppointment.getChildren().add(pagination);
+        pagination.setLayoutX(50);
+        pagination.setLayoutY(50);
+    }
+
+    public Node createAppointmentPage(int pageIndex){
+        int fromIndex = pageIndex * recordsPerPage;
+        int toIndex = Math.min(fromIndex + recordsPerPage, listAppointments.size());
+        tableViewAppointments.setItems(FXCollections.observableArrayList(listAppointments.subList(fromIndex, toIndex)));
+
+        return new BorderPane(tableViewAppointments);
     }
 
     public Parent asParent() {

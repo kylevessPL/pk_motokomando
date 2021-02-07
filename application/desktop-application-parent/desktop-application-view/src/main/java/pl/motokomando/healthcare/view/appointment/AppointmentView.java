@@ -41,15 +41,6 @@ public class AppointmentView {
     private Tab tabAddDrug;
     private AnchorPane anchorPaneAddDrug;
     private TableView<MedicineRecord> tableViewAddDrug;
-    /*private TableColumn<MedicineRecord, String> tableColumnNewDrugName;
-    private TableColumn<MedicineRecord, String> tableColumnNewDrugNDCNumber;
-    private TableColumn<MedicineRecord, String> tableColumnNewDrugCompanyName;
-    private TableColumn<MedicineRecord, String> tableColumnNewDrugType;
-    private TableColumn<MedicineRecord, String> tableColumnNewDrugOverallType;
-    private TableColumn<MedicineRecord, String> tableColumn13;
-    private TableColumn<MedicineRecord, String> tableColumn14;
-    private TableColumn<MedicineRecord, String> tableColumn15;
-    private TableColumn<MedicineRecord, String> tableColumn16;*/
     private TextField textFieldEnterDrugName;
     private Button buttonAddToPresciption;
     private Tab tabDoctor;
@@ -106,15 +97,6 @@ public class AppointmentView {
         tabAddDrug = new Tab();
         anchorPaneAddDrug = new AnchorPane();
         tableViewAddDrug = new TableView<>();
-        /*tableColumnNewDrugName = new TableColumn<>();
-        tableColumnNewDrugNDCNumber = new TableColumn<>();
-        tableColumnNewDrugCompanyName = new TableColumn<>();
-        tableColumnNewDrugType = new TableColumn<>();
-        tableColumnNewDrugOverallType = new TableColumn<>();
-        tableColumn13 = new TableColumn<>();
-        tableColumn14 = new TableColumn<>();
-        tableColumn15 = new TableColumn<>();
-        tableColumn16 = new TableColumn<>();*/
         textFieldEnterDrugName = new TextField();
         textAreaDoctorNotes = new TextArea();
         buttonAddToPresciption = new Button();
@@ -190,39 +172,6 @@ public class AppointmentView {
         tableViewAddDrug.setLayoutY(99.0);
         tableViewAddDrug.setPrefHeight(450.0);
         tableViewAddDrug.setPrefWidth(1100.0);
-
-        /*tableColumnNewDrugName.setPrefWidth(122.0);
-        tableColumnNewDrugName.setText("Nazwa");
-
-        tableColumnNewDrugNDCNumber.setPrefWidth(122.0);
-        tableColumnNewDrugNDCNumber.setText("Numer NDC");
-
-        tableColumnNewDrugCompanyName.setPrefWidth(122.0);
-        tableColumnNewDrugCompanyName.setText("Nazwa firmy");
-
-        tableColumnNewDrugType.setMinWidth(0.0);
-        tableColumnNewDrugType.setPrefWidth(122.0);
-        tableColumnNewDrugType.setText("Typ");
-
-        tableColumnNewDrugOverallType.setMinWidth(0.0);
-        tableColumnNewDrugOverallType.setPrefWidth(122.0);
-        tableColumnNewDrugOverallType.setText("Ogólny typ");
-
-        tableColumn13.setMinWidth(0.0);
-        tableColumn13.setPrefWidth(122.0);
-        tableColumn13.setText("Skład");
-
-        tableColumn14.setMinWidth(0.0);
-        tableColumn14.setPrefWidth(122.0);
-        tableColumn14.setText("Sposób podania");
-
-        tableColumn15.setMinWidth(0.0);
-        tableColumn15.setPrefWidth(122.0);
-        tableColumn15.setText("Dawkowanie");
-
-        tableColumn16.setMinWidth(0.0);
-        tableColumn16.setPrefWidth(122.0);
-        tableColumn16.setText("Rodzaj opakowania");*/
 
         textFieldEnterDrugName.setLayoutX(50.0);
         textFieldEnterDrugName.setLayoutY(40.0);
@@ -302,26 +251,10 @@ public class AppointmentView {
         tabBill.setContent(anchorPaneBill);
         tabDoctorNotes.setContent(anchorPaneDoctorNotes);
 
-        tableViewDrugsOnPrescription.getColumns().add(tableColumnDrugName);
-        tableViewDrugsOnPrescription.getColumns().add(tableColumnDrugNDCNumber);
-        tableViewDrugsOnPrescription.getColumns().add(tableColumnDrugCompanyName);
-        tableViewDrugsOnPrescription.getColumns().add(tableColumnDrugType);
-        tableViewDrugsOnPrescription.getColumns().add(tableColumnDrugOverallType);
-        tableViewDrugsOnPrescription.getColumns().add(tableColumnDrugComposition);
-        tableViewDrugsOnPrescription.getColumns().add(tableColumnDrugServeWay);
-        tableViewDrugsOnPrescription.getColumns().add(tableColumnDrugDosage);
-        tableViewDrugsOnPrescription.getColumns().add(tableColumnDrugBoxType);
+        setTableViewDrugsOnPrescription(tableViewDrugsOnPrescription);
         anchorPaneDrugsOnPrescription.getChildren().add(tableViewDrugsOnPrescription);
         tabPane.getTabs().add(tabDrugsOnPrescription);
-        tableViewAddDrug.getColumns().add(tableColumnDrugName);
-        tableViewAddDrug.getColumns().add(tableColumnDrugNDCNumber);
-        tableViewAddDrug.getColumns().add(tableColumnDrugCompanyName);
-        tableViewAddDrug.getColumns().add(tableColumnDrugType);
-        tableViewAddDrug.getColumns().add(tableColumnDrugOverallType);
-        tableViewAddDrug.getColumns().add(tableColumnDrugComposition);
-        tableViewAddDrug.getColumns().add(tableColumnDrugServeWay);
-        tableViewAddDrug.getColumns().add(tableColumnDrugDosage);
-        tableViewAddDrug.getColumns().add(tableColumnDrugBoxType);
+        setTableViewDrugsOnPrescription(tableViewAddDrug);
         anchorPaneAddDrug.getChildren().add(tableViewAddDrug);
         anchorPaneAddDrug.getChildren().add(textFieldEnterDrugName);
         anchorPaneAddDrug.getChildren().add(buttonAddToPresciption);
@@ -338,6 +271,18 @@ public class AppointmentView {
         anchorPaneDoctorNotes.getChildren().add(buttonSaveNotes);
         appointmentPane.getTabs().add(tabDoctorNotes);
         appointmentPane.getTabs().add(tabBill);
+    }
+
+    private void setTableViewDrugsOnPrescription(TableView<MedicineRecord> tableViewDrugsOnPrescription) {
+        tableViewDrugsOnPrescription.getColumns().add(tableColumnDrugName);
+        tableViewDrugsOnPrescription.getColumns().add(tableColumnDrugNDCNumber);
+        tableViewDrugsOnPrescription.getColumns().add(tableColumnDrugCompanyName);
+        tableViewDrugsOnPrescription.getColumns().add(tableColumnDrugType);
+        tableViewDrugsOnPrescription.getColumns().add(tableColumnDrugOverallType);
+        tableViewDrugsOnPrescription.getColumns().add(tableColumnDrugComposition);
+        tableViewDrugsOnPrescription.getColumns().add(tableColumnDrugServeWay);
+        tableViewDrugsOnPrescription.getColumns().add(tableColumnDrugDosage);
+        tableViewDrugsOnPrescription.getColumns().add(tableColumnDrugBoxType);
     }
 
 }

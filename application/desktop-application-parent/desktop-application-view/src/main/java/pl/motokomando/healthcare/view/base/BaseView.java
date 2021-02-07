@@ -1,16 +1,15 @@
 package pl.motokomando.healthcare.view.base;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import pl.motokomando.healthcare.controller.base.BaseController;
 import pl.motokomando.healthcare.model.base.utils.DoctorRecord;
@@ -20,7 +19,9 @@ import pl.motokomando.healthcare.view.base.utils.patient.BloodType;
 import pl.motokomando.healthcare.view.base.utils.patient.DocumentType;
 import pl.motokomando.healthcare.view.base.utils.patient.Sex;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static javafx.scene.control.TabPane.TabClosingPolicy.UNAVAILABLE;
@@ -80,15 +81,82 @@ public class BaseView {
     private Label labelNewPatientSex;
     private Label labelNewPatientBloodGroup;
     private Label labelNewPatientIdType;
+    private int recordsPerPage = 4;
+
+    public List<DoctorRecord> listDoctors;
+    public List<PatientRecord> listPatients;
 
     public BaseView(BaseController controller) {
         this.controller = controller;
         createPane();
         addContent();
+
+        //dodaje doktorów
+        listDoctors = new ArrayList<>(10);
+        listPatients = new ArrayList<>(10);
+        for (int i = 0; i < 10; i++){
+            listDoctors.add(new DoctorRecord(new SimpleStringProperty("Dr"), "Andrzej", "Kowalski", "69691000" + i, "Urolog"));
+        }
+
+        addPaginationToDoctorsTable();
+        //need to add some patients first !!!
+        //addPaginationToPatientsTable();
+        tableViewDoctors.setRowFactory(tv -> {
+            TableRow<DoctorRecord> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
+                    DoctorRecord rowData = row.getItem();
+                    System.out.println("działa");
+                }
+            });
+            return row ;
+        });
+        tableViewPatients.setRowFactory(tv -> {
+            TableRow<PatientRecord> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
+                    PatientRecord rowData = row.getItem();
+                    System.out.println("działa");
+                }
+            });
+            return row ;
+        });
+    }
+
+    private void addPaginationToDoctorsTable() {
+        Pagination pagination = new Pagination((listDoctors.size() / recordsPerPage + 1), 0);
+        pagination.setPageFactory(this::createDoctorPage);
+        anchorPaneFindDoctor.getChildren().add(pagination);
+        pagination.setLayoutX(50);
+        pagination.setLayoutY(50);
+    }
+
+    private void addPaginationToPatientsTable() {
+        Pagination pagination = new Pagination((listPatients.size() / recordsPerPage + 1), 0);
+        pagination.setPageFactory(this::createPatientPage);
+        anchorPaneFindPatient.getChildren().add(pagination);
+        pagination.setLayoutX(50);
+        pagination.setLayoutY(50);
     }
 
     public Parent asParent() {
         return mainPane;
+    }
+
+    public Node createDoctorPage(int pageIndex){
+        int fromIndex = pageIndex * recordsPerPage;
+        int toIndex = Math.min(fromIndex + recordsPerPage, listDoctors.size());
+        tableViewDoctors.setItems(FXCollections.observableArrayList(listDoctors.subList(fromIndex, toIndex)));
+
+        return new BorderPane(tableViewDoctors);
+    }
+
+    public Node createPatientPage(int pageIndex){
+        int fromIndex = pageIndex * recordsPerPage;
+        int toIndex = Math.min(fromIndex + recordsPerPage, listDoctors.size());
+        tableViewPatients.setItems(FXCollections.observableArrayList(listPatients.subList(fromIndex, toIndex)));
+
+        return new BorderPane(tableViewDoctors);
     }
 
     private void createPane() {
@@ -170,6 +238,7 @@ public class BaseView {
 
         tableColumnAcademicTittle.setPrefWidth(300.0);
         tableColumnAcademicTittle.setText("Tytuł naukowy");
+        tableColumnAcademicTittle.setCellValueFactory(p -> p.getValue().getTableColumnAcademicTittle());
 
         tableColumnDoctorName.setPrefWidth(300.0);
         tableColumnDoctorName.setText("Imie");
