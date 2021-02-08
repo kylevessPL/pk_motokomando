@@ -13,6 +13,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
 import pl.motokomando.healthcare.controller.base.BaseController;
+import pl.motokomando.healthcare.model.base.BaseModel;
 import pl.motokomando.healthcare.model.base.utils.DoctorRecord;
 import pl.motokomando.healthcare.model.base.utils.PatientRecord;
 import pl.motokomando.healthcare.view.base.utils.doctor.MedicalSpecialty;
@@ -28,6 +29,7 @@ import static javafx.scene.layout.Region.USE_PREF_SIZE;
 
 public class BaseView {
 
+    private final BaseModel model;
     private final BaseController controller;
 
     private TabPane mainPane;
@@ -81,7 +83,8 @@ public class BaseView {
     private Label labelNewPatientBloodGroup;
     private Label labelNewPatientIdType;
 
-    public BaseView(BaseController controller) {
+    public BaseView(BaseModel model, BaseController controller) {
+        this.model = model;
         this.controller = controller;
         createPane();
         addContent();
