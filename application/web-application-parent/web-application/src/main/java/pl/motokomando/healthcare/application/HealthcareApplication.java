@@ -8,9 +8,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
-import pl.motokomando.healthcare.controller.base.BaseController;
-import pl.motokomando.healthcare.model.base.BaseModel;
-import pl.motokomando.healthcare.view.base.BaseView;
+import pl.motokomando.healthcare.controller.authentication.AuthenticationController;
+import pl.motokomando.healthcare.model.authentication.AuthenticationModel;
+import pl.motokomando.healthcare.view.authentication.AuthenticationView;
 
 @SpringBootApplication
 @ComponentScan("pl.motokomando.healthcare")
@@ -26,9 +26,12 @@ public class HealthcareApplication extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        BaseView view = new BaseView(new BaseController(new BaseModel()));
-        Scene scene = new Scene(view.asParent(), 1600, 800);
+        AuthenticationModel model = new AuthenticationModel();
+        AuthenticationController controller = new AuthenticationController(model);
+        AuthenticationView view = new AuthenticationView(model, controller);
+        Scene scene = new Scene(view.asParent(), 801, 638);
         primaryStage.setScene(scene);
+        primaryStage.setTitle("Healthcare Management - Panel Logowania");
         primaryStage.show();
     }
 
