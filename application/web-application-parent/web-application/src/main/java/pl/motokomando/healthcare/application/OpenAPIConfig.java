@@ -18,7 +18,7 @@ import static io.swagger.v3.oas.models.security.SecurityScheme.Type.OAUTH2;
 @Configuration
 public class OpenAPIConfig {
 
-    @Value(value = "${spring.security.oauth2.client.provider.okta.authorization-uri}")
+    @Value(value = "${spring.security.oauth2.client.provider.okta.authentication-uri}")
     private String authorizationUrl;
     @Value(value = "${spring.security.oauth2.client.provider.okta.token-uri}")
     private String tokenUrl;
