@@ -31,7 +31,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
-@Tag(name = "Authorization API", description = "API performing user authentication operations")
+@Tag(name = "Authorization API", description = "API performing user authorization operations")
 @RequiredArgsConstructor
 public class AuthorizationServiceController {
 
@@ -40,7 +40,7 @@ public class AuthorizationServiceController {
 
     @GetMapping("/")
     public void home(HttpServletResponse response) throws IOException {
-        response.sendRedirect("/authentication");
+        response.sendRedirect("/login");
     }
 
     @Operation(
