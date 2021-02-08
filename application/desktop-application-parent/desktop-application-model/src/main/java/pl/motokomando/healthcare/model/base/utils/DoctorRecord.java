@@ -1,7 +1,6 @@
 package pl.motokomando.healthcare.model.base.utils;
 
 import javafx.beans.property.SimpleStringProperty;
-import javafx.scene.control.TableColumn;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

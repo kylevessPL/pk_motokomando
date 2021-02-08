@@ -11,7 +11,7 @@ public enum AcademicTitle {
     DDS("lek. dent."),
     MD_PHD("dr n. med."),
     MD_PHD_DSC("dr hab n. med."),
-    PROF_MD_PHD_DSC("prof. dr hab");
+    PROF_MD_PHD_DSC("prof. dr hab n. med.");
 
     private final String name;
 
