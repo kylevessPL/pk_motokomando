@@ -82,13 +82,6 @@ public class AppointmentView {
         createDoctorTab();
         createPrescriptionNotesTab();
         createBillTab();
-
-        medicineNameTextField.setLayoutX(50.0);
-        medicineNameTextField.setLayoutY(40.0);
-        medicineNameTextField.setPrefHeight(40.0);
-        medicineNameTextField.setPrefWidth(1500.0);
-        medicineNameTextField.setPromptText("Wprowadź nazwę leku");
-
     }
 
     private void createBillTab() {
@@ -109,7 +102,7 @@ public class AppointmentView {
         saveBillDetailsButton.setLayoutX(525.0);
         saveBillDetailsButton.setLayoutY(361.0);
         saveBillDetailsButton.setMnemonicParsing(false);
-        saveBillDetailsButton.setText("Zatwierdź i drukuj");
+        saveBillDetailsButton.setText("Zatwierdź");
         saveBillDetailsButton.setFont(new Font(16.0));
         billPane.getChildren().add(saveBillDetailsButton);
     }
@@ -168,8 +161,6 @@ public class AppointmentView {
         doctorTab = new Tab();
         doctorTab.setText("Lekarz");
         doctorPane = new AnchorPane();
-        doctorPane.setMinHeight(0.0);
-        doctorPane.setMinWidth(0.0);
         doctorPane.setPrefHeight(180.0);
         doctorPane.setPrefWidth(200.0);
         createChooseDoctorComboBox();
@@ -265,6 +256,11 @@ public class AppointmentView {
 
     private void createMedicineNameTextField() {
         medicineNameTextField = new TextField();
+        medicineNameTextField.setLayoutX(50.0);
+        medicineNameTextField.setLayoutY(40.0);
+        medicineNameTextField.setPrefHeight(40.0);
+        medicineNameTextField.setPrefWidth(1500.0);
+        medicineNameTextField.setPromptText("Wprowadź nazwę leku");
         addPrescriptionMedicinePane.getChildren().add(medicineNameTextField);
     }
 
@@ -276,6 +272,12 @@ public class AppointmentView {
         prescriptionMedicinesTable.setPrefWidth(1100.0);
         setMedicinesTableContent(prescriptionMedicinesTable);
         addPrescriptionMedicinePane.getChildren().add(prescriptionMedicinesTable);
+    }
+
+    private TableColumn<MedicineRecord, String> createMedicinesTableColumn() {
+        TableColumn<MedicineRecord, String> column = new TableColumn<>();
+        column.setPrefWidth(122.0);
+        return column;
     }
 
     private List<TableColumn<MedicineRecord, String>> createMedicinesTableColumns() {
@@ -293,12 +295,6 @@ public class AppointmentView {
         columnList.get(7).setText("Dawkowanie");
         columnList.get(8).setText("Rodzaj opakowania");
         return columnList;
-    }
-
-    private TableColumn<MedicineRecord, String> createMedicinesTableColumn() {
-        TableColumn<MedicineRecord, String> column = new TableColumn<>();
-        column.setPrefWidth(122.0);
-        return column;
     }
 
     private void setMedicinesTableContent(TableView<MedicineRecord> medicinesTable) {
