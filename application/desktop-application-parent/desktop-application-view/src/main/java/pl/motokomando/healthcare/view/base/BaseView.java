@@ -18,6 +18,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
+import org.controlsfx.control.CheckComboBox;
 import pl.motokomando.healthcare.controller.base.BaseController;
 import pl.motokomando.healthcare.model.base.BaseModel;
 import pl.motokomando.healthcare.model.base.utils.DoctorRecord;
@@ -54,7 +55,7 @@ public class BaseView {
     private Button addDoctorButton;
     private TextField doctorLastNameTextField;
     private TextField doctorPhoneNumberTextField;
-    private ComboBox<String> chooseDoctorSpecialtyComboBox;
+    private CheckComboBox<String> chooseDoctorSpecialtyComboBox;
     private ComboBox<String> chooseDoctorAcademicTitleComboBox;
     private Label doctorSpecialtyLabel;
     private Label doctorAcademicTitleLabel;
@@ -207,7 +208,7 @@ public class BaseView {
     }
 
     private void createChooseDoctorSpecialtyComboBox() {
-        chooseDoctorSpecialtyComboBox = new ComboBox<>();
+        chooseDoctorSpecialtyComboBox = new CheckComboBox<>();
         chooseDoctorSpecialtyComboBox.setLayoutX(650.0);
         chooseDoctorSpecialtyComboBox.setLayoutY(370.0);
         chooseDoctorSpecialtyComboBox.setPrefHeight(40.0);
