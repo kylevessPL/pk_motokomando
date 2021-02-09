@@ -11,14 +11,13 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import org.apache.commons.lang3.StringUtils;
 import pl.motokomando.healthcare.controller.authentication.AuthenticationController;
 import pl.motokomando.healthcare.controller.base.BaseController;
 import pl.motokomando.healthcare.model.authentication.AuthenticationModel;
 import pl.motokomando.healthcare.model.authentication.utils.AuthenticationStatus;
 import pl.motokomando.healthcare.model.base.BaseModel;
 import pl.motokomando.healthcare.view.base.BaseView;
-
-import java.io.FileInputStream;
 
 import static javafx.scene.control.ProgressIndicator.INDETERMINATE_PROGRESS;
 import static javafx.scene.layout.Region.USE_PREF_SIZE;
@@ -33,7 +32,6 @@ public class AuthenticationView {
 
     private Button loginButton;
     private Label authenticationStatusLabel;
-    private Label borderLabel;
     private ProgressIndicator progressIndicator;
     private ImageView imageViewLogo;
 
@@ -42,7 +40,6 @@ public class AuthenticationView {
         this.controller = controller;
         createPane();
         createContent();
-        addLogoToLoginPanel();
         delegateEventHandlers();
         observeModelAndUpdate();
     }
@@ -58,12 +55,13 @@ public class AuthenticationView {
     private void createContent() {
         createLoginButton();
         createAuthenticationStatusLabel();
+        createLogoImage();
         createProgressIndicator();
     }
 
-    private void addLogoToLoginPanel(){
-        Image imageLogo = new Image(this.getClass().getResourceAsStream("/images/logo.png"));
-        imageViewLogo = new ImageView(imageLogo);
+    private void createLogoImage() {
+        Image logoImage = new Image(this.getClass().getResourceAsStream("/images/logo.png"));
+        imageViewLogo = new ImageView(logoImage);
         imageViewLogo.setLayoutX(10);
         imageViewLogo.setLayoutY(50);
         imageViewLogo.setFitHeight(160);
@@ -92,18 +90,18 @@ public class AuthenticationView {
 
     private void createAuthenticationStatusLabel() {
         authenticationStatusLabel = new Label();
-        borderLabel = new Label();
+        Label divider = new Label();
         authenticationStatusLabel.setText(NOT_AUTHENTICATED.getDescription());
         authenticationStatusLabel.setLayoutX(190);
         authenticationStatusLabel.setLayoutY(250);
-        borderLabel.setLayoutX(190);
-        borderLabel.setLayoutY(260);
-        borderLabel.setPrefWidth(300);
-        borderLabel.setText("...........................................................................................................................");
         authenticationStatusLabel.setPrefWidth(300);
         authenticationStatusLabel.setFont(new Font(18.0));
+        divider.setLayoutX(190);
+        divider.setLayoutY(260);
+        divider.setPrefWidth(300);
+        divider.setText(StringUtils.repeat(".", 24));
+        loginPane.getChildren().add(divider);
         loginPane.getChildren().add(authenticationStatusLabel);
-        loginPane.getChildren().add(borderLabel);
     }
 
     private void createProgressIndicator() {
