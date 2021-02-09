@@ -7,6 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import pl.motokomando.healthcare.controller.authentication.AuthenticationController;
 import pl.motokomando.healthcare.controller.base.BaseController;
@@ -28,6 +29,7 @@ public class AuthenticationView {
 
     private Button loginButton;
     private Label authenticationStatusLabel;
+    private Label borderLabel;
     private ProgressIndicator progressIndicator;
 
     public AuthenticationView(AuthenticationModel model, AuthenticationController controller) {
@@ -59,24 +61,33 @@ public class AuthenticationView {
         loginPane.setMaxWidth(USE_PREF_SIZE);
         loginPane.setMinHeight(USE_PREF_SIZE);
         loginPane.setMinWidth(USE_PREF_SIZE);
-        loginPane.setPrefHeight(638.0);
-        loginPane.setPrefWidth(801.0);
+        loginPane.setPrefHeight(400.0);
+        loginPane.setPrefWidth(500.0);
     }
 
     private void createLoginButton() {
         loginButton = new Button();
         loginButton.setText("Zaloguj się");
-        loginButton.setLayoutX(350);
-        loginButton.setLayoutY(250);
+        loginButton.setLayoutX(200);
+        loginButton.setLayoutY(200);
+        loginButton.setFont(new Font(16.0));
         loginPane.getChildren().add(loginButton);
     }
 
     private void createAuthenticationStatusLabel() {
         authenticationStatusLabel = new Label();
+        borderLabel = new Label();
         authenticationStatusLabel.setText(NOT_AUTHENTICATED.getDescription());
-        authenticationStatusLabel.setLayoutX(350);
-        authenticationStatusLabel.setLayoutY(220);
+        authenticationStatusLabel.setLayoutX(100);
+        authenticationStatusLabel.setLayoutY(120);
+        borderLabel.setLayoutX(100);
+        borderLabel.setLayoutY(130);
+        borderLabel.setPrefWidth(300);
+        borderLabel.setText("...........................................................................................................................");
+        authenticationStatusLabel.setPrefWidth(300);
+        authenticationStatusLabel.setFont(new Font(16.0));
         loginPane.getChildren().add(authenticationStatusLabel);
+        loginPane.getChildren().add(borderLabel);
     }
 
     private void createProgressIndicator() {
