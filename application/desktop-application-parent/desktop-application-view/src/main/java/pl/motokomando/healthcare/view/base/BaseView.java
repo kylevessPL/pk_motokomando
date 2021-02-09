@@ -107,23 +107,23 @@ public class BaseView {
         doctorsTable.setRowFactory(tv -> {
             TableRow<DoctorRecord> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
-                if (event.getClickCount() == 2 && (!row.isEmpty()) ) {
+                if (event.getClickCount() == 2 && (!row.isEmpty())) {
                     DoctorRecord rowData = row.getItem();
                     System.out.println("działa");
                 }
             });
-            return row ;
+            return row;
         });
 
         patientsTable.setRowFactory(tv -> {
             TableRow<PatientRecord> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
-                if (event.getClickCount() == 2 && (!row.isEmpty()) ) {
+                if (event.getClickCount() == 2 && (!row.isEmpty())) {
                     PatientRecord rowData = row.getItem();
                     System.out.println("działa");
                 }
             });
-            return row ;
+            return row;
         });
     }
 
@@ -568,6 +568,5 @@ public class BaseView {
         patientsTable.setItems(FXCollections.observableArrayList(listPatients.subList(fromIndex, toIndex)));
         return new BorderPane(doctorsTable);
     }
-
 
 }
