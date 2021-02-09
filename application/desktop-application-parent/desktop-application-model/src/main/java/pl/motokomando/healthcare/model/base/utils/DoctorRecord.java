@@ -10,9 +10,11 @@ import lombok.Setter;
 @AllArgsConstructor
 
 public class DoctorRecord {
-    SimpleStringProperty tableColumnAcademicTittle;
+
+    SimpleStringProperty tableColumnAcademicTitle;
     String tableColumnDoctorName;
     String tableColumnDoctorSurname;
     String tableColumnDoctorPhoneNumber;
     String tableColumnDoctorSpecialisation;
+
 }

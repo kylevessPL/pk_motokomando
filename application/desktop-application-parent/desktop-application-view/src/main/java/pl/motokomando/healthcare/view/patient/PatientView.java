@@ -394,8 +394,8 @@ public class PatientView {
                 .mapToObj(i -> createPatientAppointmentsTableColumn())
                 .collect(Collectors.toList());
         columnList.get(0).setText("Data");
-        columnList.get(1).setText("Status");
-        columnList.get(2).setText("Lekarz");
+        columnList.get(1).setText("Lekarz");
+        columnList.get(2).setText("Status");
         return columnList;
     }
 
