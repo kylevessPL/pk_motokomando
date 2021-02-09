@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum AuthenticationStatus {
 
-    NOT_AUTHENTICATED("Nie zalogowany"),
+    NOT_AUTHENTICATED("Niezalogowany"),
     AUTHENTICATION_STARTED("Logowanie..."),
     AUTHENTICATION_FAILURE("Logowanie nieudane"),
     USER_IDENTIFICATION("Pobieranie informacji o użytkowniku..."),
