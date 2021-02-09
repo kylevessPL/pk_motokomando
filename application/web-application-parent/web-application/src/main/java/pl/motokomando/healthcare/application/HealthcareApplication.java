@@ -29,7 +29,7 @@ public class HealthcareApplication extends Application {
         AuthenticationModel model = new AuthenticationModel();
         AuthenticationController controller = new AuthenticationController(model);
         AuthenticationView view = new AuthenticationView(model, controller);
-        Scene scene = new Scene(view.asParent(), 801, 638);
+        Scene scene = new Scene(view.asParent(), 700, 500);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Healthcare Management - Panel Logowania");
         primaryStage.show();

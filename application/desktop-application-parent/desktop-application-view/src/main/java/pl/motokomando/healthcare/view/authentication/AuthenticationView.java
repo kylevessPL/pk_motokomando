@@ -6,8 +6,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import org.apache.commons.lang3.StringUtils;
 import pl.motokomando.healthcare.controller.authentication.AuthenticationController;
 import pl.motokomando.healthcare.controller.base.BaseController;
 import pl.motokomando.healthcare.model.authentication.AuthenticationModel;
@@ -29,6 +33,7 @@ public class AuthenticationView {
     private Button loginButton;
     private Label authenticationStatusLabel;
     private ProgressIndicator progressIndicator;
+    private ImageView imageViewLogo;
 
     public AuthenticationView(AuthenticationModel model, AuthenticationController controller) {
         this.model = model;
@@ -50,7 +55,18 @@ public class AuthenticationView {
     private void createContent() {
         createLoginButton();
         createAuthenticationStatusLabel();
+        createLogoImage();
         createProgressIndicator();
+    }
+
+    private void createLogoImage() {
+        Image logoImage = new Image(this.getClass().getResourceAsStream("/images/logo.png"));
+        imageViewLogo = new ImageView(logoImage);
+        imageViewLogo.setLayoutX(10);
+        imageViewLogo.setLayoutY(50);
+        imageViewLogo.setFitHeight(160);
+        imageViewLogo.setFitWidth(680);
+        loginPane.getChildren().add(imageViewLogo);
     }
 
     private void createPane() {
@@ -59,23 +75,32 @@ public class AuthenticationView {
         loginPane.setMaxWidth(USE_PREF_SIZE);
         loginPane.setMinHeight(USE_PREF_SIZE);
         loginPane.setMinWidth(USE_PREF_SIZE);
-        loginPane.setPrefHeight(638.0);
-        loginPane.setPrefWidth(801.0);
+        loginPane.setPrefHeight(400.0);
+        loginPane.setPrefWidth(500.0);
     }
 
     private void createLoginButton() {
         loginButton = new Button();
         loginButton.setText("Zaloguj się");
-        loginButton.setLayoutX(350);
-        loginButton.setLayoutY(250);
+        loginButton.setLayoutX(280);
+        loginButton.setLayoutY(370);
+        loginButton.setFont(new Font(18.0));
         loginPane.getChildren().add(loginButton);
     }
 
     private void createAuthenticationStatusLabel() {
         authenticationStatusLabel = new Label();
+        Label divider = new Label();
         authenticationStatusLabel.setText(NOT_AUTHENTICATED.getDescription());
-        authenticationStatusLabel.setLayoutX(350);
-        authenticationStatusLabel.setLayoutY(220);
+        authenticationStatusLabel.setLayoutX(190);
+        authenticationStatusLabel.setLayoutY(250);
+        authenticationStatusLabel.setPrefWidth(300);
+        authenticationStatusLabel.setFont(new Font(18.0));
+        divider.setLayoutX(190);
+        divider.setLayoutY(260);
+        divider.setPrefWidth(300);
+        divider.setText(StringUtils.repeat(".", 24));
+        loginPane.getChildren().add(divider);
         loginPane.getChildren().add(authenticationStatusLabel);
     }
 
@@ -83,8 +108,8 @@ public class AuthenticationView {
         progressIndicator = new ProgressIndicator();
         progressIndicator.setVisible(false);
         progressIndicator.setProgress(INDETERMINATE_PROGRESS);
-        progressIndicator.setLayoutX(350);
-        progressIndicator.setLayoutY(280);
+        progressIndicator.setLayoutX(315);
+        progressIndicator.setLayoutY(300);
         loginPane.getChildren().add(progressIndicator);
     }
 
