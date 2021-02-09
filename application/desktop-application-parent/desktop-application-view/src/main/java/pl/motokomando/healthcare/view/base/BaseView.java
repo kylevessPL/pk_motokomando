@@ -555,14 +555,14 @@ public class BaseView {
         pagination.setLayoutY(50);
     }
 
-    public Node createDoctorPage(int pageIndex){
+    private Node createDoctorPage(int pageIndex){
         int fromIndex = pageIndex * recordsPerPage;
         int toIndex = Math.min(fromIndex + recordsPerPage, listDoctors.size());
         doctorsTable.setItems(FXCollections.observableArrayList(listDoctors.subList(fromIndex, toIndex)));
         return new BorderPane(doctorsTable);
     }
 
-    public Node createPatientPage(int pageIndex){
+    private Node createPatientPage(int pageIndex){
         int fromIndex = pageIndex * recordsPerPage;
         int toIndex = Math.min(fromIndex + recordsPerPage, listDoctors.size());
         patientsTable.setItems(FXCollections.observableArrayList(listPatients.subList(fromIndex, toIndex)));
