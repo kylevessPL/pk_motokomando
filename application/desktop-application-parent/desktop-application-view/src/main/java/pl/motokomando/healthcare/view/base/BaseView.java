@@ -86,6 +86,10 @@ public class BaseView {
     private TextField userLoginTextField;
     private TextField userEmailTextField;
     private Button userLogOutButton;
+    private Label userNameLabel;
+    private Label userSurnameLabel;
+    private Label userEmailLabel;
+    private Label userLoginLabel;
 
     private int recordsPerPage = 4; //TODO do poprawy
 
@@ -158,23 +162,61 @@ public class BaseView {
         accountTab = new Tab();
         accountTab.setText("Konto");
         accountAnchorPane = new AnchorPane();
-
+        createUserNameLabel();
         createUserNameTextField();
+        createUserSurnameLabel();
         createUserSurnameTextField();
+        createUserLoginLabel();
         createUserLoginTextField();
+        createUserEmailLabel();
         createUserEmailTextField();
         createUserLogOutButton();
-
         accountTab.setContent(accountAnchorPane);
         mainPane.getTabs().add(accountTab);
     }
 
+    private void createUserNameLabel() {
+        userNameLabel = new Label();
+        userNameLabel.setText("Imię");
+        userNameLabel.setLayoutX(650);
+        userNameLabel.setLayoutY(70);
+        userNameLabel.setFont(new Font(16.0));
+        accountAnchorPane.getChildren().add(userNameLabel);
+    }
+
+    private void createUserSurnameLabel() {
+        userSurnameLabel = new Label();
+        userSurnameLabel.setText("Nazwisko");
+        userSurnameLabel.setLayoutX(650);
+        userSurnameLabel.setLayoutY(170);
+        userSurnameLabel.setFont(new Font(16.0));
+        accountAnchorPane.getChildren().add(userSurnameLabel);
+    }
+
+    private void createUserLoginLabel() {
+        userLoginLabel = new Label();
+        userLoginLabel.setText("Login");
+        userLoginLabel.setLayoutX(650);
+        userLoginLabel.setLayoutY(270);
+        userLoginLabel.setFont(new Font(16.0));
+        accountAnchorPane.getChildren().add(userLoginLabel);
+    }
+
+    private void createUserEmailLabel() {
+        userEmailLabel = new Label();
+        userEmailLabel.setText("Email");
+        userEmailLabel.setLayoutX(650);
+        userEmailLabel.setLayoutY(370);
+        userEmailLabel.setFont(new Font(16.0));
+        accountAnchorPane.getChildren().add(userEmailLabel);
+    }
+
     private void createUserNameTextField() {
         userNameTextField = new TextField();
-        //userNameTextField.setDisable(true);
+        userNameTextField.setDisable(true);
         userNameTextField.setEditable(false);
         userNameTextField.setLayoutX(650);
-        userNameTextField.setLayoutY(50);
+        userNameTextField.setLayoutY(100);
         userNameTextField.setPrefWidth(300);
         userNameTextField.setPrefHeight(40);
         userNameTextField.setFont(new Font(16.0));
@@ -183,10 +225,10 @@ public class BaseView {
 
     private void createUserSurnameTextField() {
         userSurnameTextField = new TextField();
-        //userNameTextField.setDisable(true);
+        userSurnameTextField.setDisable(true);
         userSurnameTextField.setEditable(false);
         userSurnameTextField.setLayoutX(650);
-        userSurnameTextField.setLayoutY(150);
+        userSurnameTextField.setLayoutY(200);
         userSurnameTextField.setPrefWidth(300);
         userSurnameTextField.setPrefHeight(40);
         userSurnameTextField.setFont(new Font(16.0));
@@ -195,10 +237,10 @@ public class BaseView {
 
     private void createUserLoginTextField() {
         userLoginTextField = new TextField();
-        //userNameTextField.setDisable(true);
+        userLoginTextField.setDisable(true);
         userLoginTextField.setEditable(false);
         userLoginTextField.setLayoutX(650);
-        userLoginTextField.setLayoutY(250);
+        userLoginTextField.setLayoutY(300);
         userLoginTextField.setPrefWidth(300);
         userLoginTextField.setPrefHeight(40);
         userLoginTextField.setFont(new Font(16.0));
@@ -207,10 +249,10 @@ public class BaseView {
 
     private void createUserEmailTextField() {
         userEmailTextField = new TextField();
-        //userNameTextField.setDisable(true);
+        userEmailTextField.setDisable(true);
         userEmailTextField.setEditable(false);
         userEmailTextField.setLayoutX(650);
-        userEmailTextField.setLayoutY(350);
+        userEmailTextField.setLayoutY(400);
         userEmailTextField.setPrefWidth(300);
         userEmailTextField.setPrefHeight(40);
         userEmailTextField.setFont(new Font(16.0));
@@ -219,12 +261,9 @@ public class BaseView {
 
     private void createUserLogOutButton() {
         userLogOutButton = new Button();
-        //userNameTextField.setDisable(true);
         userLogOutButton.setText("Wyloguj");
-        userLogOutButton.setLayoutX(750);
-        userLogOutButton.setLayoutY(450);
-        //userLogOutButton.setPrefWidth(300);
-        //userLogOutButton.setPrefHeight(40);
+        userLogOutButton.setLayoutX(760);
+        userLogOutButton.setLayoutY(550);
         userLogOutButton.setFont(new Font(16.0));
         accountAnchorPane.getChildren().add(userLogOutButton);
     }
