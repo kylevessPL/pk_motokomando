@@ -79,6 +79,13 @@ public class BaseView {
     private Button addPatientButton;
     private Label patientSexLabel;
     private Label patientBloodTypeLabel;
+    private Tab accountTab;
+    private AnchorPane accountAnchorPane;
+    private TextField userNameTextField;
+    private TextField userSurnameTextField;
+    private TextField userLoginTextField;
+    private TextField userEmailTextField;
+    private Button userLogOutButton;
 
     private int recordsPerPage = 4; //TODO do poprawy
 
@@ -144,6 +151,82 @@ public class BaseView {
     private void addContent() {
         createPatientsTab();
         createDoctorsTab();
+        createAccountTab();
+    }
+
+    private void createAccountTab() {
+        accountTab = new Tab();
+        accountTab.setText("Konto");
+        accountAnchorPane = new AnchorPane();
+
+        createUserNameTextField();
+        createUserSurnameTextField();
+        createUserLoginTextField();
+        createUserEmailTextField();
+        createUserLogOutButton();
+
+        accountTab.setContent(accountAnchorPane);
+        mainPane.getTabs().add(accountTab);
+    }
+
+    private void createUserNameTextField() {
+        userNameTextField = new TextField();
+        //userNameTextField.setDisable(true);
+        userNameTextField.setEditable(false);
+        userNameTextField.setLayoutX(650);
+        userNameTextField.setLayoutY(50);
+        userNameTextField.setPrefWidth(300);
+        userNameTextField.setPrefHeight(40);
+        userNameTextField.setFont(new Font(16.0));
+        accountAnchorPane.getChildren().add(userNameTextField);
+    }
+
+    private void createUserSurnameTextField() {
+        userSurnameTextField = new TextField();
+        //userNameTextField.setDisable(true);
+        userSurnameTextField.setEditable(false);
+        userSurnameTextField.setLayoutX(650);
+        userSurnameTextField.setLayoutY(150);
+        userSurnameTextField.setPrefWidth(300);
+        userSurnameTextField.setPrefHeight(40);
+        userSurnameTextField.setFont(new Font(16.0));
+        accountAnchorPane.getChildren().add(userSurnameTextField);
+    }
+
+    private void createUserLoginTextField() {
+        userLoginTextField = new TextField();
+        //userNameTextField.setDisable(true);
+        userLoginTextField.setEditable(false);
+        userLoginTextField.setLayoutX(650);
+        userLoginTextField.setLayoutY(250);
+        userLoginTextField.setPrefWidth(300);
+        userLoginTextField.setPrefHeight(40);
+        userLoginTextField.setFont(new Font(16.0));
+        accountAnchorPane.getChildren().add(userLoginTextField);
+    }
+
+    private void createUserEmailTextField() {
+        userEmailTextField = new TextField();
+        //userNameTextField.setDisable(true);
+        userEmailTextField.setEditable(false);
+        userEmailTextField.setLayoutX(650);
+        userEmailTextField.setLayoutY(350);
+        userEmailTextField.setPrefWidth(300);
+        userEmailTextField.setPrefHeight(40);
+        userEmailTextField.setFont(new Font(16.0));
+        accountAnchorPane.getChildren().add(userEmailTextField);
+    }
+
+    private void createUserLogOutButton() {
+        userLogOutButton = new Button();
+        //userNameTextField.setDisable(true);
+        userLogOutButton.setText("Wyloguj");
+        userLogOutButton.setLayoutX(750);
+        userLogOutButton.setLayoutY(450);
+        //userLogOutButton.setPrefWidth(300);
+        //userLogOutButton.setPrefHeight(40);
+        userLogOutButton.setFont(new Font(16.0));
+        accountAnchorPane.getChildren().add(userLogOutButton);
     }
 
     private void createDoctorsTab() {

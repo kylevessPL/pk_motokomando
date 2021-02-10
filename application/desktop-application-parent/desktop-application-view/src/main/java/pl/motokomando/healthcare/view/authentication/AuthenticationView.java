@@ -99,7 +99,7 @@ public class AuthenticationView {
         divider.setLayoutX(190);
         divider.setLayoutY(260);
         divider.setPrefWidth(300);
-        divider.setText(StringUtils.repeat(".", 24));
+        divider.setText(StringUtils.repeat(".", 110));
         loginPane.getChildren().add(divider);
         loginPane.getChildren().add(authenticationStatusLabel);
     }
