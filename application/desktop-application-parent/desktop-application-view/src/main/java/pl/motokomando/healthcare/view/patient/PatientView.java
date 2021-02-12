@@ -16,6 +16,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
 import pl.motokomando.healthcare.controller.patient.PatientController;
 import pl.motokomando.healthcare.model.patient.PatientModel;
 import pl.motokomando.healthcare.model.patient.utils.AppointmentRecord;
@@ -31,8 +32,9 @@ import static javafx.scene.layout.Region.USE_PREF_SIZE;
 
 public class PatientView {
 
-    private final PatientModel model;
-    private final PatientController controller;
+    private final PatientModel patientModel;
+
+    private PatientController controller;
 
     private TabPane patientPane;
 
@@ -68,9 +70,9 @@ public class PatientView {
     public List<AppointmentRecord> listAppointments;
     int recordsPerPage = 4;
 
-    public PatientView(PatientModel model, PatientController controller) {
-        this.model = model;
-        this.controller = controller;
+    public PatientView(PatientModel patientModel) {
+        this.patientModel = patientModel;
+        setController();
         createPane();
         addContent();
 
@@ -80,6 +82,14 @@ public class PatientView {
 
     public Parent asParent() {
         return patientPane;
+    }
+
+    private Stage currentStage() {
+        return (Stage) patientPane.getScene().getWindow();
+    }
+
+    private void setController() {
+        controller = new PatientController(patientModel);
     }
 
     private void createPane() {

@@ -6,13 +6,13 @@ import pl.motokomando.healthcare.model.base.utils.DoctorRecord;
 
 public class BaseController {
 
-    private final BaseModel model;
+    private final BaseModel baseModel;
 
-    public BaseController(BaseModel model) {
-        this.model = model;
+    public BaseController(BaseModel baseModel) {
+        this.baseModel = baseModel;
     }
 
-    public TableRow nazwa() {
+    public TableRow<?> nazwa() {
         TableRow<DoctorRecord> row = new TableRow<>();
         row.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2 && (! row.isEmpty()) ) {

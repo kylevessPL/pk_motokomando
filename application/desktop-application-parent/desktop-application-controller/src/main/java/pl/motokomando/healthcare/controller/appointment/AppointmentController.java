@@ -4,10 +4,10 @@ import pl.motokomando.healthcare.model.appointment.AppointmentModel;
 
 public class AppointmentController {
 
-    private final AppointmentModel model;
+    private final AppointmentModel appointmentModel;
 
-    public AppointmentController(AppointmentModel model) {
-        this.model = model;
+    public AppointmentController(AppointmentModel appointmentModel) {
+        this.appointmentModel = appointmentModel;
     }
 
 }
