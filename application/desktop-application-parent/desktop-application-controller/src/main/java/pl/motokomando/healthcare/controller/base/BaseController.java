@@ -2,7 +2,6 @@ package pl.motokomando.healthcare.controller.base;
 
 import javafx.scene.control.TableRow;
 import pl.motokomando.healthcare.model.base.BaseModel;
-import pl.motokomando.healthcare.model.base.utils.DoctorRecord;
 
 public class BaseController {
 
@@ -12,6 +11,7 @@ public class BaseController {
         this.baseModel = baseModel;
     }
 
+    //TODO nie tu
     public TableRow<?> nazwa() {
         TableRow<DoctorRecord> row = new TableRow<>();
         row.setOnMouseClicked(event -> {
@@ -21,6 +21,10 @@ public class BaseController {
             }
         });
         return row;
+    }*/
+
+    public void handleAddDoctorButtonClicked() {
+
     }
 
 }

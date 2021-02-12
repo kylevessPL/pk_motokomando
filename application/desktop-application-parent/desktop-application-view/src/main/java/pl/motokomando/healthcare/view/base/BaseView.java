@@ -317,6 +317,19 @@ public class BaseView {
         userInfoPane.getChildren().add(logoutButton);
     }
 
+    private void observeModelAndUpdate() {
+
+    }
+
+    private void delegateEventHandlers() {
+        delegateAddDoctorButtonOnClick();
+    }
+
+    private void delegateAddDoctorButtonOnClick() {
+
+        addDoctorButton.setOnMouseClicked(e -> controller.handleAddDoctorButtonClicked());
+    }
+
     private void createDoctorsTab() {
         doctorsTab = new Tab();
         doctorsTab.setText("Lekarze");

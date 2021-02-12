@@ -1,4 +1,4 @@
-package pl.motokomando.healthcare.model.base.utils;
+package pl.motokomando.healthcare.view.base.utils;
 
 import javafx.beans.property.SimpleStringProperty;
 import lombok.AllArgsConstructor;
