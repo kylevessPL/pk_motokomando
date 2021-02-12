@@ -1,5 +1,6 @@
 package pl.motokomando.healthcare.model.authentication.utils;
 
+import com.google.gson.annotations.SerializedName;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -7,9 +8,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public final class UserInfo {
 
-    private final String userName;
+    @SerializedName(value = "preferredUsername")
+    private final String username;
     private final String email;
+    @SerializedName(value = "givenName")
     private final String firstName;
+    @SerializedName(value = "familyName")
     private final String lastName;
 
 }

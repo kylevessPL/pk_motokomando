@@ -4,10 +4,10 @@ import pl.motokomando.healthcare.model.patient.PatientModel;
 
 public class PatientController {
 
-    private final PatientModel model;
+    private final PatientModel patientModel;
 
-    public PatientController(PatientModel model) {
-        this.model = model;
+    public PatientController(PatientModel patientModel) {
+        this.patientModel = patientModel;
     }
 
 }

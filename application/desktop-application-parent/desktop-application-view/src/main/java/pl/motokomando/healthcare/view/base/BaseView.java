@@ -1,9 +1,13 @@
 package pl.motokomando.healthcare.view.base;
 
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -18,14 +22,22 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
 import pl.motokomando.healthcare.controller.base.BaseController;
+import pl.motokomando.healthcare.model.appointment.AppointmentModel;
+import pl.motokomando.healthcare.model.authentication.AuthenticationModel;
+import pl.motokomando.healthcare.model.authentication.utils.UserInfo;
 import pl.motokomando.healthcare.model.base.BaseModel;
 import pl.motokomando.healthcare.model.base.utils.DoctorRecord;
 import pl.motokomando.healthcare.model.base.utils.PatientRecord;
+import pl.motokomando.healthcare.model.patient.PatientModel;
+import pl.motokomando.healthcare.view.authentication.AuthenticationView;
 import pl.motokomando.healthcare.view.base.utils.doctor.AcademicTitle;
 import pl.motokomando.healthcare.view.base.utils.doctor.MedicalSpecialty;
 import pl.motokomando.healthcare.view.base.utils.patient.BloodType;
 import pl.motokomando.healthcare.view.base.utils.patient.Sex;
+import utils.AlertMessage;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,15 +45,21 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
+import static javafx.scene.control.ButtonType.OK;
 import static javafx.scene.control.TabPane.TabClosingPolicy.UNAVAILABLE;
 import static javafx.scene.layout.Region.USE_PREF_SIZE;
 
 public class BaseView {
 
-    private final BaseModel model;
-    private final BaseController controller;
+    private BaseController controller;
 
-    private TabPane mainPane;
+    private final AuthenticationModel authenticationModel;
+    private BaseModel baseModel;
+    private AppointmentModel appointmentModel;
+    private PatientModel patientModel;
+
+    private TabPane basePane;
 
     private Tab doctorsTab;
     private TabPane doctorsPane;
@@ -79,35 +97,38 @@ public class BaseView {
     private Button addPatientButton;
     private Label patientSexLabel;
     private Label patientBloodTypeLabel;
-    private Tab accountTab;
-    private AnchorPane accountAnchorPane;
-    private TextField userNameTextField;
-    private TextField userSurnameTextField;
-    private TextField userLoginTextField;
+    private Tab userInfoTab;
+    private AnchorPane userInfoPane;
+    private TextField userFirstNameTextField;
+    private TextField userLastNameTextField;
+    private TextField userUsernameTextField;
     private TextField userEmailTextField;
-    private Button userLogOutButton;
-    private Label userNameLabel;
-    private Label userSurnameLabel;
+    private Button logoutButton;
+    private Label userFirstNameLabel;
+    private Label userLastNameLabel;
     private Label userEmailLabel;
-    private Label userLoginLabel;
+    private Label userUsernameLabel;
 
     private int recordsPerPage = 4; //TODO do poprawy
 
     public List<DoctorRecord> listDoctors;
     public List<PatientRecord> listPatients;
 
-    public BaseView(BaseModel model, BaseController controller) {
-        this.model = model;
-        this.controller = controller;
+    public BaseView(AuthenticationModel authenticationModel) {
+        this.authenticationModel = authenticationModel;
+        initModel();
+        setController();
         createPane();
         addContent();
+        delegateEventHandlers();
+        observeModelAndUpdate();
 
         //TODO do poprawy also
 
         //dodaje doktorów
         listDoctors = new ArrayList<>(10);
         listPatients = new ArrayList<>(10);
-        for (int i = 0; i < 10; i++){
+        for (int i = 0; i < 10; i++) {
             listDoctors.add(new DoctorRecord(new SimpleStringProperty("Dr"), "Andrzej", "Kowalski", "69691000" + i, "Urolog"));
         }
 
@@ -138,68 +159,91 @@ public class BaseView {
     }
 
     public Parent asParent() {
-        return mainPane;
+        return basePane;
+    }
+
+    private Stage currentStage() {
+        return (Stage) basePane.getScene().getWindow();
+    }
+
+    private void initModel() {
+        baseModel = new BaseModel();
+        appointmentModel = new AppointmentModel();
+        patientModel = new PatientModel();
+    }
+
+    private void setController() {
+        controller = new BaseController(baseModel);
     }
 
     private void createPane() {
-        mainPane = new TabPane();
-        mainPane.setMaxHeight(USE_PREF_SIZE);
-        mainPane.setMaxWidth(USE_PREF_SIZE);
-        mainPane.setMinHeight(USE_PREF_SIZE);
-        mainPane.setMinWidth(USE_PREF_SIZE);
-        mainPane.setPrefHeight(800.0);
-        mainPane.setPrefWidth(1600.0);
-        mainPane.setTabClosingPolicy(UNAVAILABLE);
+        basePane = new TabPane();
+        basePane.setMaxHeight(USE_PREF_SIZE);
+        basePane.setMaxWidth(USE_PREF_SIZE);
+        basePane.setMinHeight(USE_PREF_SIZE);
+        basePane.setMinWidth(USE_PREF_SIZE);
+        basePane.setPrefHeight(800.0);
+        basePane.setPrefWidth(1600.0);
+        basePane.setTabClosingPolicy(UNAVAILABLE);
     }
 
     private void addContent() {
         createPatientsTab();
         createDoctorsTab();
-        createAccountTab();
+        createUserInfoTab();
     }
 
-    private void createAccountTab() {
-        accountTab = new Tab();
-        accountTab.setText("Konto");
-        accountAnchorPane = new AnchorPane();
-        createUserNameLabel();
-        createUserNameTextField();
-        createUserSurnameLabel();
-        createUserSurnameTextField();
-        createUserLoginLabel();
-        createUserLoginTextField();
+    private void createUserInfoTab() {
+        userInfoTab = new Tab();
+        userInfoTab.setText("Konto");
+        userInfoPane = new AnchorPane();
+        createUserFirstNameLabel();
+        createUserFirstNameTextField();
+        createUserLastNameLabel();
+        createUserLastNameTextField();
+        createUserUsernameLabel();
+        createUserUsernameTextField();
         createUserEmailLabel();
         createUserEmailTextField();
-        createUserLogOutButton();
-        accountTab.setContent(accountAnchorPane);
-        mainPane.getTabs().add(accountTab);
+        createLogoutButton();
+        setUserDetails();
+        userInfoTab.setContent(userInfoPane);
+        basePane.getTabs().add(userInfoTab);
     }
 
-    private void createUserNameLabel() {
-        userNameLabel = new Label();
-        userNameLabel.setText("Imię");
-        userNameLabel.setLayoutX(650);
-        userNameLabel.setLayoutY(70);
-        userNameLabel.setFont(new Font(16.0));
-        accountAnchorPane.getChildren().add(userNameLabel);
+    private void setUserDetails() {
+        UserInfo userInfo = authenticationModel.getUserInfo();
+        userFirstNameTextField.setText(userInfo.getFirstName());
+        userLastNameTextField.setText(userInfo.getLastName());
+        userUsernameTextField.setText(userInfo.getUsername());
+        userEmailTextField.setText(userInfo.getEmail());
     }
 
-    private void createUserSurnameLabel() {
-        userSurnameLabel = new Label();
-        userSurnameLabel.setText("Nazwisko");
-        userSurnameLabel.setLayoutX(650);
-        userSurnameLabel.setLayoutY(170);
-        userSurnameLabel.setFont(new Font(16.0));
-        accountAnchorPane.getChildren().add(userSurnameLabel);
+    private void createUserFirstNameLabel() {
+        userFirstNameLabel = new Label();
+        userFirstNameLabel.setText("Imię");
+        userFirstNameLabel.setLayoutX(650);
+        userFirstNameLabel.setLayoutY(70);
+        userFirstNameLabel.setFont(new Font(16.0));
+        userInfoPane.getChildren().add(userFirstNameLabel);
     }
 
-    private void createUserLoginLabel() {
-        userLoginLabel = new Label();
-        userLoginLabel.setText("Login");
-        userLoginLabel.setLayoutX(650);
-        userLoginLabel.setLayoutY(270);
-        userLoginLabel.setFont(new Font(16.0));
-        accountAnchorPane.getChildren().add(userLoginLabel);
+    private void createUserLastNameLabel() {
+        userLastNameLabel = new Label();
+        userLastNameLabel.setText("Nazwisko");
+        userLastNameLabel.setLayoutX(650);
+        userLastNameLabel.setLayoutY(170);
+        userLastNameLabel.setFont(new Font(16.0));
+        userInfoPane.getChildren().add(userLastNameLabel);
+    }
+
+    private void createUserUsernameLabel() {
+        userUsernameLabel = new Label();
+        userUsernameLabel.setText("Nazwa użytkownika");
+        userUsernameLabel.setLayoutX(650);
+        userUsernameLabel.setLayoutY(270);
+        userUsernameLabel.setFont(new Font(16.0));
+        userInfoPane.getChildren().add(userUsernameLabel);
     }
 
     private void createUserEmailLabel() {
@@ -208,43 +252,46 @@ public class BaseView {
         userEmailLabel.setLayoutX(650);
         userEmailLabel.setLayoutY(370);
         userEmailLabel.setFont(new Font(16.0));
-        accountAnchorPane.getChildren().add(userEmailLabel);
+        userInfoPane.getChildren().add(userEmailLabel);
     }
 
-    private void createUserNameTextField() {
-        userNameTextField = new TextField();
-        userNameTextField.setDisable(true);
-        userNameTextField.setEditable(false);
-        userNameTextField.setLayoutX(650);
-        userNameTextField.setLayoutY(100);
-        userNameTextField.setPrefWidth(300);
-        userNameTextField.setPrefHeight(40);
-        userNameTextField.setFont(new Font(16.0));
-        accountAnchorPane.getChildren().add(userNameTextField);
+    private void createUserFirstNameTextField() {
+        userFirstNameTextField = new TextField();
+        userFirstNameTextField.setDisable(true);
+        userFirstNameTextField.setEditable(false);
+        userFirstNameTextField.setLayoutX(650);
+        userFirstNameTextField.setLayoutY(100);
+        userFirstNameTextField.setPrefWidth(300);
+        userFirstNameTextField.setPrefHeight(40);
+        userFirstNameTextField.setFont(new Font(16.0));
+        userFirstNameTextField.setStyle("-fx-opacity: 1.0;");
+        userInfoPane.getChildren().add(userFirstNameTextField);
     }
 
-    private void createUserSurnameTextField() {
-        userSurnameTextField = new TextField();
-        userSurnameTextField.setDisable(true);
-        userSurnameTextField.setEditable(false);
-        userSurnameTextField.setLayoutX(650);
-        userSurnameTextField.setLayoutY(200);
-        userSurnameTextField.setPrefWidth(300);
-        userSurnameTextField.setPrefHeight(40);
-        userSurnameTextField.setFont(new Font(16.0));
-        accountAnchorPane.getChildren().add(userSurnameTextField);
+    private void createUserLastNameTextField() {
+        userLastNameTextField = new TextField();
+        userLastNameTextField.setDisable(true);
+        userLastNameTextField.setEditable(false);
+        userLastNameTextField.setLayoutX(650);
+        userLastNameTextField.setLayoutY(200);
+        userLastNameTextField.setPrefWidth(300);
+        userLastNameTextField.setPrefHeight(40);
+        userLastNameTextField.setFont(new Font(16.0));
+        userLastNameTextField.setStyle("-fx-opacity: 1.0;");
+        userInfoPane.getChildren().add(userLastNameTextField);
     }
 
-    private void createUserLoginTextField() {
-        userLoginTextField = new TextField();
-        userLoginTextField.setDisable(true);
-        userLoginTextField.setEditable(false);
-        userLoginTextField.setLayoutX(650);
-        userLoginTextField.setLayoutY(300);
-        userLoginTextField.setPrefWidth(300);
-        userLoginTextField.setPrefHeight(40);
-        userLoginTextField.setFont(new Font(16.0));
-        accountAnchorPane.getChildren().add(userLoginTextField);
+    private void createUserUsernameTextField() {
+        userUsernameTextField = new TextField();
+        userUsernameTextField.setDisable(true);
+        userUsernameTextField.setEditable(false);
+        userUsernameTextField.setLayoutX(650);
+        userUsernameTextField.setLayoutY(300);
+        userUsernameTextField.setPrefWidth(300);
+        userUsernameTextField.setPrefHeight(40);
+        userUsernameTextField.setFont(new Font(16.0));
+        userUsernameTextField.setStyle("-fx-opacity: 1.0;");
+        userInfoPane.getChildren().add(userUsernameTextField);
     }
 
     private void createUserEmailTextField() {
@@ -256,16 +303,17 @@ public class BaseView {
         userEmailTextField.setPrefWidth(300);
         userEmailTextField.setPrefHeight(40);
         userEmailTextField.setFont(new Font(16.0));
-        accountAnchorPane.getChildren().add(userEmailTextField);
+        userEmailTextField.setStyle("-fx-opacity: 1.0;");
+        userInfoPane.getChildren().add(userEmailTextField);
     }
 
-    private void createUserLogOutButton() {
-        userLogOutButton = new Button();
-        userLogOutButton.setText("Wyloguj");
-        userLogOutButton.setLayoutX(760);
-        userLogOutButton.setLayoutY(550);
-        userLogOutButton.setFont(new Font(16.0));
-        accountAnchorPane.getChildren().add(userLogOutButton);
+    private void createLogoutButton() {
+        logoutButton = new Button();
+        logoutButton.setText("Wyloguj się");
+        logoutButton.setLayoutX(760);
+        logoutButton.setLayoutY(550);
+        logoutButton.setFont(new Font(16.0));
+        userInfoPane.getChildren().add(logoutButton);
     }
 
     private void createDoctorsTab() {
@@ -276,7 +324,7 @@ public class BaseView {
         createFindDoctorTab();
         createAddDoctorTab();
         doctorsTab.setContent(doctorsPane);
-        mainPane.getTabs().add(doctorsTab);
+        basePane.getTabs().add(doctorsTab);
     }
 
     private void createAddDoctorTab() {
@@ -404,7 +452,7 @@ public class BaseView {
         createFindPatientTab();
         createAddPatientTab();
         patientsTab.setContent(patientsPane);
-        mainPane.getTabs().add(patientsTab);
+        basePane.getTabs().add(patientsTab);
     }
 
     private void createAddPatientTab() {
@@ -690,5 +738,35 @@ public class BaseView {
         return new BorderPane(doctorsTable);
     }
 
+    private void observeModelAndUpdate() {
+    }
+
+    private void delegateEventHandlers() {
+        logoutButton.setOnMouseClicked(e -> logoutUser());
+    }
+
+    private void logoutUser() {
+        Alert alert = AlertMessage.builder()
+                .alertType(CONFIRMATION)
+                .contentText("Czy na pewno chcesz się wylogować?")
+                .alertTitle("Wyloguj się")
+                .build();
+        Platform.runLater(() -> alert.showAndWait()
+                .filter(OK::equals)
+                .ifPresent(e -> openAuthenticationScene()));
+    }
+
+    private void openAuthenticationScene() {
+        Scene scene = new Scene(new AuthenticationView().asParent(), 700, 500);
+        Platform.runLater(() -> {
+            Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+            Stage stage = currentStage();
+            stage.setScene(scene);
+            stage.setX((screenBounds.getWidth() - stage.getWidth()) / 2);
+            stage.setY((screenBounds.getHeight() - stage.getHeight()) / 2);
+            stage.setTitle("Healthcare Management - Panel Logowania");
+            stage.show();
+        });
+    }
 
 }
