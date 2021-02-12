@@ -12,6 +12,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
 import pl.motokomando.healthcare.controller.appointment.AppointmentController;
 import pl.motokomando.healthcare.model.appointment.AppointmentModel;
 import pl.motokomando.healthcare.model.appointment.utils.MedicineRecord;
@@ -25,8 +26,9 @@ import static javafx.scene.layout.Region.USE_PREF_SIZE;
 
 public class AppointmentView {
 
-    private final AppointmentModel model;
-    private final AppointmentController controller;
+    private final AppointmentModel appointmentModel;
+
+    private AppointmentController controller;
 
     private TabPane appointmentPane;
 
@@ -55,15 +57,23 @@ public class AppointmentView {
     private Button diagnosisButton;
     private TextArea diagnosisTextArea;
 
-    public AppointmentView(AppointmentModel model, AppointmentController controller) {
-        this.model = model;
-        this.controller = controller;
+    public AppointmentView(AppointmentModel appointmentModel) {
+        this.appointmentModel = appointmentModel;
+        setController();
         createPane();
         addContent();
     }
 
     public Parent asParent() {
         return appointmentPane;
+    }
+
+    private Stage currentStage() {
+        return (Stage) appointmentPane.getScene().getWindow();
+    }
+
+    private void setController() {
+        controller = new AppointmentController(appointmentModel);
     }
 
     private void createPane() {

@@ -1,7 +1,6 @@
 package pl.motokomando.healthcare.controller.authentication;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.Gson;
 import com.microsoft.alm.oauth2.useragent.AuthorizationException;
 import com.microsoft.alm.oauth2.useragent.AuthorizationResponse;
 import com.microsoft.alm.oauth2.useragent.UserAgent;
@@ -48,7 +47,7 @@ import static pl.motokomando.healthcare.model.authentication.utils.Authenticatio
 @Slf4j
 public class AuthenticationController {
 
-    private final AuthenticationModel model;
+    private final AuthenticationModel authenticationModel;
 
     private String apiDomain;
     private String oktaDomain;
@@ -58,26 +57,26 @@ public class AuthenticationController {
     private String grantType;
     private String codeChallengeMethod;
 
-    public AuthenticationController(AuthenticationModel model) {
-        this.model = model;
+    public AuthenticationController(AuthenticationModel authenticationModel) {
+        this.authenticationModel = authenticationModel;
     }
 
     public void handleLoginButtonClicked() {
         new Thread(() -> {
             try {
-                model.setAuthenticationStatus(AUTHENTICATION_STARTED);
+                authenticationModel.setAuthenticationStatus(AUTHENTICATION_STARTED);
                 loadProperties();
                 String codeVerifier = createCodeVerifier();
                 String codeChallenge = createCodeChallenge(codeVerifier);
                 String code = requestAuthCode(codeChallenge);
                 String token = getTokenForCode(code, codeVerifier);
                 updateUserToken(token);
-                model.setAuthenticationStatus(USER_IDENTIFICATION);
+                authenticationModel.setAuthenticationStatus(USER_IDENTIFICATION);
                 String info = getUserInfo();
                 updateUserInfo(info);
-                model.setAuthenticationStatus(AUTHENTICATION_SUCCESS);
+                authenticationModel.setAuthenticationStatus(AUTHENTICATION_SUCCESS);
             } catch (IOException | URISyntaxException | NoSuchAlgorithmException | AuthorizationException ex) {
-                model.setAuthenticationStatus(AUTHENTICATION_FAILURE);
+                authenticationModel.setAuthenticationStatus(AUTHENTICATION_FAILURE);
                 log.warn("Authentication error: " + ex.getMessage());
             }
         }).start();
@@ -143,35 +142,19 @@ public class AuthenticationController {
         HttpClient client = HttpClientBuilder.create().build();
         HttpGet get = new HttpGet(userInfoEndpoint);
         get.setHeader(CONTENT_TYPE, APPLICATION_JSON.getMimeType());
-        get.setHeader(AUTHORIZATION, "Bearer " + model.getToken().getAccessToken());
+        get.setHeader(AUTHORIZATION, "Bearer " + authenticationModel.getToken().getAccessToken());
         HttpResponse response = client.execute(get);
         return EntityUtils.toString(response.getEntity());
     }
 
     private void updateUserToken(String token) {
-        Token userToken = extractUserToken(token);
-        model.setToken(userToken);
+        Token userToken = new Gson().fromJson(token, Token.class);
+        authenticationModel.setToken(userToken);
     }
 
     private void updateUserInfo(String info) {
-        UserInfo userInfo = extractUserInfo(info);
-        model.setUserInfo(userInfo);
-    }
-
-    private Token extractUserToken(String json) {
-        JsonObject jsonObject = JsonParser.parseString(json).getAsJsonObject();
-        String accessToken = jsonObject.get("access_token").getAsString();
-        String idToken = jsonObject.get("id_token").getAsString();
-        return new Token(accessToken, idToken);
-    }
-
-    private UserInfo extractUserInfo(String json) {
-        JsonObject jsonObject = JsonParser.parseString(json).getAsJsonObject();
-        String userName = jsonObject.get("preferredUsername").getAsString();
-        String email = jsonObject.get("email").getAsString();
-        String firstName = jsonObject.get("givenName").getAsString();
-        String lastName = jsonObject.get("familyName").getAsString();
-        return new UserInfo(userName, email, firstName, lastName);
+        UserInfo userInfo = new Gson().fromJson(info, UserInfo.class);
+        authenticationModel.setUserInfo(userInfo);
     }
 
     private String createCodeVerifier() {

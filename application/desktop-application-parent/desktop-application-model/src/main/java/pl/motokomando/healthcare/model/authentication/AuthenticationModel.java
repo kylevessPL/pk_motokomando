@@ -9,6 +9,7 @@ import pl.motokomando.healthcare.model.authentication.utils.AuthenticationStatus
 import pl.motokomando.healthcare.model.authentication.utils.Token;
 import pl.motokomando.healthcare.model.authentication.utils.UserInfo;
 
+import static lombok.AccessLevel.NONE;
 import static pl.motokomando.healthcare.model.authentication.utils.AuthenticationStatus.NOT_AUTHENTICATED;
 
 @Getter
@@ -16,6 +17,7 @@ import static pl.motokomando.healthcare.model.authentication.utils.Authenticatio
 public class AuthenticationModel {
 
     @Accessors(fluent = true)
+    @Setter(NONE)
     private final ObjectProperty<AuthenticationStatus> authenticationStatus = new SimpleObjectProperty<>(NOT_AUTHENTICATED);
 
     private Token token;
