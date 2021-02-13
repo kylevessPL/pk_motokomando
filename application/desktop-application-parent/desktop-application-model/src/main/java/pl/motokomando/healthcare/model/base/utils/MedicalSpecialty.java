@@ -1,8 +1,5 @@
 package pl.motokomando.healthcare.model.base.utils;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
 public enum MedicalSpecialty {
 
     ANESTHESIA,

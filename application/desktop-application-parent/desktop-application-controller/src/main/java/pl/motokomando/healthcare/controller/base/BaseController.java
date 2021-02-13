@@ -1,6 +1,6 @@
 package pl.motokomando.healthcare.controller.base;
 
-import javafx.scene.control.TableRow;
+import javafx.collections.ObservableList;
 import pl.motokomando.healthcare.model.base.BaseModel;
 
 public class BaseController {
@@ -12,7 +12,7 @@ public class BaseController {
     }
 
     //TODO nie tu
-    public TableRow<?> nazwa() {
+    /*public TableRow<?> nazwa() {
         TableRow<DoctorRecord> row = new TableRow<>();
         row.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
@@ -22,6 +22,11 @@ public class BaseController {
         });
         return row;
     }*/
+
+    public void handleDoctorSpecialtyComboBoxCheckedItemsChanged(ObservableList<?> itemList) {
+        Integer checkedItemsNumber = itemList.size();
+        baseModel.setDoctorSpecialtyComboBoxCheckedItemsNumber(checkedItemsNumber);
+    }
 
     public void handleAddDoctorButtonClicked() {
 
