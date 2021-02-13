@@ -3,6 +3,8 @@ package pl.motokomando.healthcare.view.base;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
+import javafx.concurrent.Task;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -24,37 +26,55 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import org.controlsfx.control.CheckComboBox;
+import org.controlsfx.tools.ValueExtractor;
+import org.controlsfx.validation.ValidationSupport;
+import org.controlsfx.validation.Validator;
 import pl.motokomando.healthcare.controller.base.BaseController;
+import pl.motokomando.healthcare.model.SessionStore;
 import pl.motokomando.healthcare.model.appointment.AppointmentModel;
 import pl.motokomando.healthcare.model.authentication.AuthenticationModel;
-import pl.motokomando.healthcare.model.authentication.utils.UserInfo;
 import pl.motokomando.healthcare.model.base.BaseModel;
-import pl.motokomando.healthcare.model.base.utils.DoctorRecord;
-import pl.motokomando.healthcare.model.base.utils.PatientRecord;
+import pl.motokomando.healthcare.model.base.utils.AcademicTitle;
+import pl.motokomando.healthcare.model.base.utils.AddDoctorDetails;
+import pl.motokomando.healthcare.model.base.utils.BloodType;
+import pl.motokomando.healthcare.model.base.utils.MedicalSpecialty;
+import pl.motokomando.healthcare.model.base.utils.Sex;
 import pl.motokomando.healthcare.model.patient.PatientModel;
+import pl.motokomando.healthcare.model.utils.UserInfo;
 import pl.motokomando.healthcare.view.authentication.AuthenticationView;
-import pl.motokomando.healthcare.view.base.utils.doctor.AcademicTitle;
-import pl.motokomando.healthcare.view.base.utils.doctor.MedicalSpecialty;
-import pl.motokomando.healthcare.view.base.utils.patient.BloodType;
-import pl.motokomando.healthcare.view.base.utils.patient.Sex;
-import utils.AlertMessage;
+import pl.motokomando.healthcare.view.base.utils.DoctorRecord;
+import pl.motokomando.healthcare.view.base.utils.PatientRecord;
+import utils.FXAlert;
+import utils.FXTasks;
+import utils.FXValidation;
 
+import java.time.temporal.ValueRange;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
+import static javafx.scene.control.Alert.AlertType.ERROR;
+import static javafx.scene.control.Alert.AlertType.INFORMATION;
 import static javafx.scene.control.ButtonType.OK;
 import static javafx.scene.control.TabPane.TabClosingPolicy.UNAVAILABLE;
 import static javafx.scene.layout.Region.USE_PREF_SIZE;
 
 public class BaseView {
 
+    private final AuthenticationModel authenticationModel;
+
+    private final SessionStore sessionStore = SessionStore.getInstance();
+
+    private final ValidationSupport addDoctorValidationSupport = new ValidationSupport();
+
     private BaseController controller;
 
-    private final AuthenticationModel authenticationModel;
     private BaseModel baseModel;
     private AppointmentModel appointmentModel;
     private PatientModel patientModel;
@@ -72,7 +92,7 @@ public class BaseView {
     private Button addDoctorButton;
     private TextField doctorLastNameTextField;
     private TextField doctorPhoneNumberTextField;
-    private ComboBox<String> chooseDoctorSpecialtyComboBox;
+    private CheckComboBox<String> chooseDoctorSpecialtyComboBox;
     private ComboBox<String> chooseDoctorAcademicTitleComboBox;
     private Label doctorSpecialtyLabel;
     private Label doctorAcademicTitleLabel;
@@ -120,6 +140,7 @@ public class BaseView {
         setController();
         createPane();
         addContent();
+        setupValidation();
         delegateEventHandlers();
         observeModelAndUpdate();
 
@@ -128,9 +149,7 @@ public class BaseView {
         //dodaje doktorów
         listDoctors = new ArrayList<>(10);
         listPatients = new ArrayList<>(10);
-        for (int i = 0; i < 10; i++) {
-            listDoctors.add(new DoctorRecord(new SimpleStringProperty("Dr"), "Andrzej", "Kowalski", "69691000" + i, "Urolog"));
-        }
+        IntStream.range(0, 10).forEach(i -> listDoctors.add(new DoctorRecord(new SimpleStringProperty("Dr"), "Andrzej", "Kowalski", "69691000" + i, "Urolog")));
 
         addPaginationToDoctorsTable();
         //need to add some patients first !!!
@@ -138,23 +157,23 @@ public class BaseView {
         doctorsTable.setRowFactory(tv -> {
             TableRow<DoctorRecord> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
-                if (event.getClickCount() == 2 && (!row.isEmpty()) ) {
+                if (event.getClickCount() == 2 && (!row.isEmpty())) {
                     DoctorRecord rowData = row.getItem();
                     System.out.println("działa");
                 }
             });
-            return row ;
+            return row;
         });
 
         patientsTable.setRowFactory(tv -> {
             TableRow<PatientRecord> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
-                if (event.getClickCount() == 2 && (!row.isEmpty()) ) {
+                if (event.getClickCount() == 2 && (!row.isEmpty())) {
                     PatientRecord rowData = row.getItem();
                     System.out.println("działa");
                 }
             });
-            return row ;
+            return row;
         });
     }
 
@@ -212,7 +231,7 @@ public class BaseView {
     }
 
     private void setUserDetails() {
-        UserInfo userInfo = authenticationModel.getUserInfo();
+        UserInfo userInfo = Objects.requireNonNull(sessionStore.getUserInfo());
         userFirstNameTextField.setText(userInfo.getFirstName());
         userLastNameTextField.setText(userInfo.getLastName());
         userUsernameTextField.setText(userInfo.getUsername());
@@ -334,13 +353,13 @@ public class BaseView {
         addDoctorPane.setPrefHeight(800.0);
         addDoctorPane.setPrefWidth(1600.0);
         createDoctorFirstNameTextField();
-        createAddDoctorButton();
         createDoctorLastNameTextField();
         createDoctorPhoneNumberTextField();
         createChooseDoctorSpecialtyComboBox();
         createChooseDoctorAcademicTitleComboBox();
-        createDoctorSpecialtylabel();
+        createDoctorSpecialtyLabel();
         createDoctorAcademicTitleLabel();
+        createAddDoctorButton();
         addDoctorTab.setContent(addDoctorPane);
         doctorsPane.getTabs().add(addDoctorTab);
     }
@@ -354,7 +373,7 @@ public class BaseView {
         addDoctorPane.getChildren().add(doctorAcademicTitleLabel);
     }
 
-    private void createDoctorSpecialtylabel() {
+    private void createDoctorSpecialtyLabel() {
         doctorSpecialtyLabel = new Label();
         doctorSpecialtyLabel.setLayoutX(650.0);
         doctorSpecialtyLabel.setLayoutY(340.0);
@@ -369,6 +388,7 @@ public class BaseView {
         chooseDoctorAcademicTitleComboBox.setLayoutY(490.0);
         chooseDoctorAcademicTitleComboBox.setPrefHeight(40.0);
         chooseDoctorAcademicTitleComboBox.setPrefWidth(300.0);
+        chooseDoctorAcademicTitleComboBox.setPromptText("Wybierz tytuł naukowy");
         chooseDoctorAcademicTitleComboBox.getItems().setAll(Arrays
                 .stream(AcademicTitle.values())
                 .map(AcademicTitle::getName)
@@ -377,11 +397,13 @@ public class BaseView {
     }
 
     private void createChooseDoctorSpecialtyComboBox() {
-        chooseDoctorSpecialtyComboBox = new ComboBox<>();
+        chooseDoctorSpecialtyComboBox = new CheckComboBox<>();
         chooseDoctorSpecialtyComboBox.setLayoutX(650.0);
         chooseDoctorSpecialtyComboBox.setLayoutY(370.0);
         chooseDoctorSpecialtyComboBox.setPrefHeight(40.0);
         chooseDoctorSpecialtyComboBox.setPrefWidth(300.0);
+        chooseDoctorSpecialtyComboBox.setTitle("Wybrano");
+        chooseDoctorSpecialtyComboBox.setShowCheckedCount(true);
         chooseDoctorSpecialtyComboBox.getItems().setAll(Arrays
                 .stream(MedicalSpecialty.values())
                 .map(MedicalSpecialty::getName)
@@ -418,6 +440,7 @@ public class BaseView {
         addDoctorButton.setMnemonicParsing(false);
         addDoctorButton.setText("Dodaj lekarza");
         addDoctorButton.setFont(new Font(16.0));
+        addDoctorButton.setDisable(true);
         addDoctorPane.getChildren().add(addDoctorButton);
     }
 
@@ -724,36 +747,147 @@ public class BaseView {
         pagination.setLayoutY(50);
     }
 
-    public Node createDoctorPage(int pageIndex){
+    private Node createDoctorPage(int pageIndex) {
         int fromIndex = pageIndex * recordsPerPage;
         int toIndex = Math.min(fromIndex + recordsPerPage, listDoctors.size());
         doctorsTable.setItems(FXCollections.observableArrayList(listDoctors.subList(fromIndex, toIndex)));
         return new BorderPane(doctorsTable);
     }
 
-    public Node createPatientPage(int pageIndex){
+    private Node createPatientPage(int pageIndex) {
         int fromIndex = pageIndex * recordsPerPage;
         int toIndex = Math.min(fromIndex + recordsPerPage, listDoctors.size());
         patientsTable.setItems(FXCollections.observableArrayList(listPatients.subList(fromIndex, toIndex)));
         return new BorderPane(doctorsTable);
     }
 
+    private void setupValidation() {
+        setDoctorFirstNameTextFieldValidator();
+        setDoctorLastNameTextFieldValidator();
+        setDoctorPhoneNumberTextFieldValidator();
+        setDoctorAcademicTitleComboBoxValidator();
+        setDoctorSpecialtyComboBoxValidator();
+    }
+
+    private void setDoctorFirstNameTextFieldValidator() {
+        final String fieldName = "imię";
+        Validator<String> emptyValidator = FXValidation.createEmptyValidator(fieldName);
+        Validator<String> rangeValidator = FXValidation.createRangeValidator(fieldName, ValueRange.of(2, 30));
+        addDoctorValidationSupport.registerValidator(
+                doctorFirstNameTextField,
+                true,
+                Validator.combine(emptyValidator, rangeValidator));
+    }
+
+    private void setDoctorLastNameTextFieldValidator() {
+        final String fieldName = "nazwisko";
+        Validator<String> emptyValidator = FXValidation.createEmptyValidator(fieldName);
+        Validator<String> rangeValidator = FXValidation.createRangeValidator(fieldName, ValueRange.of(2, 30));
+        addDoctorValidationSupport.registerValidator(
+                doctorLastNameTextField,
+                true,
+                Validator.combine(emptyValidator, rangeValidator));
+    }
+
+    private void setDoctorPhoneNumberTextFieldValidator() {
+        final String fieldName = "nr telefonu";
+        Validator<String> emptyValidator = FXValidation.createEmptyValidator(fieldName);
+        Validator<String> regexValidator = FXValidation.createRegexValidator(fieldName, Pattern.compile("^[0-9]+$"));
+        Validator<String> rangeValidator = FXValidation.createRangeValidator(fieldName, ValueRange.of(7, 15));
+        addDoctorValidationSupport.registerValidator(
+                doctorPhoneNumberTextField,
+                true,
+                Validator.combine(emptyValidator, regexValidator, rangeValidator));
+    }
+
+    private void setDoctorAcademicTitleComboBoxValidator() {
+        final String fieldName = "tytuł naukowy";
+        Validator<String> emptyValidator = FXValidation.createEmptyValidator(fieldName);
+        addDoctorValidationSupport.registerValidator(chooseDoctorAcademicTitleComboBox, true, emptyValidator);
+    }
+
+    private void setDoctorSpecialtyComboBoxValidator() {
+        final String fieldName = "specjalizacja";
+        ValueExtractor.addObservableValueExtractor(c -> c == chooseDoctorSpecialtyComboBox,
+                c -> baseModel.doctorSpecialtyComboBoxCheckedItemsNumber());
+        Validator<Integer> checkComboBoxBoxValidator = FXValidation.createCheckComboBoxValidator(fieldName);
+        addDoctorValidationSupport.registerValidator(chooseDoctorSpecialtyComboBox, true, checkComboBoxBoxValidator);
+    }
+
     private void observeModelAndUpdate() {
     }
 
     private void delegateEventHandlers() {
+        addDoctorValidationSupport.invalidProperty().addListener((obs, wasInvalid, isNowInvalid) ->
+                Platform.runLater(() -> addDoctorButton.setDisable(isNowInvalid)));
+        chooseDoctorSpecialtyComboBox.getCheckModel().getCheckedItems().addListener((ListChangeListener<String>) c ->
+                controller.handleDoctorSpecialtyComboBoxCheckedItemsChanged(c.getList()));
         logoutButton.setOnMouseClicked(e -> logoutUser());
+        addDoctorButton.setOnMouseClicked(e -> addDoctor());
+    }
+
+    private void addDoctor() {
+        Platform.runLater(() -> addDoctorButton.setDisable(true));
+        AddDoctorDetails doctorDetails = createAddDoctorDetails();
+        Task<Void> task = FXTasks.create(() -> controller.handleAddDoctorButtonClicked(doctorDetails));
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
+        task.setOnSucceeded(e -> {
+            Alert alert = FXAlert.builder()
+                    .alertType(INFORMATION)
+                    .alertTitle("Success")
+                    .contentText("Doctor successfully added")
+                    .build();
+            Platform.runLater(() -> {
+                addDoctorValidationSupport.getRegisteredControls().forEach(FXTasks::clearControl);
+                addDoctorButton.setDisable(false);
+                alert.showAndWait();
+            });
+        });
+        task.setOnFailed(e -> {
+            Alert alert = FXAlert.builder()
+                    .alertType(ERROR)
+                    .alertTitle("Couldn't add doctor")
+                    .contentText(task.getException().getMessage())
+                    .build();
+            Platform.runLater(() -> {
+                addDoctorButton.setDisable(false);
+                alert.showAndWait();
+            });
+        });
+    }
+
+    private AddDoctorDetails createAddDoctorDetails() {
+        String firstName = doctorFirstNameTextField.getText();
+        String lastName = doctorLastNameTextField.getText();
+        AcademicTitle academicTitle = AcademicTitle.findByName(
+                chooseDoctorAcademicTitleComboBox.getSelectionModel().getSelectedItem());
+        List<MedicalSpecialty> specialties = chooseDoctorSpecialtyComboBox.getCheckModel().getCheckedItems()
+                .stream()
+                .map(MedicalSpecialty::findByName)
+                .collect(Collectors.toList());
+        String phoneNumber = doctorPhoneNumberTextField.getText();
+        return new AddDoctorDetails(
+                firstName,
+                lastName,
+                academicTitle,
+                specialties,
+                phoneNumber);
     }
 
     private void logoutUser() {
-        Alert alert = AlertMessage.builder()
+        Alert alert = FXAlert.builder()
                 .alertType(CONFIRMATION)
                 .contentText("Czy na pewno chcesz się wylogować?")
                 .alertTitle("Wyloguj się")
                 .build();
         Platform.runLater(() -> alert.showAndWait()
                 .filter(OK::equals)
-                .ifPresent(e -> openAuthenticationScene()));
+                .ifPresent(e -> {
+                    controller.invalidateSession();
+                    openAuthenticationScene();
+                }));
     }
 
     private void openAuthenticationScene() {

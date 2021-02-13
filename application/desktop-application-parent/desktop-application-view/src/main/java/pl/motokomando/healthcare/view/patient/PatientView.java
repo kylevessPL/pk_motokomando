@@ -19,7 +19,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import pl.motokomando.healthcare.controller.patient.PatientController;
 import pl.motokomando.healthcare.model.patient.PatientModel;
-import pl.motokomando.healthcare.model.patient.utils.AppointmentRecord;
+import pl.motokomando.healthcare.view.patient.utils.AppointmentRecord;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;

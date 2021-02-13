@@ -42,8 +42,8 @@ public class DoctorRequest implements Serializable {
     private List<MedicalSpecialty> specialties;
     @Schema(description = "Doctor phone number", example = "+48502672107")
     @NotBlank(message = "Phone number is mandatory")
-    @Pattern(regexp = "^\\+[- 0-9]+$", message = "Phone number must start with country code and contain only numbers, spaces or dashes")
-    @Size(max = 16, message = "Phone number must be maximum 16 characters long")
+    @Pattern(regexp = "^[0-9]+$", message = "Phone number must start with country code and contain only numbers, spaces or dashes")
+    @Size(min = 7, max = 15, message = "Phone number must be between 7 and 16 characters long")
     private String phoneNumber;
 
 }

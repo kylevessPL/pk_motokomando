@@ -11,15 +11,16 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import pl.motokomando.healthcare.controller.utils.GetClient;
+import pl.motokomando.healthcare.model.SessionStore;
 import pl.motokomando.healthcare.model.authentication.AuthenticationModel;
-import pl.motokomando.healthcare.model.authentication.utils.Token;
-import pl.motokomando.healthcare.model.authentication.utils.UserInfo;
+import pl.motokomando.healthcare.model.utils.Token;
+import pl.motokomando.healthcare.model.utils.UserInfo;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,9 +36,6 @@ import java.util.List;
 import java.util.Properties;
 
 import static java.nio.charset.StandardCharsets.US_ASCII;
-import static org.apache.http.HttpHeaders.AUTHORIZATION;
-import static org.apache.http.HttpHeaders.CONTENT_TYPE;
-import static org.apache.http.entity.ContentType.APPLICATION_JSON;
 import static pl.motokomando.healthcare.controller.utils.WellKnownEndpoints.USER_INFO;
 import static pl.motokomando.healthcare.model.authentication.utils.AuthenticationStatus.AUTHENTICATION_FAILURE;
 import static pl.motokomando.healthcare.model.authentication.utils.AuthenticationStatus.AUTHENTICATION_STARTED;
@@ -49,7 +47,8 @@ public class AuthenticationController {
 
     private final AuthenticationModel authenticationModel;
 
-    private String apiDomain;
+    private final SessionStore sessionStore = SessionStore.getInstance();
+
     private String oktaDomain;
     private String clientId;
     private String redirectUri;
@@ -93,7 +92,7 @@ public class AuthenticationController {
 
     private String getTokenForCode(String code, String codeVerifier) throws URISyntaxException, IOException {
         log.info("Access token request");
-        final String tokenUrl = "https://"+ oktaDomain +"/oauth2/default/v1/token";
+        final String tokenUrl = "https://" + oktaDomain + "/oauth2/default/v1/token";
         final URI redirectUri = new URI(this.redirectUri);
         HttpClient client = HttpClientBuilder.create().build();
         HttpPost post = new HttpPost(tokenUrl);
@@ -126,35 +125,23 @@ public class AuthenticationController {
         return url.toURI();
     }
 
-    private URI getUserInfoEndpointUri() throws URISyntaxException, MalformedURLException {
-        URIBuilder builder = new URIBuilder();
-        URL url = builder
-                .setScheme("http")
-                .setHost(apiDomain)
-                .setPath(USER_INFO)
-                .build().toURL();
-        return url.toURI();
-    }
-
     private String getUserInfo() throws IOException, URISyntaxException {
         log.info("User info request");
-        URI userInfoEndpoint = getUserInfoEndpointUri();
-        HttpClient client = HttpClientBuilder.create().build();
-        HttpGet get = new HttpGet(userInfoEndpoint);
-        get.setHeader(CONTENT_TYPE, APPLICATION_JSON.getMimeType());
-        get.setHeader(AUTHORIZATION, "Bearer " + authenticationModel.getToken().getAccessToken());
-        HttpResponse response = client.execute(get);
+        GetClient request = GetClient.builder()
+                .path(USER_INFO)
+                .build();
+        HttpResponse response = request.execute();
         return EntityUtils.toString(response.getEntity());
     }
 
     private void updateUserToken(String token) {
         Token userToken = new Gson().fromJson(token, Token.class);
-        authenticationModel.setToken(userToken);
+        sessionStore.setToken(userToken);
     }
 
     private void updateUserInfo(String info) {
         UserInfo userInfo = new Gson().fromJson(info, UserInfo.class);
-        authenticationModel.setUserInfo(userInfo);
+        sessionStore.setUserInfo(userInfo);
     }
 
     private String createCodeVerifier() {
@@ -176,7 +163,6 @@ public class AuthenticationController {
         InputStream inputStream = getClass().getClassLoader().getResourceAsStream("okta.properties");
         Properties appProps = new Properties();
         appProps.load(inputStream);
-        apiDomain = appProps.getProperty("apiDomain");
         oktaDomain = appProps.getProperty("oktaDomain");
         clientId = appProps.getProperty("oktaClientId");
         redirectUri = appProps.getProperty("redirectUri");

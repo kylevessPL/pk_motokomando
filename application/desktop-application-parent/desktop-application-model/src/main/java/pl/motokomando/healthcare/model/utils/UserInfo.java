@@ -1,4 +1,4 @@
-package pl.motokomando.healthcare.model.authentication.utils;
+package pl.motokomando.healthcare.model.utils;
 
 import com.google.gson.annotations.SerializedName;
 import lombok.Getter;

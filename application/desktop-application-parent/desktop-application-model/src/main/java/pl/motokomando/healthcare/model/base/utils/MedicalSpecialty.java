@@ -1,7 +1,9 @@
-package pl.motokomando.healthcare.view.base.utils.doctor;
+package pl.motokomando.healthcare.model.base.utils;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+
+import java.util.Arrays;
 
 @RequiredArgsConstructor
 @Getter
@@ -50,5 +52,12 @@ public enum MedicalSpecialty {
     UROLOGIC ("Urologiczny");
 
     private final String name;
+
+    public static MedicalSpecialty findByName(String name) {
+        return Arrays.stream(MedicalSpecialty.values())
+                .filter(e -> e.name.equals(name))
+                .findFirst()
+                .orElse(null);
+    }
 
 }

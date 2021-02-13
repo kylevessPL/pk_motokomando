@@ -15,7 +15,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import pl.motokomando.healthcare.controller.appointment.AppointmentController;
 import pl.motokomando.healthcare.model.appointment.AppointmentModel;
-import pl.motokomando.healthcare.model.appointment.utils.MedicineRecord;
+import pl.motokomando.healthcare.view.appointment.utils.MedicineRecord;
 
 import java.util.List;
 import java.util.stream.Collectors;

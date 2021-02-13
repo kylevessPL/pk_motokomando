@@ -1,4 +1,4 @@
-package pl.motokomando.healthcare.model.appointment.utils;
+package pl.motokomando.healthcare.view.appointment.utils;
 
 import lombok.Getter;
 import lombok.Setter;
