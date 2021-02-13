@@ -6,9 +6,7 @@ import org.controlsfx.validation.ValidationResult;
 import org.controlsfx.validation.Validator;
 
 import java.time.temporal.ValueRange;
-import java.util.Collection;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import static lombok.AccessLevel.PRIVATE;
 import static org.controlsfx.validation.Severity.ERROR;
@@ -57,17 +55,6 @@ public final class FXValidation {
             return ValidationResult.fromErrorIf(control, message, value == 0);
         }
 
-    }
-
-    public static String prettyPrintErrors(Collection<?> errorList) {
-        errorList = errorList
-                .stream()
-                .map(e -> e.toString().substring(6, e.toString().length() - 1))
-                .collect(Collectors.toList());
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("Popraw następujące błędy:").append(System.lineSeparator());
-        errorList.forEach(error -> stringBuilder.append("\t\u2023 ").append(error).append(System.lineSeparator()));
-        return stringBuilder.toString();
     }
 
 }

@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
+import javafx.concurrent.Task;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -30,40 +31,47 @@ import org.controlsfx.tools.ValueExtractor;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 import pl.motokomando.healthcare.controller.base.BaseController;
+import pl.motokomando.healthcare.model.SessionStore;
 import pl.motokomando.healthcare.model.appointment.AppointmentModel;
 import pl.motokomando.healthcare.model.authentication.AuthenticationModel;
-import pl.motokomando.healthcare.model.authentication.utils.UserInfo;
 import pl.motokomando.healthcare.model.base.BaseModel;
+import pl.motokomando.healthcare.model.base.utils.AcademicTitle;
+import pl.motokomando.healthcare.model.base.utils.AddDoctorDetails;
+import pl.motokomando.healthcare.model.base.utils.BloodType;
+import pl.motokomando.healthcare.model.base.utils.MedicalSpecialty;
+import pl.motokomando.healthcare.model.base.utils.Sex;
 import pl.motokomando.healthcare.model.patient.PatientModel;
+import pl.motokomando.healthcare.model.utils.UserInfo;
 import pl.motokomando.healthcare.view.authentication.AuthenticationView;
-import pl.motokomando.healthcare.view.base.utils.AcademicTitle;
-import pl.motokomando.healthcare.view.base.utils.BloodType;
 import pl.motokomando.healthcare.view.base.utils.DoctorRecord;
-import pl.motokomando.healthcare.view.base.utils.MedicalSpecialty;
 import pl.motokomando.healthcare.view.base.utils.PatientRecord;
-import pl.motokomando.healthcare.view.base.utils.Sex;
 import utils.FXAlert;
+import utils.FXTasks;
 import utils.FXValidation;
 
 import java.time.temporal.ValueRange;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
 import static javafx.scene.control.Alert.AlertType.ERROR;
+import static javafx.scene.control.Alert.AlertType.INFORMATION;
 import static javafx.scene.control.ButtonType.OK;
 import static javafx.scene.control.TabPane.TabClosingPolicy.UNAVAILABLE;
 import static javafx.scene.layout.Region.USE_PREF_SIZE;
 
 public class BaseView {
 
-    private final ValidationSupport addDoctorValidationSupport = new ValidationSupport();
-
     private final AuthenticationModel authenticationModel;
+
+    private final SessionStore sessionStore = SessionStore.getInstance();
+
+    private final ValidationSupport addDoctorValidationSupport = new ValidationSupport();
 
     private BaseController controller;
 
@@ -223,7 +231,7 @@ public class BaseView {
     }
 
     private void setUserDetails() {
-        UserInfo userInfo = authenticationModel.getUserInfo();
+        UserInfo userInfo = Objects.requireNonNull(sessionStore.getUserInfo());
         userFirstNameTextField.setText(userInfo.getFirstName());
         userLastNameTextField.setText(userInfo.getLastName());
         userUsernameTextField.setText(userInfo.getUsername());
@@ -432,6 +440,7 @@ public class BaseView {
         addDoctorButton.setMnemonicParsing(false);
         addDoctorButton.setText("Dodaj lekarza");
         addDoctorButton.setFont(new Font(16.0));
+        addDoctorButton.setDisable(true);
         addDoctorPane.getChildren().add(addDoctorButton);
     }
 
@@ -764,7 +773,8 @@ public class BaseView {
         final String fieldName = "imię";
         Validator<String> emptyValidator = FXValidation.createEmptyValidator(fieldName);
         Validator<String> rangeValidator = FXValidation.createRangeValidator(fieldName, ValueRange.of(2, 30));
-        addDoctorValidationSupport.registerValidator(doctorFirstNameTextField,
+        addDoctorValidationSupport.registerValidator(
+                doctorFirstNameTextField,
                 true,
                 Validator.combine(emptyValidator, rangeValidator));
     }
@@ -773,7 +783,8 @@ public class BaseView {
         final String fieldName = "nazwisko";
         Validator<String> emptyValidator = FXValidation.createEmptyValidator(fieldName);
         Validator<String> rangeValidator = FXValidation.createRangeValidator(fieldName, ValueRange.of(2, 30));
-        addDoctorValidationSupport.registerValidator(doctorLastNameTextField,
+        addDoctorValidationSupport.registerValidator(
+                doctorLastNameTextField,
                 true,
                 Validator.combine(emptyValidator, rangeValidator));
     }
@@ -783,7 +794,8 @@ public class BaseView {
         Validator<String> emptyValidator = FXValidation.createEmptyValidator(fieldName);
         Validator<String> regexValidator = FXValidation.createRegexValidator(fieldName, Pattern.compile("^[0-9]+$"));
         Validator<String> rangeValidator = FXValidation.createRangeValidator(fieldName, ValueRange.of(7, 15));
-        addDoctorValidationSupport.registerValidator(doctorPhoneNumberTextField,
+        addDoctorValidationSupport.registerValidator(
+                doctorPhoneNumberTextField,
                 true,
                 Validator.combine(emptyValidator, regexValidator, rangeValidator));
     }
@@ -806,6 +818,8 @@ public class BaseView {
     }
 
     private void delegateEventHandlers() {
+        addDoctorValidationSupport.invalidProperty().addListener((obs, wasInvalid, isNowInvalid) ->
+                Platform.runLater(() -> addDoctorButton.setDisable(isNowInvalid)));
         chooseDoctorSpecialtyComboBox.getCheckModel().getCheckedItems().addListener((ListChangeListener<String>) c ->
                 controller.handleDoctorSpecialtyComboBoxCheckedItemsChanged(c.getList()));
         logoutButton.setOnMouseClicked(e -> logoutUser());
@@ -813,20 +827,53 @@ public class BaseView {
     }
 
     private void addDoctor() {
-        addDoctorValidationSupport.revalidate();
-        addDoctorValidationSupport.redecorate();
-        if (addDoctorValidationSupport.isInvalid()) {
-            String alertContent = FXValidation.prettyPrintErrors(
-                    addDoctorValidationSupport.getValidationResult().getErrors());
+        Platform.runLater(() -> addDoctorButton.setDisable(true));
+        AddDoctorDetails doctorDetails = createAddDoctorDetails();
+        Task<Void> task = FXTasks.create(() -> controller.handleAddDoctorButtonClicked(doctorDetails));
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
+        task.setOnSucceeded(e -> {
+            Alert alert = FXAlert.builder()
+                    .alertType(INFORMATION)
+                    .alertTitle("Success")
+                    .contentText("Doctor successfully added")
+                    .build();
+            Platform.runLater(() -> {
+                addDoctorValidationSupport.getRegisteredControls().forEach(FXTasks::clearControl);
+                addDoctorButton.setDisable(false);
+                alert.showAndWait();
+            });
+        });
+        task.setOnFailed(e -> {
             Alert alert = FXAlert.builder()
                     .alertType(ERROR)
-                    .contentText(alertContent)
-                    .alertTitle("Niepoprawne dane")
+                    .alertTitle("Couldn't add doctor")
+                    .contentText(task.getException().getMessage())
                     .build();
-            Platform.runLater(alert::showAndWait);
-        } else {
-            controller.handleAddDoctorButtonClicked();
-        }
+            Platform.runLater(() -> {
+                addDoctorButton.setDisable(false);
+                alert.showAndWait();
+            });
+        });
+    }
+
+    private AddDoctorDetails createAddDoctorDetails() {
+        String firstName = doctorFirstNameTextField.getText();
+        String lastName = doctorLastNameTextField.getText();
+        AcademicTitle academicTitle = AcademicTitle.findByName(
+                chooseDoctorAcademicTitleComboBox.getSelectionModel().getSelectedItem());
+        List<MedicalSpecialty> specialties = chooseDoctorSpecialtyComboBox.getCheckModel().getCheckedItems()
+                .stream()
+                .map(MedicalSpecialty::findByName)
+                .collect(Collectors.toList());
+        String phoneNumber = doctorPhoneNumberTextField.getText();
+        return new AddDoctorDetails(
+                firstName,
+                lastName,
+                academicTitle,
+                specialties,
+                phoneNumber);
     }
 
     private void logoutUser() {
@@ -837,7 +884,10 @@ public class BaseView {
                 .build();
         Platform.runLater(() -> alert.showAndWait()
                 .filter(OK::equals)
-                .ifPresent(e -> openAuthenticationScene()));
+                .ifPresent(e -> {
+                    controller.invalidateSession();
+                    openAuthenticationScene();
+                }));
     }
 
     private void openAuthenticationScene() {

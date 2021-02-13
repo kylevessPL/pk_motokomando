@@ -2,6 +2,7 @@ package pl.motokomando.healthcare.application;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -27,6 +28,8 @@ public class HealthcareApplication extends Application {
         Scene scene = new Scene(new AuthenticationView().asParent(), 700, 500);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Healthcare Management - Panel Logowania");
+        primaryStage.getIcons().add(new Image(AuthenticationView.class
+                .getResourceAsStream("/images/favicon.png")));
         primaryStage.show();
     }
 
