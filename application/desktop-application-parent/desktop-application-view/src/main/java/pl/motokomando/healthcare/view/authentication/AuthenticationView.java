@@ -108,7 +108,7 @@ public class AuthenticationView {
         divider.setLayoutX(190);
         divider.setLayoutY(260);
         divider.setPrefWidth(300);
-        divider.setText(StringUtils.repeat(".", 110));
+        divider.setText(StringUtils.repeat(".", 112));
         authenticationPane.getChildren().add(divider);
         authenticationPane.getChildren().add(authenticationStatusLabel);
     }
@@ -161,7 +161,7 @@ public class AuthenticationView {
     }
 
     private void openBaseScene() {
-        Scene scene = new Scene(new BaseView(authenticationModel).asParent(), 1600, 800);
+        Scene scene = new Scene(new BaseView().asParent(), 1600, 800);
         Platform.runLater(() -> {
             Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
             Stage stage = currentStage();
