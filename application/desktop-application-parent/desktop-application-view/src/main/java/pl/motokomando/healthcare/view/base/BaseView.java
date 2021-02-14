@@ -1,9 +1,8 @@
 package pl.motokomando.healthcare.view.base;
 
 import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
+import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
@@ -26,6 +25,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.controlsfx.control.CheckComboBox;
 import org.controlsfx.tools.ValueExtractor;
 import org.controlsfx.validation.ValidationSupport;
@@ -33,24 +33,22 @@ import org.controlsfx.validation.Validator;
 import pl.motokomando.healthcare.controller.base.BaseController;
 import pl.motokomando.healthcare.model.SessionStore;
 import pl.motokomando.healthcare.model.appointment.AppointmentModel;
-import pl.motokomando.healthcare.model.authentication.AuthenticationModel;
 import pl.motokomando.healthcare.model.base.BaseModel;
 import pl.motokomando.healthcare.model.base.utils.AcademicTitle;
 import pl.motokomando.healthcare.model.base.utils.AddDoctorDetails;
 import pl.motokomando.healthcare.model.base.utils.BloodType;
+import pl.motokomando.healthcare.model.base.utils.DoctorRecord;
 import pl.motokomando.healthcare.model.base.utils.MedicalSpecialty;
+import pl.motokomando.healthcare.model.base.utils.PatientRecord;
 import pl.motokomando.healthcare.model.base.utils.Sex;
 import pl.motokomando.healthcare.model.patient.PatientModel;
 import pl.motokomando.healthcare.model.utils.UserInfo;
 import pl.motokomando.healthcare.view.authentication.AuthenticationView;
-import pl.motokomando.healthcare.view.base.utils.DoctorRecord;
-import pl.motokomando.healthcare.view.base.utils.PatientRecord;
 import utils.FXAlert;
 import utils.FXTasks;
 import utils.FXValidation;
 
 import java.time.temporal.ValueRange;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -61,13 +59,14 @@ import java.util.stream.IntStream;
 import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
 import static javafx.scene.control.Alert.AlertType.ERROR;
 import static javafx.scene.control.Alert.AlertType.INFORMATION;
+import static javafx.scene.control.Alert.AlertType.WARNING;
 import static javafx.scene.control.ButtonType.OK;
 import static javafx.scene.control.TabPane.TabClosingPolicy.UNAVAILABLE;
 import static javafx.scene.layout.Region.USE_PREF_SIZE;
 
 public class BaseView {
 
-    private final AuthenticationModel authenticationModel;
+    private static final int TABLE_REFRESH_RATE = 10;
 
     private final SessionStore sessionStore = SessionStore.getInstance();
 
@@ -129,13 +128,10 @@ public class BaseView {
     private Label userEmailLabel;
     private Label userUsernameLabel;
 
-    private int recordsPerPage = 4; //TODO do poprawy
+    private Pagination patientsTablePagination;
+    private Pagination doctorsTablePagination;
 
-    public List<DoctorRecord> listDoctors;
-    public List<PatientRecord> listPatients;
-
-    public BaseView(AuthenticationModel authenticationModel) {
-        this.authenticationModel = authenticationModel;
+    public BaseView() {
         initModel();
         setController();
         createPane();
@@ -143,38 +139,6 @@ public class BaseView {
         setupValidation();
         delegateEventHandlers();
         observeModelAndUpdate();
-
-        //TODO do poprawy also
-
-        //dodaje doktorów
-        listDoctors = new ArrayList<>(10);
-        listPatients = new ArrayList<>(10);
-        IntStream.range(0, 10).forEach(i -> listDoctors.add(new DoctorRecord(new SimpleStringProperty("Dr"), "Andrzej", "Kowalski", "69691000" + i, "Urolog")));
-
-        addPaginationToDoctorsTable();
-        //need to add some patients first !!!
-        //addPaginationToPatientsTable();
-        doctorsTable.setRowFactory(tv -> {
-            TableRow<DoctorRecord> row = new TableRow<>();
-            row.setOnMouseClicked(event -> {
-                if (event.getClickCount() == 2 && (!row.isEmpty())) {
-                    DoctorRecord rowData = row.getItem();
-                    System.out.println("działa");
-                }
-            });
-            return row;
-        });
-
-        patientsTable.setRowFactory(tv -> {
-            TableRow<PatientRecord> row = new TableRow<>();
-            row.setOnMouseClicked(event -> {
-                if (event.getClickCount() == 2 && (!row.isEmpty())) {
-                    PatientRecord rowData = row.getItem();
-                    System.out.println("działa");
-                }
-            });
-            return row;
-        });
     }
 
     public Parent asParent() {
@@ -669,7 +633,7 @@ public class BaseView {
         patientsTable.setLayoutY(50.0);
         patientsTable.setPrefHeight(600.0);
         patientsTable.setPrefWidth(1500.0);
-        setPatientsTableContent(patientsTable);
+        setPatientsTableColumns(patientsTable);
         findPatientPane.getChildren().add(patientsTable);
     }
 
@@ -691,7 +655,7 @@ public class BaseView {
         return columnList;
     }
 
-    private void setPatientsTableContent(TableView<PatientRecord> patientsTable) {
+    private void setPatientsTableColumns(TableView<PatientRecord> patientsTable) {
         List<TableColumn<PatientRecord, String>> columnList = createPatientsTableColumns();
         patientsTable.getColumns().addAll(columnList);
     }
@@ -702,64 +666,63 @@ public class BaseView {
         doctorsTable.setLayoutY(50.0);
         doctorsTable.setPrefHeight(600.0);
         doctorsTable.setPrefWidth(1500.0);
-        setDoctorsTableContent(doctorsTable);
+        setDoctorsTableColumns(doctorsTable);
+        setupDoctorsTablePagination();
+        doctorsTable.setItems(baseModel.doctorsTablePageContent());
         findDoctorPane.getChildren().add(doctorsTable);
     }
 
     private TableColumn<DoctorRecord, String> createDoctorsTableColumn() {
         TableColumn<DoctorRecord, String> column = new TableColumn<>();
-        column.setPrefWidth(300.0);
+        column.setPrefWidth(750.0);
         return column;
     }
 
     private List<TableColumn<DoctorRecord, String>> createDoctorsTableColumns() {
         List<TableColumn<DoctorRecord, String>> columnList = IntStream
-                .range(0, 5)
+                .range(0, 2)
                 .mapToObj(i -> createDoctorsTableColumn())
                 .collect(Collectors.toList());
         columnList.get(0).setText("Imię");
         columnList.get(1).setText("Nazwisko");
-        columnList.get(2).setText("Tytuł naukowy");
-        columnList.get(2).setCellValueFactory(c -> c.getValue().getTableColumnAcademicTitle());
-        columnList.get(3).setText("Specjalizacja");
-        columnList.get(4).setText("Numer telefonu");
+        columnList.get(0).setCellValueFactory(c -> c.getValue().firstName());
+        columnList.get(1).setCellValueFactory(c -> c.getValue().lastName());
         return columnList;
     }
 
-    private void setDoctorsTableContent(TableView<DoctorRecord> doctorsTable) {
+    private void setDoctorsTableColumns(TableView<DoctorRecord> doctorsTable) {
         List<TableColumn<DoctorRecord, String>> columnList = createDoctorsTableColumns();
         doctorsTable.getColumns().addAll(columnList);
     }
 
-    private void addPaginationToDoctorsTable() {
-        Pagination pagination = new Pagination((listDoctors.size() / recordsPerPage + 1), 0);
-        pagination.setPageFactory(this::createDoctorPage);
-        findDoctorPane.getChildren().add(pagination);
-        pagination.setLayoutX(50);
-        pagination.setLayoutY(50);
+    private void setupDoctorsTablePagination() {
+        doctorsTablePagination = new Pagination(1, 0);
+        doctorsTablePagination.setLayoutX(50);
+        doctorsTablePagination.setLayoutY(50);
+        doctorsTablePagination.setPageFactory(this::createDoctorsTablePage);
+        findDoctorPane.getChildren().add(doctorsTablePagination);
     }
 
-    private void addPaginationToPatientsTable() {
-        Pagination pagination = new Pagination((listPatients.size() / recordsPerPage + 1), 0);
-        pagination.setPageFactory(this::createPatientPage);
-        findPatientPane.getChildren().add(pagination);
-        pagination.setLayoutX(50);
-        pagination.setLayoutY(50);
-    }
-
-    private Node createDoctorPage(int pageIndex) {
-        int fromIndex = pageIndex * recordsPerPage;
-        int toIndex = Math.min(fromIndex + recordsPerPage, listDoctors.size());
-        doctorsTable.setItems(FXCollections.observableArrayList(listDoctors.subList(fromIndex, toIndex)));
+    private Node createDoctorsTablePage(int pageIndex) {
+        controller.updateDoctorsTableCurrentPage(pageIndex + 1);
+        updateDoctorsTablePageData();
         return new BorderPane(doctorsTable);
     }
 
-    private Node createPatientPage(int pageIndex) {
+    /*private void addPaginationToPatientsTable() {
+        patientsTablePagination = new Pagination((listPatients.size() / recordsPerPage + 1), 0);
+        patientsTablePagination.setPageFactory(this::createPatientPage);
+        findPatientPane.getChildren().add(patientsTablePagination);
+        patientsTablePagination.setLayoutX(50);
+        patientsTablePagination.setLayoutY(50);
+    }*/
+
+    /*private Node createPatientPage(int pageIndex) {
         int fromIndex = pageIndex * recordsPerPage;
         int toIndex = Math.min(fromIndex + recordsPerPage, listDoctors.size());
         patientsTable.setItems(FXCollections.observableArrayList(listPatients.subList(fromIndex, toIndex)));
         return new BorderPane(doctorsTable);
-    }
+    }*/
 
     private void setupValidation() {
         setDoctorFirstNameTextFieldValidator();
@@ -815,46 +778,89 @@ public class BaseView {
     }
 
     private void observeModelAndUpdate() {
+        baseModel.doctorsTableTotalPages().addListener((obs, oldValue, newValue) ->
+                Platform.runLater(() -> doctorsTablePagination.setPageCount((int) newValue)));
     }
 
     private void delegateEventHandlers() {
+        scheduleDoctorsTableUpdate();
         addDoctorValidationSupport.invalidProperty().addListener((obs, wasInvalid, isNowInvalid) ->
                 Platform.runLater(() -> addDoctorButton.setDisable(isNowInvalid)));
         chooseDoctorSpecialtyComboBox.getCheckModel().getCheckedItems().addListener((ListChangeListener<String>) c ->
                 controller.handleDoctorSpecialtyComboBoxCheckedItemsChanged(c.getList()));
         logoutButton.setOnMouseClicked(e -> logoutUser());
         addDoctorButton.setOnMouseClicked(e -> addDoctor());
+        patientsTable.setRowFactory(tv -> setPatientsTableRowFactory());
+    }
+
+    private void scheduleDoctorsTableUpdate() {
+        ScheduledService<Void> service = FXTasks.createService(() -> controller.updateDoctorsTablePageData());
+        service.setPeriod(Duration.seconds(TABLE_REFRESH_RATE));
+        service.setOnFailed(e -> processUpdateDoctorsTableFailureResult(service.getException().getMessage()));
+        service.start();
+    }
+
+    private void processUpdateDoctorsTableFailureResult(String errorMessage) {
+        Alert alert = FXAlert.builder()
+                .alertType(WARNING)
+                .alertTitle("Nie udało się pobrać danych lekarzy")
+                .contentText(errorMessage)
+                .build();
+        Platform.runLater(alert::showAndWait);
+    }
+
+    private TableRow<PatientRecord> setPatientsTableRowFactory() {
+        TableRow<PatientRecord> row = new TableRow<>();
+        row.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2 && !row.isEmpty()) {
+                //System.out.println("działa");
+            }
+        });
+        return row;
     }
 
     private void addDoctor() {
         Platform.runLater(() -> addDoctorButton.setDisable(true));
         AddDoctorDetails doctorDetails = createAddDoctorDetails();
-        Task<Void> task = FXTasks.create(() -> controller.handleAddDoctorButtonClicked(doctorDetails));
+        Task<Void> task = FXTasks.createTask(() -> controller.handleAddDoctorButtonClicked(doctorDetails));
         Thread thread = new Thread(task);
         thread.setDaemon(true);
         thread.start();
-        task.setOnSucceeded(e -> {
-            Alert alert = FXAlert.builder()
-                    .alertType(INFORMATION)
-                    .alertTitle("Success")
-                    .contentText("Doctor successfully added")
-                    .build();
-            Platform.runLater(() -> {
-                addDoctorValidationSupport.getRegisteredControls().forEach(FXTasks::clearControl);
-                addDoctorButton.setDisable(false);
-                alert.showAndWait();
-            });
+        task.setOnSucceeded(e -> processAddDoctorSuccessResult());
+        task.setOnFailed(e -> processAddDoctorFailureResult(task.getException().getMessage()));
+    }
+
+    private void processAddDoctorSuccessResult() {
+        Alert alert = FXAlert.builder()
+                .alertType(INFORMATION)
+                .alertTitle("Operacja ukończona pomyślnie")
+                .contentText("Pomyślnie dodano nowego lekarza")
+                .build();
+        Platform.runLater(() -> {
+            addDoctorValidationSupport.getRegisteredControls().forEach(FXTasks::clearControlState);
+            addDoctorButton.setDisable(false);
+            alert.showAndWait();
         });
-        task.setOnFailed(e -> {
-            Alert alert = FXAlert.builder()
-                    .alertType(ERROR)
-                    .alertTitle("Couldn't add doctor")
-                    .contentText(task.getException().getMessage())
-                    .build();
-            Platform.runLater(() -> {
-                addDoctorButton.setDisable(false);
-                alert.showAndWait();
-            });
+        updateDoctorsTablePageData();
+    }
+
+    private void updateDoctorsTablePageData() {
+        Task<Void> task = FXTasks.createTask(() -> controller.updateDoctorsTablePageData());
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
+        task.setOnFailed(e -> processUpdateDoctorsTableFailureResult(task.getException().getMessage()));
+    }
+
+    private void processAddDoctorFailureResult(String errorMessage) {
+        Alert alert = FXAlert.builder()
+                .alertType(ERROR)
+                .alertTitle("Operacja ukończona niepomyślnie")
+                .contentText(errorMessage)
+                .build();
+        Platform.runLater(() -> {
+            addDoctorButton.setDisable(false);
+            alert.showAndWait();
         });
     }
 

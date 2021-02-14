@@ -18,6 +18,7 @@ import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.Optional;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.http.HttpHeaders.CONTENT_TYPE;
 
 @SuperBuilder(toBuilder = true)
@@ -41,7 +42,7 @@ public class PatchClient extends WebClient {
         HttpPatch patch = new HttpPatch(endpointURI);
         patch.setHeaders(headersArray);
         patch.addHeader(CONTENT_TYPE, APPLICATION_JSON_PATCH);
-        patch.setEntity(new StringEntity(body));
+        patch.setEntity(new StringEntity(body, UTF_8));
         return client.execute(patch);
     }
 

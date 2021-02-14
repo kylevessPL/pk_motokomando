@@ -1,5 +1,6 @@
 package pl.motokomando.healthcare.api.authorization;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -38,6 +39,7 @@ public class AuthorizationServiceController {
     @Value("${spring.security.oauth2.client.provider.okta.user-info-uri}")
     private String userInfoUri;
 
+    @Hidden
     @GetMapping("/")
     public void home(HttpServletResponse response) throws IOException {
         response.sendRedirect("/login");

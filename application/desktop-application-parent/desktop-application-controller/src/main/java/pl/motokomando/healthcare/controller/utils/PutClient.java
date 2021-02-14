@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 @SuperBuilder(toBuilder = true)
 public class PutClient extends WebClient {
 
@@ -24,7 +26,7 @@ public class PutClient extends WebClient {
         Header[] headersArray = createHeadersArray();
         HttpPut put = new HttpPut(endpointURI);
         put.setHeaders(headersArray);
-        put.setEntity(new StringEntity(body));
+        put.setEntity(new StringEntity(body, UTF_8));
         return client.execute(put);
     }
 

@@ -20,14 +20,18 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static org.apache.http.HttpHeaders.AUTHORIZATION;
 import static org.apache.http.HttpHeaders.CONTENT_TYPE;
 import static org.apache.http.HttpHost.DEFAULT_SCHEME_NAME;
 import static org.apache.http.entity.ContentType.APPLICATION_JSON;
+import static pl.motokomando.healthcare.controller.utils.ResponseHeaders.CURRENT_PAGE;
+import static pl.motokomando.healthcare.controller.utils.ResponseHeaders.TOTAL_PAGES;
 
 @SuperBuilder(toBuilder = true)
 public abstract class WebClient {
@@ -51,6 +55,17 @@ public abstract class WebClient {
         String responseBody = EntityUtils.toString(response.getEntity());
         JsonObject jsonObject = JsonParser.parseString(responseBody).getAsJsonObject();
         throw new Exception(jsonObject.get("message").getAsString());
+    }
+
+    public Map<String, String> extractPageHeaders(HttpResponse response) {
+        List<String> acceptedKeys = Arrays.asList(CURRENT_PAGE, TOTAL_PAGES);
+        Header[] headers = response.getAllHeaders();
+        return Arrays.stream(headers)
+                .filter(e -> acceptedKeys.contains(e.getName()))
+                .collect(Collectors.toMap(
+                        NameValuePair::getName,
+                        NameValuePair::getValue,
+                        (a, b) -> b));
     }
 
     protected URI createEndpointURI() throws URISyntaxException, MalformedURLException {

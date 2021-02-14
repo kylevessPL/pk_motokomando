@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 @SuperBuilder(toBuilder = true)
 public class PostClient extends WebClient {
 
@@ -24,7 +26,7 @@ public class PostClient extends WebClient {
         Header[] headersArray = createHeadersArray();
         HttpPost post = new HttpPost(endpointURI);
         post.setHeaders(headersArray);
-        post.setEntity(new StringEntity(body));
+        post.setEntity(new StringEntity(body, UTF_8));
         return client.execute(post);
     }
 
