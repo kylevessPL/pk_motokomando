@@ -8,7 +8,7 @@ import lombok.experimental.Accessors;
 
 @Getter
 @RequiredArgsConstructor
-public final class DoctorRecord {
+public final class BaseTableRecord {
 
     @Accessors(fluent = true)
     private final SimpleIntegerProperty id;
