@@ -14,6 +14,7 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -43,6 +44,7 @@ public class PatientRequest implements Serializable {
     @Schema(description = "Patient birth date")
     @NotNull(message = "Birth date is mandatory")
     @DateTimeFormat(iso = DATE)
+    @Past(message = "Birth date must be in the past")
     private LocalDate birthDate;
     @Schema(description = "Patient sex", example = "MALE")
     @NotNull(message = "Sex is mandatory")
@@ -62,6 +64,7 @@ public class PatientRequest implements Serializable {
     @Schema(description = "Patient zip code", example = "11735")
     @NotBlank(message = "Zip code is mandatory")
     @Pattern(regexp = "^[0-9 \\-]*$", message = "Zip code must contain only numbers, spaces or a dash")
+    @Size(max = 10, message = "Zip code must be maximum 10 characters long")
     private String zipCode;
     @Schema(description = "Patient city", example = "Farmingdale")
     @NotBlank(message = "City is mandatory")
@@ -75,7 +78,7 @@ public class PatientRequest implements Serializable {
     @Schema(description = "Patient phone number", example = "+48502672107")
     @NotBlank(message = "Phone number is mandatory")
     @Pattern(regexp = "^[0-9]+$", message = "Phone number must start with country code and contain only numbers, spaces or dashes")
-    @Size(min = 10, max = 19, message = "Phone number must be between 7 and 16 characters long")
+    @Size(min = 7, max = 15, message = "Phone number must be between 7 and 16 characters long")
     private String phoneNumber;
 
 }
