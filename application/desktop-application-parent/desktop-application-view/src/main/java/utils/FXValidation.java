@@ -1,60 +1,49 @@
 package utils;
 
-import javafx.scene.control.Control;
-import lombok.RequiredArgsConstructor;
-import org.controlsfx.validation.ValidationResult;
 import org.controlsfx.validation.Validator;
 
-import java.time.temporal.ValueRange;
+import java.time.LocalDate;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
-import static lombok.AccessLevel.PRIVATE;
 import static org.controlsfx.validation.Severity.ERROR;
+import static utils.DateConstraints.FUTURE;
 
 public final class FXValidation {
 
-    public static Validator<String> createEmptyValidator(String fieldName) {
-        return Validator.createEmptyValidator(String.format("Pole '%s' nie może być puste", fieldName));
+    public static <T> Validator<T> createEmptyValidator(String fieldName) {
+        String message = String.format("Pole '%s' nie może być puste", fieldName);
+        return Validator.createEmptyValidator(message);
     }
 
     public static Validator<String> createRegexValidator(String fieldName, Pattern regex) {
-        return Validator.createRegexValidator(String.format("Pole '%s' zawiera niepoprawne znaki", fieldName), regex, ERROR);
+        String message = String.format("Pole '%s' zawiera niepoprawne znaki", fieldName);
+        return Validator.createRegexValidator(message, regex, ERROR);
     }
 
-    public static Validator<String> createRangeValidator(String fieldName, ValueRange range) {
-        return new RangeValidator(fieldName, range);
+    public static Validator<String> createMinLengthValidator(String fieldName, Integer minLength) {
+        String message = String.format("Pole '%s' powinno liczyć minimum %s znaków długości", fieldName, minLength);
+        return Validator.createPredicateValidator(value -> value.length() >= minLength, message);
     }
 
     public static Validator<Integer> createCheckComboBoxValidator(String fieldName) {
-        return new CheckComboBoxValidator(fieldName);
+        String message = String.format("Dla pola '%s' wymagana jest przynajmniej jedna opcja", fieldName);
+        return Validator.createPredicateValidator(value -> value != 0, message);
     }
 
-    @RequiredArgsConstructor(access = PRIVATE)
-    private static class RangeValidator implements Validator<String> {
-
-        private final String fieldName;
-        private final ValueRange range;
-
-        @Override
-        public ValidationResult apply(Control control, String value) {
-            String message = String.format("Pole '%s' powinno wynosić od %d do %d znaków długości",
-                    fieldName, (int) range.getMinimum(), (int) range.getMaximum());
-            return ValidationResult.fromErrorIf(control, message, !range.isValidValue(value.length()));
-        }
-
+    public static Validator<LocalDate> createDateValidator(String fieldName, DateConstraints dateConstraint) {
+        String message = String.format("Pole '%s' musi zawierać datę w %s",
+                fieldName, (dateConstraint.equals(FUTURE) ? "przyszłości" : "przeszłości"));
+        return Validator.createPredicateValidator(isDateValid(dateConstraint), message);
     }
 
-    @RequiredArgsConstructor(access = PRIVATE)
-    private static class CheckComboBoxValidator implements Validator<Integer> {
-
-        private final String fieldName;
-
-        @Override
-        public ValidationResult apply(Control control, Integer value) {
-            String message = String.format("Dla pola '%s' wymagana jest przynajmniej jedna opcja", fieldName);
-            return ValidationResult.fromErrorIf(control, message, value == 0);
-        }
-
+    private static Predicate<LocalDate> isDateValid(DateConstraints dateConstraint) {
+        return value -> {
+            if (dateConstraint.equals(FUTURE)) {
+                return value == null || value.isAfter(LocalDate.now());
+            }
+            return value == null || value.isBefore(LocalDate.now());
+        };
     }
 
 }

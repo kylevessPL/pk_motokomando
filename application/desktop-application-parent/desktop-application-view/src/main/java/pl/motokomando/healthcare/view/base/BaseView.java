@@ -36,6 +36,7 @@ import pl.motokomando.healthcare.model.appointment.AppointmentModel;
 import pl.motokomando.healthcare.model.base.BaseModel;
 import pl.motokomando.healthcare.model.base.utils.AcademicTitle;
 import pl.motokomando.healthcare.model.base.utils.AddDoctorDetails;
+import pl.motokomando.healthcare.model.base.utils.AddPatientDetails;
 import pl.motokomando.healthcare.model.base.utils.BloodType;
 import pl.motokomando.healthcare.model.base.utils.DoctorRecord;
 import pl.motokomando.healthcare.model.base.utils.MedicalSpecialty;
@@ -44,11 +45,14 @@ import pl.motokomando.healthcare.model.base.utils.Sex;
 import pl.motokomando.healthcare.model.patient.PatientModel;
 import pl.motokomando.healthcare.model.utils.UserInfo;
 import pl.motokomando.healthcare.view.authentication.AuthenticationView;
+import utils.DefaultDatePickerConverter;
 import utils.FXAlert;
 import utils.FXTasks;
 import utils.FXValidation;
+import utils.TextFieldLimiter;
 
-import java.time.temporal.ValueRange;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -63,6 +67,7 @@ import static javafx.scene.control.Alert.AlertType.WARNING;
 import static javafx.scene.control.ButtonType.OK;
 import static javafx.scene.control.TabPane.TabClosingPolicy.UNAVAILABLE;
 import static javafx.scene.layout.Region.USE_PREF_SIZE;
+import static utils.DateConstraints.PAST;
 
 public class BaseView {
 
@@ -70,6 +75,7 @@ public class BaseView {
 
     private final SessionStore sessionStore = SessionStore.getInstance();
 
+    private final ValidationSupport addPatientValidationSupport = new ValidationSupport();
     private final ValidationSupport addDoctorValidationSupport = new ValidationSupport();
 
     private BaseController controller;
@@ -494,6 +500,7 @@ public class BaseView {
         addPatientButton.setPrefWidth(200.0);
         addPatientButton.setText("Dodaj pacjenta");
         addPatientButton.setFont(new Font(16.0));
+        addPatientButton.setDisable(true);
         addPatientPane.getChildren().add(addPatientButton);
     }
 
@@ -569,6 +576,7 @@ public class BaseView {
         choosePatientBloodTypeComboBox.setLayoutY(370.0);
         choosePatientBloodTypeComboBox.setPrefHeight(40.0);
         choosePatientBloodTypeComboBox.setPrefWidth(300.0);
+        choosePatientBloodTypeComboBox.setPromptText("Wybierz grupę krwi");
         choosePatientBloodTypeComboBox.getItems().setAll(Arrays.stream(BloodType.values()).map(BloodType::getName).collect(Collectors.toList()));
         addPatientPane.getChildren().add(choosePatientBloodTypeComboBox);
     }
@@ -579,6 +587,7 @@ public class BaseView {
         choosePatientSexComboBox.setLayoutY(290.0);
         choosePatientSexComboBox.setPrefHeight(40.0);
         choosePatientSexComboBox.setPrefWidth(300.0);
+        choosePatientSexComboBox.setPromptText("Wybierz płeć");
         choosePatientSexComboBox.getItems().setAll(Arrays.stream(Sex.values()).map(Sex::getName).collect(Collectors.toList()));
         addPatientPane.getChildren().add(choosePatientSexComboBox);
     }
@@ -590,6 +599,7 @@ public class BaseView {
         patientBirthDateDatePicker.setPrefHeight(40.0);
         patientBirthDateDatePicker.setPrefWidth(300.0);
         patientBirthDateDatePicker.setPromptText("Data urodzenia");
+        patientBirthDateDatePicker.setConverter(new DefaultDatePickerConverter());
         addPatientPane.getChildren().add(patientBirthDateDatePicker);
     }
 
@@ -709,33 +719,133 @@ public class BaseView {
         return new BorderPane(doctorsTable);
     }
 
-    /*private void addPaginationToPatientsTable() {
-        patientsTablePagination = new Pagination((listPatients.size() / recordsPerPage + 1), 0);
-        patientsTablePagination.setPageFactory(this::createPatientPage);
-        findPatientPane.getChildren().add(patientsTablePagination);
-        patientsTablePagination.setLayoutX(50);
-        patientsTablePagination.setLayoutY(50);
-    }*/
-
-    /*private Node createPatientPage(int pageIndex) {
-        int fromIndex = pageIndex * recordsPerPage;
-        int toIndex = Math.min(fromIndex + recordsPerPage, listDoctors.size());
-        patientsTable.setItems(FXCollections.observableArrayList(listPatients.subList(fromIndex, toIndex)));
-        return new BorderPane(doctorsTable);
-    }*/
-
     private void setupValidation() {
         setDoctorFirstNameTextFieldValidator();
         setDoctorLastNameTextFieldValidator();
         setDoctorPhoneNumberTextFieldValidator();
         setDoctorAcademicTitleComboBoxValidator();
         setDoctorSpecialtyComboBoxValidator();
+        setPatientFirstNameTextFieldValidator();
+        setPatientLastNameTextFieldValidator();
+        setPatientStreetNameTextFieldValidator();
+        setPatientHouseNumberTextFieldValidator();
+        setPatientZipCodeTextFieldValidator();
+        setPatientCityTextFieldValidator();
+        setPatientPeselTextFieldValidator();
+        setPatientPhoneNumberTextFieldValidator();
+        setPatientSexComboBoxValidator();
+        setPatientBloodTypeComboBoxValidator();
+        setPatientBirthDateDatePickerValidator();
+    }
+
+    private void setPatientBirthDateDatePickerValidator() {
+        final String fieldName = "data urodzenia";
+        Validator<LocalDate> emptyValidator = FXValidation.createEmptyValidator(fieldName);
+        Validator<LocalDate> dateValidator = FXValidation.createDateValidator(fieldName, PAST);
+        addPatientValidationSupport.registerValidator(
+                patientBirthDateDatePicker,
+                true,
+                Validator.combine(emptyValidator, dateValidator));
+    }
+
+    private void setPatientBloodTypeComboBoxValidator() {
+        final String fieldName = "grupa krwi";
+        Validator<String> emptyValidator = FXValidation.createEmptyValidator(fieldName);
+        addPatientValidationSupport.registerValidator(choosePatientBloodTypeComboBox, true, emptyValidator);
+    }
+
+    private void setPatientSexComboBoxValidator() {
+        final String fieldName = "płeć";
+        Validator<String> emptyValidator = FXValidation.createEmptyValidator(fieldName);
+        addPatientValidationSupport.registerValidator(choosePatientSexComboBox, true, emptyValidator);
+    }
+
+    private void setPatientPhoneNumberTextFieldValidator() {
+        final String fieldName = "nr telefonu";
+        Validator<String> emptyValidator = FXValidation.createEmptyValidator(fieldName);
+        Validator<String> regexValidator = FXValidation.createRegexValidator(fieldName, Pattern.compile("^[0-9]+$"));
+        Validator<String> rangeValidator = FXValidation.createMinLengthValidator(fieldName, 7);
+        addPatientValidationSupport.registerValidator(
+                patientPhoneNumberTextField,
+                true,
+                Validator.combine(emptyValidator, regexValidator, rangeValidator));
+    }
+
+    private void setPatientPeselTextFieldValidator() {
+        final String fieldName = "PESEL";
+        Validator<String> emptyValidator = FXValidation.createEmptyValidator(fieldName);
+        Validator<String> regexValidator = FXValidation.createRegexValidator(fieldName, Pattern.compile("^(0|[1-9][0-9]*)$"));
+        Validator<String> rangeValidator = FXValidation.createMinLengthValidator(fieldName, 11);
+        addPatientValidationSupport.registerValidator(
+                patientPeselTextField,
+                true,
+                Validator.combine(emptyValidator, regexValidator, rangeValidator));
+    }
+
+    private void setPatientCityTextFieldValidator() {
+        final String fieldName = "miejscowość";
+        Validator<String> emptyValidator = FXValidation.createEmptyValidator(fieldName);
+        Validator<String> rangeValidator = FXValidation.createMinLengthValidator(fieldName, 2);
+        addPatientValidationSupport.registerValidator(
+                patientCityTextField,
+                true,
+                Validator.combine(emptyValidator, rangeValidator));
+    }
+
+    private void setPatientZipCodeTextFieldValidator() {
+        final String fieldName = "kod pocztowy";
+        Validator<String> emptyValidator = FXValidation.createEmptyValidator(fieldName);
+        Validator<String> regexValidator = FXValidation.createRegexValidator(fieldName, Pattern.compile("^[0-9 \\-]*$"));
+        addPatientValidationSupport.registerValidator(
+                patientZipCodeTextField,
+                true,
+                Validator.combine(emptyValidator, regexValidator));
+    }
+
+    private void setPatientHouseNumberTextFieldValidator() {
+        final String fieldName = "nr domu";
+        Validator<String> emptyValidator = FXValidation.createEmptyValidator(fieldName);
+        Validator<String> regexValidator = FXValidation.createRegexValidator(fieldName, Pattern.compile("^[0-9a-zA-Z ./]*$"));
+        addPatientValidationSupport.registerValidator(
+                patientHouseNumberTextField,
+                true,
+                Validator.combine(emptyValidator, regexValidator));
+    }
+
+    private void setPatientStreetNameTextFieldValidator() {
+        final String fieldName = "ulica";
+        Validator<String> emptyValidator = FXValidation.createEmptyValidator(fieldName);
+        Validator<String> rangeValidator = FXValidation.createMinLengthValidator(fieldName, 2);
+        addPatientValidationSupport.registerValidator(
+                patientStreetNameTextField,
+                true,
+                Validator.combine(emptyValidator, rangeValidator));
+    }
+
+    private void setPatientLastNameTextFieldValidator() {
+        final String fieldName = "nazwisko";
+        Validator<String> emptyValidator = FXValidation.createEmptyValidator(fieldName);
+        Validator<String> rangeValidator = FXValidation.createMinLengthValidator(fieldName, 2);
+        addPatientValidationSupport.registerValidator(
+                patientLastNameTextField,
+                true,
+                Validator.combine(emptyValidator, rangeValidator));
+    }
+
+    private void setPatientFirstNameTextFieldValidator() {
+        final String fieldName = "imię";
+        Validator<String> emptyValidator = FXValidation.createEmptyValidator(fieldName);
+        Validator<String> rangeValidator = FXValidation.createMinLengthValidator(fieldName, 2);
+        addPatientValidationSupport.registerValidator(
+                patientFirstNameTextField,
+                true,
+                Validator.combine(emptyValidator, rangeValidator));
     }
 
     private void setDoctorFirstNameTextFieldValidator() {
         final String fieldName = "imię";
         Validator<String> emptyValidator = FXValidation.createEmptyValidator(fieldName);
-        Validator<String> rangeValidator = FXValidation.createRangeValidator(fieldName, ValueRange.of(2, 30));
+        Validator<String> rangeValidator = FXValidation.createMinLengthValidator(fieldName, 2);
         addDoctorValidationSupport.registerValidator(
                 doctorFirstNameTextField,
                 true,
@@ -745,7 +855,7 @@ public class BaseView {
     private void setDoctorLastNameTextFieldValidator() {
         final String fieldName = "nazwisko";
         Validator<String> emptyValidator = FXValidation.createEmptyValidator(fieldName);
-        Validator<String> rangeValidator = FXValidation.createRangeValidator(fieldName, ValueRange.of(2, 30));
+        Validator<String> rangeValidator = FXValidation.createMinLengthValidator(fieldName, 2);
         addDoctorValidationSupport.registerValidator(
                 doctorLastNameTextField,
                 true,
@@ -756,7 +866,7 @@ public class BaseView {
         final String fieldName = "nr telefonu";
         Validator<String> emptyValidator = FXValidation.createEmptyValidator(fieldName);
         Validator<String> regexValidator = FXValidation.createRegexValidator(fieldName, Pattern.compile("^[0-9]+$"));
-        Validator<String> rangeValidator = FXValidation.createRangeValidator(fieldName, ValueRange.of(7, 15));
+        Validator<String> rangeValidator = FXValidation.createMinLengthValidator(fieldName, 7);
         addDoctorValidationSupport.registerValidator(
                 doctorPhoneNumberTextField,
                 true,
@@ -784,13 +894,31 @@ public class BaseView {
 
     private void delegateEventHandlers() {
         scheduleDoctorsTableUpdate();
+        setTextFieldsLimit();
+        addPatientValidationSupport.invalidProperty().addListener((obs, wasInvalid, isNowInvalid) ->
+                Platform.runLater(() -> addPatientButton.setDisable(isNowInvalid)));
         addDoctorValidationSupport.invalidProperty().addListener((obs, wasInvalid, isNowInvalid) ->
                 Platform.runLater(() -> addDoctorButton.setDisable(isNowInvalid)));
         chooseDoctorSpecialtyComboBox.getCheckModel().getCheckedItems().addListener((ListChangeListener<String>) c ->
                 controller.handleDoctorSpecialtyComboBoxCheckedItemsChanged(c.getList()));
         logoutButton.setOnMouseClicked(e -> logoutUser());
         addDoctorButton.setOnMouseClicked(e -> addDoctor());
+        addPatientButton.setOnMouseClicked(e -> addPatient());
         patientsTable.setRowFactory(tv -> setPatientsTableRowFactory());
+    }
+
+    private void setTextFieldsLimit() {
+        doctorFirstNameTextField.textProperty().addListener(new TextFieldLimiter(30));
+        doctorLastNameTextField.textProperty().addListener(new TextFieldLimiter(30));
+        doctorPhoneNumberTextField.textProperty().addListener(new TextFieldLimiter(15));
+        patientFirstNameTextField.textProperty().addListener(new TextFieldLimiter(30));
+        patientLastNameTextField.textProperty().addListener(new TextFieldLimiter(15));
+        patientPhoneNumberTextField.textProperty().addListener(new TextFieldLimiter(15));
+        patientPeselTextField.textProperty().addListener(new TextFieldLimiter(11));
+        patientCityTextField.textProperty().addListener(new TextFieldLimiter(30));
+        patientZipCodeTextField.textProperty().addListener(new TextFieldLimiter(10));
+        patientHouseNumberTextField.textProperty().addListener(new TextFieldLimiter(10));
+        patientStreetNameTextField.textProperty().addListener(new TextFieldLimiter(30));
     }
 
     private void scheduleDoctorsTableUpdate() {
@@ -830,6 +958,17 @@ public class BaseView {
         task.setOnFailed(e -> processAddDoctorFailureResult(task.getException().getMessage()));
     }
 
+    private void addPatient() {
+        Platform.runLater(() -> addPatientButton.setDisable(true));
+        AddPatientDetails patientDetails = createAddPatientDetails();
+        Task<Void> task = FXTasks.createTask(() -> controller.handleAddPatientButtonClicked(patientDetails));
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
+        task.setOnSucceeded(e -> processAddPatientSuccessResult());
+        task.setOnFailed(e -> processAddPatientFailureResult(task.getException().getMessage()));
+    }
+
     private void processAddDoctorSuccessResult() {
         Alert alert = FXAlert.builder()
                 .alertType(INFORMATION)
@@ -853,15 +992,41 @@ public class BaseView {
     }
 
     private void processAddDoctorFailureResult(String errorMessage) {
-        Alert alert = FXAlert.builder()
-                .alertType(ERROR)
-                .alertTitle("Operacja ukończona niepomyślnie")
-                .contentText(errorMessage)
-                .build();
+        Alert alert = createAddActionFailureAlert(errorMessage);
         Platform.runLater(() -> {
             addDoctorButton.setDisable(false);
             alert.showAndWait();
         });
+    }
+
+    private void processAddPatientSuccessResult() {
+        Alert alert = FXAlert.builder()
+                .alertType(INFORMATION)
+                .alertTitle("Operacja ukończona pomyślnie")
+                .contentText("Pomyślnie dodano nowego pacjenta")
+                .build();
+        Platform.runLater(() -> {
+            addPatientValidationSupport.getRegisteredControls().forEach(FXTasks::clearControlState);
+            addPatientButton.setDisable(false);
+            alert.showAndWait();
+        });
+        //TODO updatePatientsTablePageData();
+    }
+
+    private void processAddPatientFailureResult(String errorMessage) {
+        Alert alert = createAddActionFailureAlert(errorMessage);
+        Platform.runLater(() -> {
+            addPatientButton.setDisable(false);
+            alert.showAndWait();
+        });
+    }
+
+    private Alert createAddActionFailureAlert(String errorMessage) {
+        return FXAlert.builder()
+                    .alertType(ERROR)
+                    .alertTitle("Operacja ukończona niepomyślnie")
+                    .contentText(errorMessage)
+                    .build();
     }
 
     private AddDoctorDetails createAddDoctorDetails() {
@@ -874,12 +1039,23 @@ public class BaseView {
                 .map(MedicalSpecialty::findByName)
                 .collect(Collectors.toList());
         String phoneNumber = doctorPhoneNumberTextField.getText();
-        return new AddDoctorDetails(
-                firstName,
-                lastName,
-                academicTitle,
-                specialties,
-                phoneNumber);
+        return new AddDoctorDetails(firstName, lastName, academicTitle, specialties, phoneNumber);
+    }
+
+    private AddPatientDetails createAddPatientDetails() {
+        String firstName = patientFirstNameTextField.getText();
+        String lastName = patientLastNameTextField.getText();
+        LocalDate birthDate = patientBirthDateDatePicker.getValue();
+        Sex sex = Sex.findByName(choosePatientSexComboBox.getSelectionModel().getSelectedItem());
+        BloodType bloodType = BloodType.findByName(choosePatientBloodTypeComboBox.getSelectionModel().getSelectedItem());
+        String streetName = patientStreetNameTextField.getText();
+        String houseNumber = patientHouseNumberTextField.getText();
+        String zipCode = patientZipCodeTextField.getText();
+        String city = patientCityTextField.getText();
+        BigDecimal pesel = new BigDecimal(patientPeselTextField.getText());
+        String phoneNumber = patientPhoneNumberTextField.getText();
+        return new AddPatientDetails(firstName, lastName, birthDate, sex, bloodType,
+                streetName, houseNumber, zipCode, city, pesel, phoneNumber);
     }
 
     private void logoutUser() {

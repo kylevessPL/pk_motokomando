@@ -3,6 +3,8 @@ package pl.motokomando.healthcare.model.base.utils;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Arrays;
+
 @RequiredArgsConstructor
 @Getter
 public enum BloodType {
@@ -17,5 +19,12 @@ public enum BloodType {
     AB_NEG("AB-");
 
     private final String name;
+
+    public static BloodType findByName(String name) {
+        return Arrays.stream(BloodType.values())
+                .filter(e -> e.name.equals(name))
+                .findFirst()
+                .orElse(null);
+    }
 
 }
