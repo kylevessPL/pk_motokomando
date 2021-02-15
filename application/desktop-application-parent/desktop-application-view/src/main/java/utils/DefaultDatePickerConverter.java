@@ -1,18 +1,13 @@
 package utils;
 
 import javafx.util.StringConverter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-import static lombok.AccessLevel.PRIVATE;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 
-@NoArgsConstructor(access = PRIVATE)
 public final class DefaultDatePickerConverter extends StringConverter<LocalDate> {
-
-    private static final StringConverter<LocalDate> INSTANCE = new DefaultDatePickerConverter();
 
     private static final String DATE_FORMAT = "dd-MM-yyyy";
 
@@ -34,10 +29,6 @@ public final class DefaultDatePickerConverter extends StringConverter<LocalDate>
         } else {
             return null;
         }
-    }
-
-    public static StringConverter<LocalDate> getInstance() {
-        return INSTANCE;
     }
 
 }

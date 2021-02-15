@@ -1,6 +1,7 @@
 package pl.motokomando.healthcare.controller.base;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
@@ -8,16 +9,19 @@ import javafx.collections.ObservableList;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import pl.motokomando.healthcare.controller.utils.GetClient;
+import pl.motokomando.healthcare.controller.utils.LocalDateAdapter;
 import pl.motokomando.healthcare.controller.utils.MappingUtils;
 import pl.motokomando.healthcare.controller.utils.PutClient;
 import pl.motokomando.healthcare.controller.utils.WebClient;
 import pl.motokomando.healthcare.model.SessionStore;
 import pl.motokomando.healthcare.model.base.BaseModel;
 import pl.motokomando.healthcare.model.base.utils.AddDoctorDetails;
+import pl.motokomando.healthcare.model.base.utils.AddPatientDetails;
 import pl.motokomando.healthcare.model.base.utils.DoctorPagedResponse;
 import pl.motokomando.healthcare.model.base.utils.DoctorRecord;
 
 import java.lang.reflect.Type;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +31,7 @@ import static org.apache.http.HttpStatus.SC_OK;
 import static pl.motokomando.healthcare.controller.utils.ResponseHeaders.CURRENT_PAGE;
 import static pl.motokomando.healthcare.controller.utils.ResponseHeaders.TOTAL_PAGES;
 import static pl.motokomando.healthcare.controller.utils.WellKnownEndpoints.DOCTORS;
+import static pl.motokomando.healthcare.controller.utils.WellKnownEndpoints.PATIENTS;
 
 public class BaseController {
 
@@ -48,6 +53,22 @@ public class BaseController {
         String body = gson.toJson(doctorDetails);
         WebClient client = PutClient.builder()
                 .path(DOCTORS)
+                .body(body)
+                .build();
+        HttpResponse response = client.execute();
+        if (response.getStatusLine().getStatusCode() != SC_NO_CONTENT) {
+            client.mapErrorResponseAsException(response);
+        }
+        return null;
+    }
+
+    public Void handleAddPatientButtonClicked(AddPatientDetails patientDetails) throws Exception {
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
+                .create();
+        String body = gson.toJson(patientDetails);
+        WebClient client = PutClient.builder()
+                .path(PATIENTS)
                 .body(body)
                 .build();
         HttpResponse response = client.execute();

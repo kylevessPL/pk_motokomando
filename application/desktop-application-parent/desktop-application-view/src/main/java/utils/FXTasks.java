@@ -4,6 +4,7 @@ import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Control;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextField;
 import org.controlsfx.control.CheckComboBox;
 
@@ -29,8 +30,10 @@ public final class FXTasks {
             ((TextField) control).clear();
         } else if (control instanceof ComboBox) {
             ((ComboBox<?>) control).getSelectionModel().clearSelection();
-        } else {
+        } else if (control instanceof CheckComboBox){
             ((CheckComboBox<?>) control).getCheckModel().clearChecks();
+        } else {
+            ((DatePicker) control).setValue(null);
         }
     }
 

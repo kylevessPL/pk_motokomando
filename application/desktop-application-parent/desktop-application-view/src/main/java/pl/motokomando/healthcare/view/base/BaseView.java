@@ -36,6 +36,7 @@ import pl.motokomando.healthcare.model.appointment.AppointmentModel;
 import pl.motokomando.healthcare.model.base.BaseModel;
 import pl.motokomando.healthcare.model.base.utils.AcademicTitle;
 import pl.motokomando.healthcare.model.base.utils.AddDoctorDetails;
+import pl.motokomando.healthcare.model.base.utils.AddPatientDetails;
 import pl.motokomando.healthcare.model.base.utils.BloodType;
 import pl.motokomando.healthcare.model.base.utils.DoctorRecord;
 import pl.motokomando.healthcare.model.base.utils.MedicalSpecialty;
@@ -50,6 +51,7 @@ import utils.FXTasks;
 import utils.FXValidation;
 import utils.TextFieldLimiter;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
@@ -597,7 +599,7 @@ public class BaseView {
         patientBirthDateDatePicker.setPrefHeight(40.0);
         patientBirthDateDatePicker.setPrefWidth(300.0);
         patientBirthDateDatePicker.setPromptText("Data urodzenia");
-        patientBirthDateDatePicker.setConverter(DefaultDatePickerConverter.getInstance());
+        patientBirthDateDatePicker.setConverter(new DefaultDatePickerConverter());
         addPatientPane.getChildren().add(patientBirthDateDatePicker);
     }
 
@@ -901,6 +903,7 @@ public class BaseView {
                 controller.handleDoctorSpecialtyComboBoxCheckedItemsChanged(c.getList()));
         logoutButton.setOnMouseClicked(e -> logoutUser());
         addDoctorButton.setOnMouseClicked(e -> addDoctor());
+        addPatientButton.setOnMouseClicked(e -> addPatient());
         patientsTable.setRowFactory(tv -> setPatientsTableRowFactory());
     }
 
@@ -955,6 +958,17 @@ public class BaseView {
         task.setOnFailed(e -> processAddDoctorFailureResult(task.getException().getMessage()));
     }
 
+    private void addPatient() {
+        Platform.runLater(() -> addPatientButton.setDisable(true));
+        AddPatientDetails patientDetails = createAddPatientDetails();
+        Task<Void> task = FXTasks.createTask(() -> controller.handleAddPatientButtonClicked(patientDetails));
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
+        task.setOnSucceeded(e -> processAddPatientSuccessResult());
+        task.setOnFailed(e -> processAddPatientFailureResult(task.getException().getMessage()));
+    }
+
     private void processAddDoctorSuccessResult() {
         Alert alert = FXAlert.builder()
                 .alertType(INFORMATION)
@@ -978,15 +992,41 @@ public class BaseView {
     }
 
     private void processAddDoctorFailureResult(String errorMessage) {
-        Alert alert = FXAlert.builder()
-                .alertType(ERROR)
-                .alertTitle("Operacja ukończona niepomyślnie")
-                .contentText(errorMessage)
-                .build();
+        Alert alert = createAddActionFailureAlert(errorMessage);
         Platform.runLater(() -> {
             addDoctorButton.setDisable(false);
             alert.showAndWait();
         });
+    }
+
+    private void processAddPatientSuccessResult() {
+        Alert alert = FXAlert.builder()
+                .alertType(INFORMATION)
+                .alertTitle("Operacja ukończona pomyślnie")
+                .contentText("Pomyślnie dodano nowego pacjenta")
+                .build();
+        Platform.runLater(() -> {
+            addPatientValidationSupport.getRegisteredControls().forEach(FXTasks::clearControlState);
+            addPatientButton.setDisable(false);
+            alert.showAndWait();
+        });
+        //TODO updatePatientsTablePageData();
+    }
+
+    private void processAddPatientFailureResult(String errorMessage) {
+        Alert alert = createAddActionFailureAlert(errorMessage);
+        Platform.runLater(() -> {
+            addPatientButton.setDisable(false);
+            alert.showAndWait();
+        });
+    }
+
+    private Alert createAddActionFailureAlert(String errorMessage) {
+        return FXAlert.builder()
+                    .alertType(ERROR)
+                    .alertTitle("Operacja ukończona niepomyślnie")
+                    .contentText(errorMessage)
+                    .build();
     }
 
     private AddDoctorDetails createAddDoctorDetails() {
@@ -999,12 +1039,23 @@ public class BaseView {
                 .map(MedicalSpecialty::findByName)
                 .collect(Collectors.toList());
         String phoneNumber = doctorPhoneNumberTextField.getText();
-        return new AddDoctorDetails(
-                firstName,
-                lastName,
-                academicTitle,
-                specialties,
-                phoneNumber);
+        return new AddDoctorDetails(firstName, lastName, academicTitle, specialties, phoneNumber);
+    }
+
+    private AddPatientDetails createAddPatientDetails() {
+        String firstName = patientFirstNameTextField.getText();
+        String lastName = patientLastNameTextField.getText();
+        LocalDate birthDate = patientBirthDateDatePicker.getValue();
+        Sex sex = Sex.findByName(choosePatientSexComboBox.getSelectionModel().getSelectedItem());
+        BloodType bloodType = BloodType.findByName(choosePatientBloodTypeComboBox.getSelectionModel().getSelectedItem());
+        String streetName = patientStreetNameTextField.getText();
+        String houseNumber = patientHouseNumberTextField.getText();
+        String zipCode = patientZipCodeTextField.getText();
+        String city = patientCityTextField.getText();
+        BigDecimal pesel = new BigDecimal(patientPeselTextField.getText());
+        String phoneNumber = patientPhoneNumberTextField.getText();
+        return new AddPatientDetails(firstName, lastName, birthDate, sex, bloodType,
+                streetName, houseNumber, zipCode, city, pesel, phoneNumber);
     }
 
     private void logoutUser() {
