@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public final class DoctorPagedResponse {
+public final class BasePagedResponse {
 
     private final Integer id;
     private final String firstName;
