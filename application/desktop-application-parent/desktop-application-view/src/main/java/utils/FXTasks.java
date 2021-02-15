@@ -9,7 +9,7 @@ import org.controlsfx.control.CheckComboBox;
 
 import java.util.concurrent.Callable;
 
-public class FXTasks {
+public final class FXTasks {
 
     public static <T> Task<T> createTask(Callable<T> callable) {
         return newTask(callable);
