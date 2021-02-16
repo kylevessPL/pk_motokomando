@@ -20,6 +20,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
@@ -31,8 +32,6 @@ import org.controlsfx.tools.ValueExtractor;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 import pl.motokomando.healthcare.controller.base.BaseController;
-import pl.motokomando.healthcare.model.SessionStore;
-import pl.motokomando.healthcare.model.appointment.AppointmentModel;
 import pl.motokomando.healthcare.model.base.BaseModel;
 import pl.motokomando.healthcare.model.base.utils.AcademicTitle;
 import pl.motokomando.healthcare.model.base.utils.AddDoctorDetails;
@@ -41,9 +40,11 @@ import pl.motokomando.healthcare.model.base.utils.BaseTableRecord;
 import pl.motokomando.healthcare.model.base.utils.BloodType;
 import pl.motokomando.healthcare.model.base.utils.MedicalSpecialty;
 import pl.motokomando.healthcare.model.base.utils.Sex;
-import pl.motokomando.healthcare.model.patient.PatientModel;
+import pl.motokomando.healthcare.model.utils.ServiceStore;
+import pl.motokomando.healthcare.model.utils.SessionStore;
 import pl.motokomando.healthcare.model.utils.UserInfo;
 import pl.motokomando.healthcare.view.authentication.AuthenticationView;
+import pl.motokomando.healthcare.view.patient.PatientView;
 import utils.DefaultDatePickerConverter;
 import utils.FXAlert;
 import utils.FXTasks;
@@ -66,12 +67,14 @@ import static javafx.scene.control.Alert.AlertType.WARNING;
 import static javafx.scene.control.ButtonType.OK;
 import static javafx.scene.control.TabPane.TabClosingPolicy.UNAVAILABLE;
 import static javafx.scene.layout.Region.USE_PREF_SIZE;
+import static javafx.stage.Modality.WINDOW_MODAL;
 import static utils.DateConstraints.PAST;
 
 public class BaseView {
 
     private static final int TABLE_REFRESH_RATE = 10;
 
+    private final ServiceStore serviceStore = ServiceStore.getInstance();
     private final SessionStore sessionStore = SessionStore.getInstance();
 
     private final ValidationSupport addPatientValidationSupport = new ValidationSupport();
@@ -79,9 +82,7 @@ public class BaseView {
 
     private BaseController controller;
 
-    private BaseModel baseModel;
-    private AppointmentModel appointmentModel;
-    private PatientModel patientModel;
+    private BaseModel model;
 
     private TabPane basePane;
 
@@ -155,13 +156,11 @@ public class BaseView {
     }
 
     private void initModel() {
-        baseModel = new BaseModel();
-        appointmentModel = new AppointmentModel();
-        patientModel = new PatientModel();
+        model = new BaseModel();
     }
 
     private void setController() {
-        controller = new BaseController(baseModel);
+        controller = new BaseController(model);
     }
 
     private void createPane() {
@@ -644,7 +643,7 @@ public class BaseView {
         patientsTable.setPrefWidth(1500.0);
         setPatientsTableColumns(patientsTable);
         setupPatientsTablePagination();
-        patientsTable.setItems(baseModel.patientsTablePageContent());
+        patientsTable.setItems(model.patientsTablePageContent());
         findPatientPane.getChildren().add(patientsTable);
     }
 
@@ -684,7 +683,7 @@ public class BaseView {
         doctorsTable.setPrefWidth(1500.0);
         setDoctorsTableColumns(doctorsTable);
         setupDoctorsTablePagination();
-        doctorsTable.setItems(baseModel.doctorsTablePageContent());
+        doctorsTable.setItems(model.doctorsTablePageContent());
         findDoctorPane.getChildren().add(doctorsTable);
     }
 
@@ -879,15 +878,15 @@ public class BaseView {
     private void setDoctorSpecialtyComboBoxValidator() {
         final String fieldName = "specjalizacja";
         ValueExtractor.addObservableValueExtractor(c -> c == chooseDoctorSpecialtyComboBox,
-                c -> baseModel.doctorSpecialtyComboBoxCheckedItemsNumber());
+                c -> model.doctorSpecialtyComboBoxCheckedItemsNumber());
         Validator<Integer> checkComboBoxBoxValidator = FXValidation.createCheckComboBoxValidator(fieldName);
         addDoctorValidationSupport.registerValidator(chooseDoctorSpecialtyComboBox, true, checkComboBoxBoxValidator);
     }
 
     private void observeModelAndUpdate() {
-        baseModel.patientsTableTotalPages().addListener((obs, oldValue, newValue) ->
+        model.patientsTableTotalPages().addListener((obs, oldValue, newValue) ->
                 Platform.runLater(() -> patientsTablePagination.setPageCount((int) newValue)));
-        baseModel.doctorsTableTotalPages().addListener((obs, oldValue, newValue) ->
+        model.doctorsTableTotalPages().addListener((obs, oldValue, newValue) ->
                 Platform.runLater(() -> doctorsTablePagination.setPageCount((int) newValue)));
     }
 
@@ -923,6 +922,7 @@ public class BaseView {
 
     private void schedulePatientsTableUpdate() {
         ScheduledService<Void> service = FXTasks.createService(() -> controller.updatePatientsTablePageData());
+        serviceStore.addBaseService(service);
         service.setPeriod(Duration.seconds(TABLE_REFRESH_RATE));
         service.setOnFailed(e -> processUpdateBaseTableFailureResult(service.getException().getMessage()));
         service.start();
@@ -930,6 +930,7 @@ public class BaseView {
 
     private void scheduleDoctorsTableUpdate() {
         ScheduledService<Void> service = FXTasks.createService(() -> controller.updateDoctorsTablePageData());
+        serviceStore.addBaseService(service);
         service.setPeriod(Duration.seconds(TABLE_REFRESH_RATE));
         service.setOnFailed(e -> processUpdateBaseTableFailureResult(service.getException().getMessage()));
         service.start();
@@ -941,14 +942,20 @@ public class BaseView {
                 .alertTitle("Nie udało się pobrać niektórych danych")
                 .contentText(errorMessage)
                 .build();
+        setBaseAlertOwner(alert);
         Platform.runLater(alert::showAndWait);
+    }
+
+    private void setBaseAlertOwner(Alert alert) {
+        alert.initOwner(currentStage());
     }
 
     private TableRow<BaseTableRecord> setPatientsTableRowFactory() {
         TableRow<BaseTableRecord> row = new TableRow<>();
         row.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2 && !row.isEmpty()) {
-                //System.out.println("działa");
+                BaseTableRecord record = patientsTable.getItems().get(row.getIndex());
+                openPatientScene(record.getId());
             }
         });
         return row;
@@ -998,6 +1005,7 @@ public class BaseView {
                 .alertTitle("Operacja ukończona pomyślnie")
                 .contentText("Pomyślnie dodano nowego pacjenta")
                 .build();
+        setBaseAlertOwner(alert);
         Platform.runLater(() -> {
             addPatientValidationSupport.getRegisteredControls().forEach(FXTasks::clearControlState);
             addPatientButton.setDisable(false);
@@ -1012,6 +1020,7 @@ public class BaseView {
                 .alertTitle("Operacja ukończona pomyślnie")
                 .contentText("Pomyślnie dodano nowego lekarza")
                 .build();
+        setBaseAlertOwner(alert);
         Platform.runLater(() -> {
             addDoctorValidationSupport.getRegisteredControls().forEach(FXTasks::clearControlState);
             addDoctorButton.setDisable(false);
@@ -1037,11 +1046,13 @@ public class BaseView {
     }
 
     private Alert createAddPersonFailureAlert(String errorMessage) {
-        return FXAlert.builder()
+        Alert alert = FXAlert.builder()
                     .alertType(ERROR)
                     .alertTitle("Operacja ukończona niepomyślnie")
                     .contentText(errorMessage)
                     .build();
+        setBaseAlertOwner(alert);
+        return alert;
     }
 
     private AddDoctorDetails createAddDoctorDetails() {
@@ -1079,6 +1090,7 @@ public class BaseView {
                 .contentText("Czy na pewno chcesz się wylogować?")
                 .alertTitle("Wyloguj się")
                 .build();
+        setBaseAlertOwner(alert);
         Platform.runLater(() -> alert.showAndWait()
                 .filter(OK::equals)
                 .ifPresent(e -> {
@@ -1092,11 +1104,29 @@ public class BaseView {
         Platform.runLater(() -> {
             Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
             Stage stage = currentStage();
+            stage.close();
             stage.setScene(scene);
-            stage.setX((screenBounds.getWidth() - stage.getWidth()) / 2);
-            stage.setY((screenBounds.getHeight() - stage.getHeight()) / 2);
+            stage.setX((screenBounds.getWidth() - scene.getWidth()) / 2);
+            stage.setY((screenBounds.getHeight() - scene.getHeight()) / 2);
             stage.setTitle("Healthcare Management - Panel Logowania");
             stage.show();
+        });
+    }
+
+    private void openPatientScene(Integer patientId) {
+        Scene scene = new Scene(new PatientView(patientId).asParent(), 900, 600);
+        Platform.runLater(() -> {
+            Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+            Stage subStage = new Stage();
+            subStage.setScene(scene);
+            subStage.setX((screenBounds.getWidth() - scene.getWidth()) / 2);
+            subStage.setY((screenBounds.getHeight() - scene.getHeight()) / 2);
+            subStage.setTitle("Healthcare Management");
+            subStage.getIcons().add(new Image(this.getClass().getResourceAsStream("/images/favicon.png")));
+            subStage.initOwner(currentStage());
+            subStage.initModality(WINDOW_MODAL);
+            subStage.setOnHidden(e -> serviceStore.cancelAllPatientServices());
+            subStage.show();
         });
     }
 

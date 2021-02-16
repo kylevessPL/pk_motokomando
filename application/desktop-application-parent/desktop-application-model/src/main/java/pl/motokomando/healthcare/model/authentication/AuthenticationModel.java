@@ -12,7 +12,7 @@ import static pl.motokomando.healthcare.model.authentication.utils.Authenticatio
 
 @Getter
 @Setter
-public class AuthenticationModel {
+public final class AuthenticationModel {
 
     @Accessors(fluent = true)
     @Setter(NONE)

@@ -1,9 +1,7 @@
 package utils;
 
-import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.stage.Screen;
 import lombok.Builder;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -17,13 +15,10 @@ public final class FXAlert {
 
     @Builder
     public static Alert createAlert(AlertType alertType, String contentText, String alertTitle) {
-        Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
         Alert alert = new Alert(alertType, contentText);
         alert.setTitle(alertTitle);
         alert.setHeaderText(getHeader(alertType));
         alert.getDialogPane().setPrefWidth(500);
-        alert.setX((screenBounds.getWidth() - alert.getDialogPane().getPrefWidth()) / 2);
-        alert.setY((screenBounds.getHeight() - alert.getHeight()) / 2);
         return alert;
     }
 

@@ -17,8 +17,8 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import pl.motokomando.healthcare.controller.utils.GetClient;
-import pl.motokomando.healthcare.model.SessionStore;
 import pl.motokomando.healthcare.model.authentication.AuthenticationModel;
+import pl.motokomando.healthcare.model.utils.SessionStore;
 import pl.motokomando.healthcare.model.utils.Token;
 import pl.motokomando.healthcare.model.utils.UserInfo;
 

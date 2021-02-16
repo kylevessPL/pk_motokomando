@@ -165,10 +165,11 @@ public class AuthenticationView {
         Platform.runLater(() -> {
             Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
             Stage stage = currentStage();
+            stage.close();
             stage.setScene(scene);
-            stage.setX((screenBounds.getWidth() - stage.getWidth()) / 2);
-            stage.setY((screenBounds.getHeight() - stage.getHeight()) / 2);
-            stage.setTitle("Healthcare Management - Panel Główny");
+            stage.setX((screenBounds.getWidth() - scene.getWidth()) / 2);
+            stage.setY((screenBounds.getHeight() - scene.getHeight()) / 2);
+            stage.setTitle("Healthcare Management");
             stage.show();
         });
     }

@@ -39,10 +39,12 @@ public final class FXTasks {
 
     private static <T> Task<T> newTask(Callable<T> callable) {
         return new Task<T>() {
+
             @Override
             public T call() throws Exception {
                 return callable.call();
             }
+
         };
     }
 
