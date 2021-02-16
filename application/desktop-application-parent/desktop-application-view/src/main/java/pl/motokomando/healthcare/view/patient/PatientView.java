@@ -1,8 +1,11 @@
 package pl.motokomando.healthcare.view.patient;
 
-import javafx.collections.FXCollections;
+import javafx.application.Platform;
+import javafx.concurrent.ScheduledService;
+import javafx.concurrent.Task;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -17,9 +20,13 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import pl.motokomando.healthcare.controller.patient.PatientController;
 import pl.motokomando.healthcare.model.patient.PatientModel;
-import pl.motokomando.healthcare.view.patient.utils.AppointmentRecord;
+import pl.motokomando.healthcare.model.patient.utils.PatientAppointmentsTableRecord;
+import pl.motokomando.healthcare.model.utils.ServiceStore;
+import utils.FXAlert;
+import utils.FXTasks;
 
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -27,14 +34,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static javafx.scene.control.Alert.AlertType.WARNING;
 import static javafx.scene.control.TabPane.TabClosingPolicy.UNAVAILABLE;
 import static javafx.scene.layout.Region.USE_PREF_SIZE;
 
 public class PatientView {
 
-    private final PatientModel patientModel;
+    private static final int TABLE_REFRESH_RATE = 10;
+
+    private final ServiceStore serviceStore = ServiceStore.getInstance();
 
     private PatientController controller;
+
+    private PatientModel model;
 
     private TabPane patientPane;
 
@@ -56,7 +68,7 @@ public class PatientView {
     private Button updatePatientDetailsButton;
     private Tab patientAppointmentsTab;
     private AnchorPane patientAppointmentsPane;
-    private TableView<AppointmentRecord> patientAppointmentsTable;
+    private TableView<PatientAppointmentsTableRecord> patientAppointmentsTable;
     private Tab scheduleAppointmentTab;
     private AnchorPane scheduleAppointmentPane;
     private DatePicker appointmentDateDatePicker;
@@ -67,17 +79,15 @@ public class PatientView {
     private Label scheduleAppointmentDoctorLabel;
     private Label scheduleAppointmentHourLabel;
 
-    public List<AppointmentRecord> listAppointments;
-    int recordsPerPage = 4;
+    private Pagination patientAppointmentsTablePagination;
 
-    public PatientView(PatientModel patientModel) {
-        this.patientModel = patientModel;
+    public PatientView(Integer patientId) {
+        initModel(patientId);
         setController();
         createPane();
         addContent();
-
-        //TODO fill up table with data
-        //addPaginationToDoctorsTable();
+        delegateEventHandlers();
+        observeModelAndUpdate();
     }
 
     public Parent asParent() {
@@ -88,8 +98,12 @@ public class PatientView {
         return (Stage) patientPane.getScene().getWindow();
     }
 
+    private void initModel(Integer patientId) {
+        model = new PatientModel(patientId);
+    }
+
     private void setController() {
-        controller = new PatientController(patientModel);
+        controller = new PatientController(model);
     }
 
     private void createPane() {
@@ -387,46 +401,88 @@ public class PatientView {
         patientAppointmentsTable = new TableView<>();
         patientAppointmentsTable.setLayoutX(43.0);
         patientAppointmentsTable.setLayoutY(36.0);
-        patientAppointmentsTable.setPrefHeight(500.0);
-        setPatientAppointmentsTableContent(patientAppointmentsTable);
+        patientAppointmentsTable.setPrefHeight(450.0);
+        patientAppointmentsTable.setPrefWidth(800.0);
+        setPatientAppointmentsTableColumns(patientAppointmentsTable);
+        setupPatientAppointmentsTablePagination();
+        patientAppointmentsTable.setItems(model.patientAppointmentsTablePageContent());
         patientAppointmentsPane.getChildren().add(patientAppointmentsTable);
     }
 
-    private TableColumn<AppointmentRecord, String> createPatientAppointmentsTableColumn() {
-        TableColumn<AppointmentRecord, String> column = new TableColumn<>();
-        column.setPrefWidth(266.0);
+    private void setupPatientAppointmentsTablePagination() {
+        patientAppointmentsTablePagination = new Pagination(1, 0);
+        patientAppointmentsTablePagination.setLayoutX(50);
+        patientAppointmentsTablePagination.setLayoutY(50);
+        patientAppointmentsTablePagination.setPageFactory(this::createPatientAppointmentsTablePage);
+        patientAppointmentsPane.getChildren().add(patientAppointmentsTablePagination);
+    }
+
+    private Node createPatientAppointmentsTablePage(Integer pageIndex) {
+        controller.updatePatientAppointmentsTableCurrentPage(pageIndex + 1);
+        updatePatientAppointmentsTablePageData();
+        return new BorderPane(patientAppointmentsTable);
+    }
+
+    private void updatePatientAppointmentsTablePageData() {
+        Task<Void> task = FXTasks.createTask(() -> controller.updatePatientAppointmentsTablePageData());
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
+        task.setOnFailed(e -> processUpdatePatientAppointmentsTableFailureResult(task.getException().getMessage()));
+    }
+
+    private void processUpdatePatientAppointmentsTableFailureResult(String errorMessage) {
+        Alert alert = FXAlert.builder()
+                .alertType(WARNING)
+                .alertTitle("Nie udało się pobrać niektórych danych")
+                .contentText(errorMessage)
+                .build();
+        setPatientAlertOwner(alert);
+        Platform.runLater(alert::showAndWait);
+    }
+
+    private void setPatientAlertOwner(Alert alert) {
+        alert.initOwner(currentStage());
+    }
+
+    private TableColumn<PatientAppointmentsTableRecord, String> createPatientAppointmentsTableColumn() {
+        TableColumn<PatientAppointmentsTableRecord, String> column = new TableColumn<>();
+        column.setPrefWidth(400.0);
         return column;
     }
 
-    private List<TableColumn<AppointmentRecord, String>> createPatientAppointmentsTableColumns() {
-        List<TableColumn<AppointmentRecord, String>> columnList = IntStream
-                .range(0, 3)
+    private List<TableColumn<PatientAppointmentsTableRecord, String>> createPatientAppointmentsTableColumns() {
+        List<TableColumn<PatientAppointmentsTableRecord, String>> columnList = IntStream
+                .range(0, 2)
                 .mapToObj(i -> createPatientAppointmentsTableColumn())
                 .collect(Collectors.toList());
-        columnList.get(0).setText("Data");
-        columnList.get(1).setText("Lekarz");
-        columnList.get(2).setText("Status");
+        columnList.get(0).setText("Data wizyty");
+        columnList.get(0).setCellValueFactory(c -> c.getValue().appointmentDate());
+        columnList.get(1).setText("Status");
+        columnList.get(1).setCellValueFactory(c -> c.getValue().appointmentStatus());
         return columnList;
     }
 
-    private void setPatientAppointmentsTableContent(TableView<AppointmentRecord> patientAppointmentsTable) {
-        List<TableColumn<AppointmentRecord, String>> columnList = createPatientAppointmentsTableColumns();
+    private void observeModelAndUpdate() {
+        model.patientAppointmentsTableTotalPages().addListener((obs, oldValue, newValue) ->
+                Platform.runLater(() -> patientAppointmentsTablePagination.setPageCount((int) newValue)));
+    }
+
+    private void delegateEventHandlers() {
+        schedulePatientAppointmentsTableUpdate();
+    }
+
+    private void schedulePatientAppointmentsTableUpdate() {
+        ScheduledService<Void> service = FXTasks.createService(() -> controller.updatePatientAppointmentsTablePageData());
+        serviceStore.addPatientService(service);
+        service.setPeriod(Duration.seconds(TABLE_REFRESH_RATE));
+        service.setOnFailed(e -> processUpdatePatientAppointmentsTableFailureResult(service.getException().getMessage()));
+        service.start();
+    }
+
+    private void setPatientAppointmentsTableColumns(TableView<PatientAppointmentsTableRecord> patientAppointmentsTable) {
+        List<TableColumn<PatientAppointmentsTableRecord, String>> columnList = createPatientAppointmentsTableColumns();
         patientAppointmentsTable.getColumns().addAll(columnList);
-    }
-
-    private void addPaginationToDoctorsTable() {
-        Pagination pagination = new Pagination((listAppointments.size() / recordsPerPage + 1), 0);
-        pagination.setPageFactory(this::createAppointmentPage);
-        patientAppointmentsPane.getChildren().add(pagination);
-        pagination.setLayoutX(50);
-        pagination.setLayoutY(50);
-    }
-
-    public Node createAppointmentPage(int pageIndex) {
-        int fromIndex = pageIndex * recordsPerPage;
-        int toIndex = Math.min(fromIndex + recordsPerPage, listAppointments.size());
-        patientAppointmentsTable.setItems(FXCollections.observableArrayList(listAppointments.subList(fromIndex, toIndex)));
-        return new BorderPane(patientAppointmentsTable);
     }
 
     void setWorkingHours(ComboBox<String> comboBoxHour) {

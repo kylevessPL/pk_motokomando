@@ -1,4 +1,4 @@
-package pl.motokomando.healthcare.model.base.utils;
+package pl.motokomando.healthcare.model.patient.utils;
 
 import javafx.beans.property.SimpleStringProperty;
 import lombok.Getter;
@@ -7,12 +7,12 @@ import lombok.experimental.Accessors;
 
 @Getter
 @RequiredArgsConstructor
-public final class BaseTableRecord {
+public final class PatientAppointmentsTableRecord {
 
     private final Integer id;
     @Accessors(fluent = true)
-    private final SimpleStringProperty firstName;
+    private final SimpleStringProperty appointmentDate;
     @Accessors(fluent = true)
-    private final SimpleStringProperty lastName;
+    private final SimpleStringProperty appointmentStatus;
 
 }

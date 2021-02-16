@@ -1,12 +1,10 @@
-package pl.motokomando.healthcare.model;
+package pl.motokomando.healthcare.model.utils;
 
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.lang.Nullable;
-import pl.motokomando.healthcare.model.utils.Token;
-import pl.motokomando.healthcare.model.utils.UserInfo;
 
 import static lombok.AccessLevel.PRIVATE;
 

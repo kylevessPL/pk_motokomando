@@ -5,7 +5,9 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import pl.motokomando.healthcare.controller.utils.GetClient;
@@ -13,18 +15,20 @@ import pl.motokomando.healthcare.controller.utils.LocalDateAdapter;
 import pl.motokomando.healthcare.controller.utils.PutClient;
 import pl.motokomando.healthcare.controller.utils.WebClient;
 import pl.motokomando.healthcare.controller.utils.WebResponseUtils;
-import pl.motokomando.healthcare.model.SessionStore;
 import pl.motokomando.healthcare.model.base.BaseModel;
 import pl.motokomando.healthcare.model.base.utils.AddDoctorDetails;
 import pl.motokomando.healthcare.model.base.utils.AddPatientDetails;
 import pl.motokomando.healthcare.model.base.utils.BasePagedResponse;
 import pl.motokomando.healthcare.model.base.utils.BaseTableRecord;
+import pl.motokomando.healthcare.model.utils.SessionStore;
 
 import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static org.apache.http.HttpStatus.SC_OK;
@@ -62,11 +66,14 @@ public class BaseController {
     public Void updateDoctorsTablePageData() throws Exception {
         int page = baseModel.getDoctorsTableCurrentPage();
         int size = baseModel.getTableCountPerPage();
-        HttpResponse response = getBaseTableDataResponse(DOCTORS, page, size);
+        HttpResponse response = getBasePagedResponse(DOCTORS, page, size);
         Map<String, String> headers = WebResponseUtils.extractPageHeaders(response);
         setDoctorsTablePageDetails(headers);
-        String responseBody = EntityUtils.toString(response.getEntity());
-        List<BaseTableRecord> tableContent = createBaseTableContent(responseBody);
+        HttpEntity responseBody = response.getEntity();
+        List<BaseTableRecord> tableContent = Collections.emptyList();
+        if (responseBody != null) {
+            tableContent = createBaseTableContent(EntityUtils.toString(responseBody));
+        }
         baseModel.setDoctorsTablePageContent(tableContent);
         return null;
     }
@@ -74,11 +81,14 @@ public class BaseController {
     public Void updatePatientsTablePageData() throws Exception {
         int page = baseModel.getPatientsTableCurrentPage();
         int size = baseModel.getTableCountPerPage();
-        HttpResponse response = getBaseTableDataResponse(PATIENTS, page, size);
+        HttpResponse response = getBasePagedResponse(PATIENTS, page, size);
         Map<String, String> headers = WebResponseUtils.extractPageHeaders(response);
         setPatientsTablePageDetails(headers);
-        String responseBody = EntityUtils.toString(response.getEntity());
-        List<BaseTableRecord> tableContent = createBaseTableContent(responseBody);
+        HttpEntity responseBody = response.getEntity();
+        List<BaseTableRecord> tableContent = Collections.emptyList();
+        if (responseBody != null) {
+            tableContent = createBaseTableContent(EntityUtils.toString(responseBody));
+        }
         baseModel.setPatientsTablePageContent(tableContent);
         return null;
     }
@@ -111,20 +121,6 @@ public class BaseController {
         }
     }
 
-    private HttpResponse getBaseTableDataResponse(String path, int page, int size) throws Exception {
-        WebClient client = GetClient.builder()
-                .path(path)
-                .parameter("page", String.valueOf(page))
-                .parameter("size", String.valueOf(size))
-                .build();
-        HttpResponse response = client.execute();
-        int statusCode = response.getStatusLine().getStatusCode();
-        if (statusCode != SC_NO_CONTENT && statusCode != SC_OK) {
-            WebResponseUtils.mapErrorResponseAsException(response);
-        }
-        return response;
-    }
-
     private void setPatientsTablePageDetails(Map<String, String> headers) {
         Integer currentPage = Integer.valueOf(headers.getOrDefault(CURRENT_PAGE, "1"));
         Integer totalPages = Integer.valueOf(headers.getOrDefault(TOTAL_PAGES, "1"));
@@ -143,7 +139,31 @@ public class BaseController {
         JsonArray jsonArray = JsonParser.parseString(responseBody).getAsJsonArray();
         Type listType = new TypeToken<ArrayList<BasePagedResponse>>(){}.getType();
         List<BasePagedResponse> recordList = new Gson().fromJson(jsonArray, listType);
-        return WebResponseUtils.mapBasePagedResponseToBaseRecord(recordList);
+        return mapBasePagedResponseToBaseRecord(recordList);
+    }
+
+    private HttpResponse getBasePagedResponse(String path, int page, int size) throws Exception {
+        WebClient client = GetClient.builder()
+                .path(path)
+                .parameter("page", String.valueOf(page))
+                .parameter("size", String.valueOf(size))
+                .build();
+        HttpResponse response = client.execute();
+        int statusCode = response.getStatusLine().getStatusCode();
+        if (statusCode != SC_NO_CONTENT && statusCode != SC_OK) {
+            WebResponseUtils.mapErrorResponseAsException(response);
+        }
+        return response;
+    }
+
+    private List<BaseTableRecord> mapBasePagedResponseToBaseRecord(List<BasePagedResponse> response) {
+        return response
+                .stream()
+                .map(e -> new BaseTableRecord(
+                        e.getId(),
+                        new SimpleStringProperty(e.getFirstName()),
+                        new SimpleStringProperty(e.getLastName())))
+                .collect(Collectors.toList());
     }
 
 }

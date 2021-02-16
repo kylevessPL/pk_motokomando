@@ -15,7 +15,7 @@ import static lombok.AccessLevel.NONE;
 
 @Getter
 @Setter
-public class BaseModel {
+public final class BaseModel {
 
     @Accessors(fluent = true)
     @Setter(NONE)

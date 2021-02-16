@@ -9,7 +9,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
-import pl.motokomando.healthcare.model.SessionStore;
+import pl.motokomando.healthcare.model.utils.SessionStore;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -40,6 +40,9 @@ public abstract class WebClient {
     protected final Map<String, String> headers;
     @Singular
     @NonNull
+    protected final Map<String, String> pathVariables;
+    @Singular
+    @NonNull
     protected final Map<String, String> parameters;
 
     abstract public HttpResponse execute() throws URISyntaxException, IOException;
@@ -51,7 +54,7 @@ public abstract class WebClient {
         URL url = builder
                 .setScheme(DEFAULT_SCHEME_NAME)
                 .setHost(HOST)
-                .setPath(path)
+                .setPath(matchPathVariablesAndGet())
                 .addParameters(parameterList)
                 .build().toURL();
         return url.toURI();
@@ -67,6 +70,14 @@ public abstract class WebClient {
                 "Bearer " + Objects.requireNonNull(sessionStore.getToken()).getAccessToken()));
         parameters.forEach((key, value) -> headerList.add(new BasicHeader(key, value)));
         return headerList.toArray(new Header[0]);
+    }
+
+    protected String matchPathVariablesAndGet() {
+        String resultPath = path;
+        for (Map.Entry<String, String> entry : pathVariables.entrySet()) {
+            resultPath = resultPath.replaceAll("\\{" + entry.getKey() + "}", entry.getValue());
+        }
+        return resultPath;
     }
 
 }

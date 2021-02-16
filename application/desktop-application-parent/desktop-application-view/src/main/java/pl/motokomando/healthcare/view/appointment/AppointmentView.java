@@ -26,9 +26,9 @@ import static javafx.scene.layout.Region.USE_PREF_SIZE;
 
 public class AppointmentView {
 
-    private final AppointmentModel appointmentModel;
-
     private AppointmentController controller;
+
+    private AppointmentModel model;
 
     private TabPane appointmentPane;
 
@@ -57,8 +57,8 @@ public class AppointmentView {
     private Button diagnosisButton;
     private TextArea diagnosisTextArea;
 
-    public AppointmentView(AppointmentModel appointmentModel) {
-        this.appointmentModel = appointmentModel;
+    public AppointmentView() {
+        initModel();
         setController();
         createPane();
         addContent();
@@ -72,8 +72,12 @@ public class AppointmentView {
         return (Stage) appointmentPane.getScene().getWindow();
     }
 
+    private void initModel() {
+        model = new AppointmentModel();
+    }
+
     private void setController() {
-        controller = new AppointmentController(appointmentModel);
+        controller = new AppointmentController(model);
     }
 
     private void createPane() {
