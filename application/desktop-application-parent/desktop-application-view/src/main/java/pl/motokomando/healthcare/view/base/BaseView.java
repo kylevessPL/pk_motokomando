@@ -941,13 +941,9 @@ public class BaseView {
                 .alertType(WARNING)
                 .alertTitle("Nie udało się pobrać niektórych danych")
                 .contentText(errorMessage)
+                .owner(currentStage())
                 .build();
-        setBaseAlertOwner(alert);
         Platform.runLater(alert::showAndWait);
-    }
-
-    private void setBaseAlertOwner(Alert alert) {
-        alert.initOwner(currentStage());
     }
 
     private TableRow<BaseTableRecord> setPatientsTableRowFactory() {
@@ -1004,8 +1000,8 @@ public class BaseView {
                 .alertType(INFORMATION)
                 .alertTitle("Operacja ukończona pomyślnie")
                 .contentText("Pomyślnie dodano nowego pacjenta")
+                .owner(currentStage())
                 .build();
-        setBaseAlertOwner(alert);
         Platform.runLater(() -> {
             addPatientValidationSupport.getRegisteredControls().forEach(FXTasks::clearControlState);
             addPatientButton.setDisable(false);
@@ -1019,8 +1015,8 @@ public class BaseView {
                 .alertType(INFORMATION)
                 .alertTitle("Operacja ukończona pomyślnie")
                 .contentText("Pomyślnie dodano nowego lekarza")
+                .owner(currentStage())
                 .build();
-        setBaseAlertOwner(alert);
         Platform.runLater(() -> {
             addDoctorValidationSupport.getRegisteredControls().forEach(FXTasks::clearControlState);
             addDoctorButton.setDisable(false);
@@ -1046,13 +1042,12 @@ public class BaseView {
     }
 
     private Alert createAddPersonFailureAlert(String errorMessage) {
-        Alert alert = FXAlert.builder()
+        return FXAlert.builder()
                     .alertType(ERROR)
                     .alertTitle("Operacja ukończona niepomyślnie")
                     .contentText(errorMessage)
+                    .owner(currentStage())
                     .build();
-        setBaseAlertOwner(alert);
-        return alert;
     }
 
     private AddDoctorDetails createAddDoctorDetails() {
@@ -1089,8 +1084,8 @@ public class BaseView {
                 .alertType(CONFIRMATION)
                 .contentText("Czy na pewno chcesz się wylogować?")
                 .alertTitle("Wyloguj się")
+                .owner(currentStage())
                 .build();
-        setBaseAlertOwner(alert);
         Platform.runLater(() -> alert.showAndWait()
                 .filter(OK::equals)
                 .ifPresent(e -> {

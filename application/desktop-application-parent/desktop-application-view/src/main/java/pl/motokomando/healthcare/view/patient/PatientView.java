@@ -436,13 +436,9 @@ public class PatientView {
                 .alertType(WARNING)
                 .alertTitle("Nie udało się pobrać niektórych danych")
                 .contentText(errorMessage)
+                .owner(currentStage())
                 .build();
-        setPatientAlertOwner(alert);
         Platform.runLater(alert::showAndWait);
-    }
-
-    private void setPatientAlertOwner(Alert alert) {
-        alert.initOwner(currentStage());
     }
 
     private TableColumn<PatientAppointmentsTableRecord, String> createPatientAppointmentsTableColumn() {
