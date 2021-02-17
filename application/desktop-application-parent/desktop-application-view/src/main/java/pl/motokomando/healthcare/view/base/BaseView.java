@@ -575,7 +575,10 @@ public class BaseView {
         choosePatientBloodTypeComboBox.setPrefHeight(40.0);
         choosePatientBloodTypeComboBox.setPrefWidth(300.0);
         choosePatientBloodTypeComboBox.setPromptText("Wybierz grupę krwi");
-        choosePatientBloodTypeComboBox.getItems().setAll(Arrays.stream(BloodType.values()).map(BloodType::getName).collect(Collectors.toList()));
+        choosePatientBloodTypeComboBox.getItems().setAll(Arrays
+                .stream(BloodType.values())
+                .map(BloodType::getName)
+                .collect(Collectors.toList()));
         addPatientPane.getChildren().add(choosePatientBloodTypeComboBox);
     }
 
@@ -586,7 +589,10 @@ public class BaseView {
         choosePatientSexComboBox.setPrefHeight(40.0);
         choosePatientSexComboBox.setPrefWidth(300.0);
         choosePatientSexComboBox.setPromptText("Wybierz płeć");
-        choosePatientSexComboBox.getItems().setAll(Arrays.stream(Sex.values()).map(Sex::getName).collect(Collectors.toList()));
+        choosePatientSexComboBox.getItems().setAll(Arrays
+                .stream(Sex.values())
+                .map(Sex::getName)
+                .collect(Collectors.toList()));
         addPatientPane.getChildren().add(choosePatientSexComboBox);
     }
 
