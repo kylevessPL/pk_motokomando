@@ -24,10 +24,12 @@ import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 import pl.motokomando.healthcare.controller.patient.PatientController;
 import pl.motokomando.healthcare.model.base.utils.BloodType;
+import pl.motokomando.healthcare.model.base.utils.PatientDetails;
 import pl.motokomando.healthcare.model.base.utils.Sex;
 import pl.motokomando.healthcare.model.patient.PatientModel;
 import pl.motokomando.healthcare.model.patient.utils.PatientAppointmentsTableRecord;
 import pl.motokomando.healthcare.model.utils.ServiceStore;
+import utils.DefaultDatePickerConverter;
 import utils.FXAlert;
 import utils.FXTasks;
 import utils.FXValidation;
@@ -42,7 +44,9 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static javafx.scene.control.Alert.AlertType.ERROR;
 import static javafx.scene.control.Alert.AlertType.WARNING;
+import static javafx.scene.control.ButtonType.OK;
 import static javafx.scene.control.TabPane.TabClosingPolicy.UNAVAILABLE;
 import static javafx.scene.layout.Region.USE_PREF_SIZE;
 import static utils.DateConstraints.PAST;
@@ -213,6 +217,7 @@ public class PatientView {
         appointmentDateDatePicker.setPrefHeight(40.0);
         appointmentDateDatePicker.setPrefWidth(300.0);
         appointmentDateDatePicker.setPromptText("Wybierz datę");
+        patientBirthDateDatePicker.setConverter(new DefaultDatePickerConverter());
         scheduleAppointmentPane.getChildren().add(appointmentDateDatePicker);
     }
 
@@ -237,6 +242,7 @@ public class PatientView {
         createPatientHouseNumberTextField();
         createUpdatePatientDetailsButton();
         createUnlockUpdatePatientDetailsButton();
+        getPatientDetails();
         patientDetailsTab.setContent(patientDetailsPane);
         patientPane.getTabs().add(patientDetailsTab);
     }
@@ -632,6 +638,42 @@ public class PatientView {
             comboBoxHour.getItems().add(workingHours.format(formatter));
             workingHours = workingHours.plusMinutes(30);
         }
+    }
+
+    private void getPatientDetails() {
+        Task<Void> task = FXTasks.createTask(() -> controller.getPatientDetails());
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
+        task.setOnSucceeded(e -> setPatientDetailsFields());
+        task.setOnFailed(e -> getPatientDetailsFailureResult(task.getException().getMessage()));
+    }
+
+    private void getPatientDetailsFailureResult(String errorMessage) {
+        Alert alert = FXAlert.builder()
+                .alertType(ERROR)
+                .alertTitle("Nie udało się pobrać danych pacjenta")
+                .contentText(errorMessage)
+                .owner(currentStage())
+                .build();
+        Platform.runLater(() -> alert.showAndWait()
+                .filter(OK::equals)
+                .ifPresent(e -> currentStage().close()));
+    }
+
+    private void setPatientDetailsFields() {
+        PatientDetails patientDetails = model.getPatientDetails();
+        patientFirstNameTextField.setText(patientDetails.getFirstName());
+        patientLastNameTextField.setText(patientDetails.getLastName());
+        patientBirthDateDatePicker.setValue(patientDetails.getBirthDate());
+        choosePatientSexComboBox.getSelectionModel().select(patientDetails.getSex().getName());
+        choosePatientBloodTypeComboBox.getSelectionModel().select(patientDetails.getBloodType().getName());
+        patientStreetNameTextField.setText(patientDetails.getStreetName());
+        patientHouseNumberTextField.setText(patientDetails.getHouseNumber());
+        patientZipCodeTextField.setText(patientDetails.getZipCode());
+        patientCityTextField.setText(patientDetails.getCity());
+        patientPeselTextField.setText(patientDetails.getPesel().toString());
+        patientPhoneNumberTextField.setText(patientDetails.getPhoneNumber());
     }
 
 }

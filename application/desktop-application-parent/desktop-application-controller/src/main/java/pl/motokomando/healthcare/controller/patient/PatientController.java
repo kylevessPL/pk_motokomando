@@ -3,6 +3,7 @@ package pl.motokomando.healthcare.controller.patient;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import javafx.beans.property.SimpleStringProperty;
@@ -11,6 +12,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import pl.motokomando.healthcare.controller.utils.GetClient;
 import pl.motokomando.healthcare.controller.utils.JsonPatchOperation;
+import pl.motokomando.healthcare.controller.utils.LocalDateAdapter;
 import pl.motokomando.healthcare.controller.utils.LocalDateTimeAdapter;
 import pl.motokomando.healthcare.controller.utils.PatchClient;
 import pl.motokomando.healthcare.controller.utils.PatchUtils;
@@ -22,6 +24,7 @@ import pl.motokomando.healthcare.model.patient.utils.PatientAppointmentsPagedRes
 import pl.motokomando.healthcare.model.patient.utils.PatientAppointmentsTableRecord;
 
 import java.lang.reflect.Type;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -48,8 +51,7 @@ public class PatientController {
 
     public Void getPatientDetails() throws Exception {
         HttpResponse response = sendGetPatientDetailsRequest();
-        PatientDetails patientDetails = createPatientDetails(EntityUtils.toString(response.getEntity()));
-        patientModel.setPatientDetails(patientDetails);
+        extractPatientDetails(EntityUtils.toString(response.getEntity()));
         return null;
     }
 
@@ -74,9 +76,25 @@ public class PatientController {
         return null;
     }
 
-    private PatientDetails createPatientDetails(String responseBody) {
-        JsonArray jsonArray = JsonParser.parseString(responseBody).getAsJsonArray();
-        return new Gson().fromJson(jsonArray, PatientDetails.class);
+    private void extractPatientDetails(String responseBody) {
+        JsonObject jsonObject = JsonParser.parseString(responseBody).getAsJsonObject();
+        setPatientRegistrationDate(jsonObject);
+        setPatientDetails(jsonObject);
+    }
+
+    private void setPatientRegistrationDate(JsonObject jsonObject) {
+        JsonObject json = jsonObject.getAsJsonObject("basicInfo");
+        String registrationDate = json.get("registrationDate").getAsString();
+        patientModel.setPatientRegistrationDate(LocalDateTime.parse(registrationDate));
+    }
+
+    private void setPatientDetails(JsonObject jsonObject) {
+        JsonObject json = jsonObject.getAsJsonObject("patientDetails");
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
+                .create();
+        PatientDetails patientDetails = gson.fromJson(json, PatientDetails.class);
+        patientModel.setPatientDetails(patientDetails);
     }
 
     private void sendUpdatePatientDetailsRequest(Map<JsonPatchOperation, Map.Entry<String, Optional<String>>> operationsMap) throws Exception {

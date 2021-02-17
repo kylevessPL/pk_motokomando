@@ -11,6 +11,7 @@ import lombok.experimental.Accessors;
 import pl.motokomando.healthcare.model.base.utils.PatientDetails;
 import pl.motokomando.healthcare.model.patient.utils.PatientAppointmentsTableRecord;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static lombok.AccessLevel.NONE;
@@ -30,6 +31,7 @@ public final class PatientModel {
     private final ObservableList<PatientAppointmentsTableRecord> patientAppointmentsTablePageContent =
             FXCollections.synchronizedObservableList(FXCollections.observableArrayList());
 
+    private LocalDateTime patientRegistrationDate;
     private PatientDetails patientDetails;
 
     private Integer patientAppointmentsTableCurrentPage = 1;
