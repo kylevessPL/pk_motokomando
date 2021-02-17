@@ -777,7 +777,7 @@ public class PatientView {
         patientPeselTextField.setText(patientDetails.getPesel().toString());
         patientPhoneNumberTextField.setText(patientDetails.getPhoneNumber());
         patientRegistrationTextField.setText(model.getPatientRegistrationDate()
-                .format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+                .format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")));
     }
 
 }
