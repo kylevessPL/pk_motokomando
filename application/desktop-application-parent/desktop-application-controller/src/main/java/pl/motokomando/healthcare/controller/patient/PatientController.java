@@ -3,6 +3,7 @@ package pl.motokomando.healthcare.controller.patient;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import javafx.beans.property.SimpleStringProperty;
@@ -10,14 +11,18 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import pl.motokomando.healthcare.controller.utils.GetClient;
+import pl.motokomando.healthcare.controller.utils.LocalDateAdapter;
 import pl.motokomando.healthcare.controller.utils.LocalDateTimeAdapter;
+import pl.motokomando.healthcare.controller.utils.PutClient;
 import pl.motokomando.healthcare.controller.utils.WebClient;
 import pl.motokomando.healthcare.controller.utils.WebResponseUtils;
+import pl.motokomando.healthcare.model.base.utils.PatientDetails;
 import pl.motokomando.healthcare.model.patient.PatientModel;
 import pl.motokomando.healthcare.model.patient.utils.PatientAppointmentsPagedResponse;
 import pl.motokomando.healthcare.model.patient.utils.PatientAppointmentsTableRecord;
 
 import java.lang.reflect.Type;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -30,13 +35,11 @@ import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static org.apache.http.HttpStatus.SC_OK;
 import static pl.motokomando.healthcare.controller.utils.ResponseHeaders.CURRENT_PAGE;
 import static pl.motokomando.healthcare.controller.utils.ResponseHeaders.TOTAL_PAGES;
+import static pl.motokomando.healthcare.controller.utils.WellKnownEndpoints.PATIENT;
+import static pl.motokomando.healthcare.controller.utils.WellKnownEndpoints.PATIENTS;
 import static pl.motokomando.healthcare.controller.utils.WellKnownEndpoints.PATIENT_APPOINTMENTS;
 
 public class PatientController {
-
-    private static final String DATE_FORMAT = "dd-MM-yyyy";
-
-    private final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
 
     private final PatientModel patientModel;
 
@@ -44,10 +47,75 @@ public class PatientController {
         this.patientModel = patientModel;
     }
 
+    public Void getPatientDetails() throws Exception {
+        HttpResponse response = sendGetPatientDetailsRequest();
+        extractPatientDetails(EntityUtils.toString(response.getEntity()));
+        return null;
+    }
+
+    public Void handleUpdatePatientDetailsButtonClicked(PatientDetails patientDetails) throws Exception {
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
+                .create();
+        JsonObject jsonObject = (JsonObject) gson.toJsonTree(patientDetails);
+        jsonObject.addProperty("id", patientModel.getPatientId());
+        String body = gson.toJson(jsonObject);
+        sendUpdatePatientDetailsRequest(body);
+        patientModel.setPatientDetails(patientDetails);
+        return null;
+    }
+
+    private HttpResponse sendGetPatientDetailsRequest() throws Exception {
+        WebClient client = GetClient.builder()
+                .path(PATIENT)
+                .pathVariable("id", String.valueOf(patientModel.getPatientId()))
+                .build();
+        HttpResponse response = client.execute();
+        int statusCode = response.getStatusLine().getStatusCode();
+        if (statusCode != SC_OK) {
+            WebResponseUtils.mapErrorResponseAsException(response);
+        }
+        return response;
+    }
+
+    private void extractPatientDetails(String responseBody) {
+        JsonObject jsonObject = JsonParser.parseString(responseBody).getAsJsonObject();
+        setPatientRegistrationDate(jsonObject);
+        setPatientDetails(jsonObject);
+    }
+
+    private void setPatientRegistrationDate(JsonObject jsonObject) {
+        JsonObject json = jsonObject.getAsJsonObject("basicInfo");
+        String registrationDate = json.get("registrationDate").getAsString();
+        patientModel.setPatientRegistrationDate(LocalDateTime.parse(registrationDate));
+    }
+
+    private void setPatientDetails(JsonObject jsonObject) {
+        JsonObject json = jsonObject.getAsJsonObject("patientDetails");
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
+                .create();
+        PatientDetails patientDetails = gson.fromJson(json, PatientDetails.class);
+        patientModel.setPatientDetails(patientDetails);
+    }
+
+    private void sendUpdatePatientDetailsRequest(String body) throws Exception {
+        WebClient client = PutClient.builder()
+                .path(PATIENTS)
+                .pathVariable("id", String.valueOf(patientModel.getPatientId()))
+                .body(body)
+                .build();
+        HttpResponse response = client.execute();
+        int statusCode = response.getStatusLine().getStatusCode();
+        if (statusCode != SC_NO_CONTENT) {
+            WebResponseUtils.mapErrorResponseAsException(response);
+        }
+    }
+
     public Void updatePatientAppointmentsTablePageData() throws Exception {
         int page = patientModel.getPatientAppointmentsTableCurrentPage();
         int size = patientModel.getTableCountPerPage();
-        HttpResponse response = getPatientAppointmentsPagedResponse(page, size);
+        HttpResponse response = sendGetPatientAppointmentsPagedRequest(page, size);
         Map<String, String> headers = WebResponseUtils.extractPageHeaders(response);
         setPatientAppointmentsTablePageDetails(headers);
         HttpEntity responseBody = response.getEntity();
@@ -80,7 +148,7 @@ public class PatientController {
         return mapPatientAppointmentsPagedResponseToBaseRecord(recordList);
     }
 
-    private HttpResponse getPatientAppointmentsPagedResponse(int page, int size) throws Exception {
+    private HttpResponse sendGetPatientAppointmentsPagedRequest(int page, int size) throws Exception {
         WebClient client = GetClient.builder()
                 .path(PATIENT_APPOINTMENTS)
                 .pathVariable("id", String.valueOf(patientModel.getPatientId()))
@@ -96,6 +164,7 @@ public class PatientController {
     }
 
     private List<PatientAppointmentsTableRecord> mapPatientAppointmentsPagedResponseToBaseRecord(List<PatientAppointmentsPagedResponse> response) {
+        final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         return response
                 .stream()
                 .map(e -> new PatientAppointmentsTableRecord(

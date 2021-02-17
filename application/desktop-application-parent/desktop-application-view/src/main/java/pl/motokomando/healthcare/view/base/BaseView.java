@@ -23,7 +23,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -34,11 +33,11 @@ import org.controlsfx.validation.Validator;
 import pl.motokomando.healthcare.controller.base.BaseController;
 import pl.motokomando.healthcare.model.base.BaseModel;
 import pl.motokomando.healthcare.model.base.utils.AcademicTitle;
-import pl.motokomando.healthcare.model.base.utils.AddDoctorDetails;
-import pl.motokomando.healthcare.model.base.utils.AddPatientDetails;
 import pl.motokomando.healthcare.model.base.utils.BaseTableRecord;
 import pl.motokomando.healthcare.model.base.utils.BloodType;
+import pl.motokomando.healthcare.model.base.utils.DoctorDetails;
 import pl.motokomando.healthcare.model.base.utils.MedicalSpecialty;
+import pl.motokomando.healthcare.model.base.utils.PatientDetails;
 import pl.motokomando.healthcare.model.base.utils.Sex;
 import pl.motokomando.healthcare.model.utils.ServiceStore;
 import pl.motokomando.healthcare.model.utils.SessionStore;
@@ -211,7 +210,6 @@ public class BaseView {
         userFirstNameLabel.setText("Imię");
         userFirstNameLabel.setLayoutX(650);
         userFirstNameLabel.setLayoutY(70);
-        userFirstNameLabel.setFont(new Font(16.0));
         userInfoPane.getChildren().add(userFirstNameLabel);
     }
 
@@ -220,7 +218,6 @@ public class BaseView {
         userLastNameLabel.setText("Nazwisko");
         userLastNameLabel.setLayoutX(650);
         userLastNameLabel.setLayoutY(170);
-        userLastNameLabel.setFont(new Font(16.0));
         userInfoPane.getChildren().add(userLastNameLabel);
     }
 
@@ -229,7 +226,6 @@ public class BaseView {
         userUsernameLabel.setText("Nazwa użytkownika");
         userUsernameLabel.setLayoutX(650);
         userUsernameLabel.setLayoutY(270);
-        userUsernameLabel.setFont(new Font(16.0));
         userInfoPane.getChildren().add(userUsernameLabel);
     }
 
@@ -238,7 +234,6 @@ public class BaseView {
         userEmailLabel.setText("Email");
         userEmailLabel.setLayoutX(650);
         userEmailLabel.setLayoutY(370);
-        userEmailLabel.setFont(new Font(16.0));
         userInfoPane.getChildren().add(userEmailLabel);
     }
 
@@ -250,7 +245,6 @@ public class BaseView {
         userFirstNameTextField.setLayoutY(100);
         userFirstNameTextField.setPrefWidth(300);
         userFirstNameTextField.setPrefHeight(40);
-        userFirstNameTextField.setFont(new Font(16.0));
         userFirstNameTextField.setStyle("-fx-opacity: 1.0;");
         userInfoPane.getChildren().add(userFirstNameTextField);
     }
@@ -263,7 +257,6 @@ public class BaseView {
         userLastNameTextField.setLayoutY(200);
         userLastNameTextField.setPrefWidth(300);
         userLastNameTextField.setPrefHeight(40);
-        userLastNameTextField.setFont(new Font(16.0));
         userLastNameTextField.setStyle("-fx-opacity: 1.0;");
         userInfoPane.getChildren().add(userLastNameTextField);
     }
@@ -276,7 +269,6 @@ public class BaseView {
         userUsernameTextField.setLayoutY(300);
         userUsernameTextField.setPrefWidth(300);
         userUsernameTextField.setPrefHeight(40);
-        userUsernameTextField.setFont(new Font(16.0));
         userUsernameTextField.setStyle("-fx-opacity: 1.0;");
         userInfoPane.getChildren().add(userUsernameTextField);
     }
@@ -289,7 +281,6 @@ public class BaseView {
         userEmailTextField.setLayoutY(400);
         userEmailTextField.setPrefWidth(300);
         userEmailTextField.setPrefHeight(40);
-        userEmailTextField.setFont(new Font(16.0));
         userEmailTextField.setStyle("-fx-opacity: 1.0;");
         userInfoPane.getChildren().add(userEmailTextField);
     }
@@ -299,7 +290,6 @@ public class BaseView {
         logoutButton.setText("Wyloguj się");
         logoutButton.setLayoutX(760);
         logoutButton.setLayoutY(550);
-        logoutButton.setFont(new Font(16.0));
         userInfoPane.getChildren().add(logoutButton);
     }
 
@@ -337,7 +327,6 @@ public class BaseView {
         doctorAcademicTitleLabel.setLayoutX(650.0);
         doctorAcademicTitleLabel.setLayoutY(460.0);
         doctorAcademicTitleLabel.setText("Tytuł naukowy:");
-        doctorAcademicTitleLabel.setFont(new Font(16.0));
         addDoctorPane.getChildren().add(doctorAcademicTitleLabel);
     }
 
@@ -346,7 +335,6 @@ public class BaseView {
         doctorSpecialtyLabel.setLayoutX(650.0);
         doctorSpecialtyLabel.setLayoutY(340.0);
         doctorSpecialtyLabel.setText("Specjalizacja:");
-        doctorSpecialtyLabel.setFont(new Font(16.0));
         addDoctorPane.getChildren().add(doctorSpecialtyLabel);
     }
 
@@ -386,7 +374,6 @@ public class BaseView {
         doctorPhoneNumberTextField.setPrefHeight(40.0);
         doctorPhoneNumberTextField.setPrefWidth(300.0);
         doctorPhoneNumberTextField.setPromptText("Numer telefonu");
-        doctorPhoneNumberTextField.setFont(new Font(16.0));
         addDoctorPane.getChildren().add(doctorPhoneNumberTextField);
     }
 
@@ -397,7 +384,6 @@ public class BaseView {
         doctorLastNameTextField.setPrefHeight(40.0);
         doctorLastNameTextField.setPrefWidth(300.0);
         doctorLastNameTextField.setPromptText("Nazwisko");
-        doctorLastNameTextField.setFont(new Font(16.0));
         addDoctorPane.getChildren().add(doctorLastNameTextField);
     }
 
@@ -407,7 +393,6 @@ public class BaseView {
         addDoctorButton.setLayoutY(590.0);
         addDoctorButton.setMnemonicParsing(false);
         addDoctorButton.setText("Dodaj lekarza");
-        addDoctorButton.setFont(new Font(16.0));
         addDoctorButton.setDisable(true);
         addDoctorPane.getChildren().add(addDoctorButton);
     }
@@ -419,7 +404,6 @@ public class BaseView {
         doctorFirstNameTextField.setPrefHeight(40.0);
         doctorFirstNameTextField.setPrefWidth(300.0);
         doctorFirstNameTextField.setPromptText("Imie");
-        doctorFirstNameTextField.setFont(new Font(16.0));
         addDoctorPane.getChildren().add(doctorFirstNameTextField);
     }
 
@@ -476,7 +460,6 @@ public class BaseView {
         patientBloodTypeLabel.setLayoutX(350.0);
         patientBloodTypeLabel.setLayoutY(340.0);
         patientBloodTypeLabel.setText("Grupa krwi:");
-        patientBloodTypeLabel.setFont(new Font(16.0));
         addPatientPane.getChildren().add(patientBloodTypeLabel);
     }
 
@@ -485,7 +468,6 @@ public class BaseView {
         patientSexLabel.setLayoutX(350.0);
         patientSexLabel.setLayoutY(260.0);
         patientSexLabel.setText("Płeć:");
-        patientSexLabel.setFont(new Font(16.0));
         addPatientPane.getChildren().add(patientSexLabel);
     }
 
@@ -497,7 +479,6 @@ public class BaseView {
         addPatientButton.setPrefHeight(45.0);
         addPatientButton.setPrefWidth(200.0);
         addPatientButton.setText("Dodaj pacjenta");
-        addPatientButton.setFont(new Font(16.0));
         addPatientButton.setDisable(true);
         addPatientPane.getChildren().add(addPatientButton);
     }
@@ -509,7 +490,6 @@ public class BaseView {
         patientPhoneNumberTextField.setPrefHeight(40.0);
         patientPhoneNumberTextField.setPrefWidth(300.0);
         patientPhoneNumberTextField.setPromptText("Numer Telefonu");
-        patientPhoneNumberTextField.setFont(new Font(16.0));
         addPatientPane.getChildren().add(patientPhoneNumberTextField);
     }
 
@@ -520,7 +500,6 @@ public class BaseView {
         patientPeselTextField.setPrefHeight(40.0);
         patientPeselTextField.setPrefWidth(300.0);
         patientPeselTextField.setPromptText("PESEL");
-        patientPeselTextField.setFont(new Font(16.0));
         addPatientPane.getChildren().add(patientPeselTextField);
     }
 
@@ -531,7 +510,6 @@ public class BaseView {
         patientCityTextField.setPrefHeight(40.0);
         patientCityTextField.setPrefWidth(300.0);
         patientCityTextField.setPromptText("Miejscowość");
-        patientCityTextField.setFont(new Font(16.0));
         addPatientPane.getChildren().add(patientCityTextField);
     }
 
@@ -542,7 +520,6 @@ public class BaseView {
         patientZipCodeTextField.setPrefHeight(40.0);
         patientZipCodeTextField.setPrefWidth(300.0);
         patientZipCodeTextField.setPromptText("Kod pocztowy");
-        patientZipCodeTextField.setFont(new Font(16.0));
         addPatientPane.getChildren().add(patientZipCodeTextField);
     }
 
@@ -553,7 +530,6 @@ public class BaseView {
         patientHouseNumberTextField.setPrefHeight(40.0);
         patientHouseNumberTextField.setPrefWidth(300.0);
         patientHouseNumberTextField.setPromptText("Numer domu");
-        patientHouseNumberTextField.setFont(new Font(16.0));
         addPatientPane.getChildren().add(patientHouseNumberTextField);
     }
 
@@ -564,7 +540,6 @@ public class BaseView {
         patientStreetNameTextField.setPrefHeight(40.0);
         patientStreetNameTextField.setPrefWidth(300.0);
         patientStreetNameTextField.setPromptText("Ulica");
-        patientStreetNameTextField.setFont(new Font(16.0));
         addPatientPane.getChildren().add(patientStreetNameTextField);
     }
 
@@ -575,7 +550,10 @@ public class BaseView {
         choosePatientBloodTypeComboBox.setPrefHeight(40.0);
         choosePatientBloodTypeComboBox.setPrefWidth(300.0);
         choosePatientBloodTypeComboBox.setPromptText("Wybierz grupę krwi");
-        choosePatientBloodTypeComboBox.getItems().setAll(Arrays.stream(BloodType.values()).map(BloodType::getName).collect(Collectors.toList()));
+        choosePatientBloodTypeComboBox.getItems().setAll(Arrays
+                .stream(BloodType.values())
+                .map(BloodType::getName)
+                .collect(Collectors.toList()));
         addPatientPane.getChildren().add(choosePatientBloodTypeComboBox);
     }
 
@@ -586,7 +564,10 @@ public class BaseView {
         choosePatientSexComboBox.setPrefHeight(40.0);
         choosePatientSexComboBox.setPrefWidth(300.0);
         choosePatientSexComboBox.setPromptText("Wybierz płeć");
-        choosePatientSexComboBox.getItems().setAll(Arrays.stream(Sex.values()).map(Sex::getName).collect(Collectors.toList()));
+        choosePatientSexComboBox.getItems().setAll(Arrays
+                .stream(Sex.values())
+                .map(Sex::getName)
+                .collect(Collectors.toList()));
         addPatientPane.getChildren().add(choosePatientSexComboBox);
     }
 
@@ -608,7 +589,6 @@ public class BaseView {
         patientLastNameTextField.setPrefHeight(40.0);
         patientLastNameTextField.setPrefWidth(300.0);
         patientLastNameTextField.setPromptText("Nazwisko");
-        patientLastNameTextField.setFont(new Font(16.0));
         addPatientPane.getChildren().add(patientLastNameTextField);
     }
 
@@ -619,7 +599,6 @@ public class BaseView {
         patientFirstNameTextField.setPrefHeight(40.0);
         patientFirstNameTextField.setPrefWidth(300.0);
         patientFirstNameTextField.setPromptText("Imie");
-        patientFirstNameTextField.setFont(new Font(16.0));
         addPatientPane.getChildren().add(patientFirstNameTextField);
     }
 
@@ -941,13 +920,9 @@ public class BaseView {
                 .alertType(WARNING)
                 .alertTitle("Nie udało się pobrać niektórych danych")
                 .contentText(errorMessage)
+                .owner(currentStage())
                 .build();
-        setBaseAlertOwner(alert);
         Platform.runLater(alert::showAndWait);
-    }
-
-    private void setBaseAlertOwner(Alert alert) {
-        alert.initOwner(currentStage());
     }
 
     private TableRow<BaseTableRecord> setPatientsTableRowFactory() {
@@ -963,7 +938,7 @@ public class BaseView {
 
     private void addDoctor() {
         Platform.runLater(() -> addDoctorButton.setDisable(true));
-        AddDoctorDetails doctorDetails = createAddDoctorDetails();
+        DoctorDetails doctorDetails = createDoctorDetails();
         Task<Void> task = FXTasks.createTask(() -> controller.handleAddDoctorButtonClicked(doctorDetails));
         Thread thread = new Thread(task);
         thread.setDaemon(true);
@@ -974,7 +949,7 @@ public class BaseView {
 
     private void addPatient() {
         Platform.runLater(() -> addPatientButton.setDisable(true));
-        AddPatientDetails patientDetails = createAddPatientDetails();
+        PatientDetails patientDetails = createAddPatientDetails();
         Task<Void> task = FXTasks.createTask(() -> controller.handleAddPatientButtonClicked(patientDetails));
         Thread thread = new Thread(task);
         thread.setDaemon(true);
@@ -1004,8 +979,8 @@ public class BaseView {
                 .alertType(INFORMATION)
                 .alertTitle("Operacja ukończona pomyślnie")
                 .contentText("Pomyślnie dodano nowego pacjenta")
+                .owner(currentStage())
                 .build();
-        setBaseAlertOwner(alert);
         Platform.runLater(() -> {
             addPatientValidationSupport.getRegisteredControls().forEach(FXTasks::clearControlState);
             addPatientButton.setDisable(false);
@@ -1019,8 +994,8 @@ public class BaseView {
                 .alertType(INFORMATION)
                 .alertTitle("Operacja ukończona pomyślnie")
                 .contentText("Pomyślnie dodano nowego lekarza")
+                .owner(currentStage())
                 .build();
-        setBaseAlertOwner(alert);
         Platform.runLater(() -> {
             addDoctorValidationSupport.getRegisteredControls().forEach(FXTasks::clearControlState);
             addDoctorButton.setDisable(false);
@@ -1046,16 +1021,15 @@ public class BaseView {
     }
 
     private Alert createAddPersonFailureAlert(String errorMessage) {
-        Alert alert = FXAlert.builder()
+        return FXAlert.builder()
                     .alertType(ERROR)
                     .alertTitle("Operacja ukończona niepomyślnie")
                     .contentText(errorMessage)
+                    .owner(currentStage())
                     .build();
-        setBaseAlertOwner(alert);
-        return alert;
     }
 
-    private AddDoctorDetails createAddDoctorDetails() {
+    private DoctorDetails createDoctorDetails() {
         String firstName = doctorFirstNameTextField.getText();
         String lastName = doctorLastNameTextField.getText();
         AcademicTitle academicTitle = AcademicTitle.findByName(
@@ -1065,10 +1039,10 @@ public class BaseView {
                 .map(MedicalSpecialty::findByName)
                 .collect(Collectors.toList());
         String phoneNumber = doctorPhoneNumberTextField.getText();
-        return new AddDoctorDetails(firstName, lastName, academicTitle, specialties, phoneNumber);
+        return new DoctorDetails(firstName, lastName, academicTitle, specialties, phoneNumber);
     }
 
-    private AddPatientDetails createAddPatientDetails() {
+    private PatientDetails createAddPatientDetails() {
         String firstName = patientFirstNameTextField.getText();
         String lastName = patientLastNameTextField.getText();
         LocalDate birthDate = patientBirthDateDatePicker.getValue();
@@ -1080,7 +1054,7 @@ public class BaseView {
         String city = patientCityTextField.getText();
         BigDecimal pesel = new BigDecimal(patientPeselTextField.getText());
         String phoneNumber = patientPhoneNumberTextField.getText();
-        return new AddPatientDetails(firstName, lastName, birthDate, sex, bloodType,
+        return new PatientDetails(firstName, lastName, birthDate, sex, bloodType,
                 streetName, houseNumber, zipCode, city, pesel, phoneNumber);
     }
 
@@ -1089,8 +1063,8 @@ public class BaseView {
                 .alertType(CONFIRMATION)
                 .contentText("Czy na pewno chcesz się wylogować?")
                 .alertTitle("Wyloguj się")
+                .owner(currentStage())
                 .build();
-        setBaseAlertOwner(alert);
         Platform.runLater(() -> alert.showAndWait()
                 .filter(OK::equals)
                 .ifPresent(e -> {

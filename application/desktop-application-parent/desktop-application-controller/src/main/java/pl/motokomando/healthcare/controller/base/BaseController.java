@@ -16,10 +16,10 @@ import pl.motokomando.healthcare.controller.utils.PutClient;
 import pl.motokomando.healthcare.controller.utils.WebClient;
 import pl.motokomando.healthcare.controller.utils.WebResponseUtils;
 import pl.motokomando.healthcare.model.base.BaseModel;
-import pl.motokomando.healthcare.model.base.utils.AddDoctorDetails;
-import pl.motokomando.healthcare.model.base.utils.AddPatientDetails;
 import pl.motokomando.healthcare.model.base.utils.BasePagedResponse;
 import pl.motokomando.healthcare.model.base.utils.BaseTableRecord;
+import pl.motokomando.healthcare.model.base.utils.DoctorDetails;
+import pl.motokomando.healthcare.model.base.utils.PatientDetails;
 import pl.motokomando.healthcare.model.utils.SessionStore;
 
 import java.lang.reflect.Type;
@@ -47,14 +47,14 @@ public class BaseController {
         this.baseModel = baseModel;
     }
 
-    public Void handleAddDoctorButtonClicked(AddDoctorDetails doctorDetails) throws Exception {
+    public Void handleAddDoctorButtonClicked(DoctorDetails doctorDetails) throws Exception {
         Gson gson = new Gson();
         String body = gson.toJson(doctorDetails);
         sendAddPersonRequest(DOCTORS, body);
         return null;
     }
 
-    public Void handleAddPatientButtonClicked(AddPatientDetails patientDetails) throws Exception {
+    public Void handleAddPatientButtonClicked(PatientDetails patientDetails) throws Exception {
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
                 .create();
@@ -66,7 +66,7 @@ public class BaseController {
     public Void updateDoctorsTablePageData() throws Exception {
         int page = baseModel.getDoctorsTableCurrentPage();
         int size = baseModel.getTableCountPerPage();
-        HttpResponse response = getBasePagedResponse(DOCTORS, page, size);
+        HttpResponse response = sendGetBasePagedRequest(DOCTORS, page, size);
         Map<String, String> headers = WebResponseUtils.extractPageHeaders(response);
         setDoctorsTablePageDetails(headers);
         HttpEntity responseBody = response.getEntity();
@@ -81,7 +81,7 @@ public class BaseController {
     public Void updatePatientsTablePageData() throws Exception {
         int page = baseModel.getPatientsTableCurrentPage();
         int size = baseModel.getTableCountPerPage();
-        HttpResponse response = getBasePagedResponse(PATIENTS, page, size);
+        HttpResponse response = sendGetBasePagedRequest(PATIENTS, page, size);
         Map<String, String> headers = WebResponseUtils.extractPageHeaders(response);
         setPatientsTablePageDetails(headers);
         HttpEntity responseBody = response.getEntity();
@@ -142,7 +142,7 @@ public class BaseController {
         return mapBasePagedResponseToBaseRecord(recordList);
     }
 
-    private HttpResponse getBasePagedResponse(String path, int page, int size) throws Exception {
+    private HttpResponse sendGetBasePagedRequest(String path, int page, int size) throws Exception {
         WebClient client = GetClient.builder()
                 .path(path)
                 .parameter("page", String.valueOf(page))

@@ -2,6 +2,7 @@ package utils;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.stage.Window;
 import lombok.Builder;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -14,11 +15,12 @@ public final class FXAlert {
     private static final String WARNING_HEADER = "Ostrzeżenie";
 
     @Builder
-    public static Alert createAlert(AlertType alertType, String contentText, String alertTitle) {
+    public static Alert createAlert(AlertType alertType, String contentText, String alertTitle, Window owner) {
         Alert alert = new Alert(alertType, contentText);
         alert.setTitle(alertTitle);
         alert.setHeaderText(getHeader(alertType));
         alert.getDialogPane().setPrefWidth(500);
+        alert.initOwner(owner);
         return alert;
     }
 

@@ -108,7 +108,7 @@ public class AuthenticationView {
         divider.setLayoutX(190);
         divider.setLayoutY(260);
         divider.setPrefWidth(300);
-        divider.setText(StringUtils.repeat(".", 112));
+        divider.setText(StringUtils.repeat(".", 114));
         authenticationPane.getChildren().add(divider);
         authenticationPane.getChildren().add(authenticationStatusLabel);
     }

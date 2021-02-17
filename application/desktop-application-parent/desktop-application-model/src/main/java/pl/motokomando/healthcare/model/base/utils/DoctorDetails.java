@@ -8,7 +8,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Getter
-public final class AddDoctorDetails implements Serializable {
+public final class DoctorDetails implements Serializable {
 
     private final String firstName;
     private final String lastName;
