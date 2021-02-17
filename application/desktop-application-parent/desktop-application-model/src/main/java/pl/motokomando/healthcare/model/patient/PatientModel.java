@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import pl.motokomando.healthcare.model.base.utils.PatientDetails;
 import pl.motokomando.healthcare.model.patient.utils.PatientAppointmentsTableRecord;
 
 import java.util.List;
@@ -28,6 +29,8 @@ public final class PatientModel {
     @Setter(NONE)
     private final ObservableList<PatientAppointmentsTableRecord> patientAppointmentsTablePageContent =
             FXCollections.synchronizedObservableList(FXCollections.observableArrayList());
+
+    private PatientDetails patientDetails;
 
     private Integer patientAppointmentsTableCurrentPage = 1;
     private Integer tableCountPerPage = 19;

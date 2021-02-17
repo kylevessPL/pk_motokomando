@@ -9,7 +9,7 @@ import java.time.LocalDate;
 
 @RequiredArgsConstructor
 @Getter
-public final class AddPatientDetails implements Serializable {
+public final class PatientDetails implements Serializable {
 
     private final String firstName;
     private final String lastName;
