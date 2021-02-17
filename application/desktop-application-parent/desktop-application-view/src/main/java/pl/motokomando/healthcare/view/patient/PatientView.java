@@ -77,9 +77,11 @@ public class PatientView {
     private Label patientSexLabel;
     private ComboBox<String> choosePatientBloodTypeComboBox;
     private Label patientBloodTypeLabel;
+    private Label patientRegistrationDateLabel;
     private DatePicker patientBirthDateDatePicker;
     private TextField patientHouseNumberTextField;
     private TextField patientPeselTextField;
+    private TextField patientRegistrationTextField;
     private Button unlockUpdatePatientDetailsButton;
     private Tab patientAppointmentsTab;
     private AnchorPane patientAppointmentsPane;
@@ -240,6 +242,8 @@ public class PatientView {
         createPatientBloodTypeLabel();
         createPatientBirthDateDatePicker();
         createPatientHouseNumberTextField();
+        createPatientRegistrationInfoTextField();
+        createPatientRegistrationDateLabel();
         createUpdatePatientDetailsButton();
         createUnlockUpdatePatientDetailsButton();
         getPatientDetails();
@@ -289,15 +293,23 @@ public class PatientView {
     private void createPatientBloodTypeLabel() {
         patientBloodTypeLabel = new Label();
         patientBloodTypeLabel.setLayoutX(650.0);
-        patientBloodTypeLabel.setLayoutY(280.0);
+        patientBloodTypeLabel.setLayoutY(200.0);
         patientBloodTypeLabel.setText("Grupa krwi");
         patientDetailsPane.getChildren().add(patientBloodTypeLabel);
+    }
+
+    private void createPatientRegistrationDateLabel() {
+        patientRegistrationDateLabel = new Label();
+        patientRegistrationDateLabel.setLayoutX(650.0);
+        patientRegistrationDateLabel.setLayoutY(280.0);
+        patientRegistrationDateLabel.setText("Data rejestracji");
+        patientDetailsPane.getChildren().add(patientRegistrationDateLabel);
     }
 
     private void createChoosePatientBloodTypeComboBox() {
         choosePatientBloodTypeComboBox = new ComboBox<>();
         choosePatientBloodTypeComboBox.setLayoutX(650.0);
-        choosePatientBloodTypeComboBox.setLayoutY(300.0);
+        choosePatientBloodTypeComboBox.setLayoutY(220.0);
         choosePatientBloodTypeComboBox.setPrefHeight(30.0);
         choosePatientBloodTypeComboBox.setPrefWidth(200.0);
         choosePatientBloodTypeComboBox.setPromptText("Wybierz grupę krwi");
@@ -373,11 +385,23 @@ public class PatientView {
     private void createPatientPeselTextField() {
         patientPeselTextField = new TextField();
         patientPeselTextField.setLayoutX(650.0);
-        patientPeselTextField.setLayoutY(220.0);
+        patientPeselTextField.setLayoutY(140.0);
         patientPeselTextField.setPrefHeight(30.0);
         patientPeselTextField.setPrefWidth(200.0);
         patientPeselTextField.setPromptText("PESEL");
         patientDetailsPane.getChildren().add(patientPeselTextField);
+    }
+
+    private void createPatientRegistrationInfoTextField() {
+        patientRegistrationTextField = new TextField();
+        patientRegistrationTextField.setDisable(true);
+        patientRegistrationTextField.setEditable(false);
+        patientRegistrationTextField.setLayoutX(650.0);
+        patientRegistrationTextField.setLayoutY(300.0);
+        patientRegistrationTextField.setPrefHeight(30.0);
+        patientRegistrationTextField.setPrefWidth(200.0);
+        patientRegistrationTextField.setStyle("-fx-opacity: 1.0;");
+        patientDetailsPane.getChildren().add(patientRegistrationTextField);
     }
 
     private void createPatientPhoneNumberTextField() {
@@ -674,6 +698,8 @@ public class PatientView {
         patientCityTextField.setText(patientDetails.getCity());
         patientPeselTextField.setText(patientDetails.getPesel().toString());
         patientPhoneNumberTextField.setText(patientDetails.getPhoneNumber());
+        patientRegistrationTextField.setText(model.getPatientRegistrationDate()
+                .format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
     }
 
 }
