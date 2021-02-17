@@ -11,11 +11,9 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import pl.motokomando.healthcare.controller.utils.GetClient;
-import pl.motokomando.healthcare.controller.utils.JsonPatchOperation;
 import pl.motokomando.healthcare.controller.utils.LocalDateAdapter;
 import pl.motokomando.healthcare.controller.utils.LocalDateTimeAdapter;
-import pl.motokomando.healthcare.controller.utils.PatchClient;
-import pl.motokomando.healthcare.controller.utils.PatchUtils;
+import pl.motokomando.healthcare.controller.utils.PutClient;
 import pl.motokomando.healthcare.controller.utils.WebClient;
 import pl.motokomando.healthcare.controller.utils.WebResponseUtils;
 import pl.motokomando.healthcare.model.base.utils.PatientDetails;
@@ -31,7 +29,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
@@ -39,6 +36,7 @@ import static org.apache.http.HttpStatus.SC_OK;
 import static pl.motokomando.healthcare.controller.utils.ResponseHeaders.CURRENT_PAGE;
 import static pl.motokomando.healthcare.controller.utils.ResponseHeaders.TOTAL_PAGES;
 import static pl.motokomando.healthcare.controller.utils.WellKnownEndpoints.PATIENT;
+import static pl.motokomando.healthcare.controller.utils.WellKnownEndpoints.PATIENTS;
 import static pl.motokomando.healthcare.controller.utils.WellKnownEndpoints.PATIENT_APPOINTMENTS;
 
 public class PatientController {
@@ -55,6 +53,18 @@ public class PatientController {
         return null;
     }
 
+    public Void handleUpdatePatientDetailsButtonClicked(PatientDetails patientDetails) throws Exception {
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
+                .create();
+        JsonObject jsonObject = (JsonObject) gson.toJsonTree(patientDetails);
+        jsonObject.addProperty("id", patientModel.getPatientId());
+        String body = gson.toJson(jsonObject);
+        sendUpdatePatientDetailsRequest(body);
+        patientModel.setPatientDetails(patientDetails);
+        return null;
+    }
+
     private HttpResponse sendGetPatientDetailsRequest() throws Exception {
         WebClient client = GetClient.builder()
                 .path(PATIENT)
@@ -66,14 +76,6 @@ public class PatientController {
             WebResponseUtils.mapErrorResponseAsException(response);
         }
         return response;
-    }
-
-    public Void handleUpdatePatientDetailsButtonClicked(PatientDetails patientDetails) throws Exception {
-        Map<JsonPatchOperation, Map.Entry<String, Optional<String>>> operationsMap =
-                PatchUtils.createAddOperationsMap(patientModel.getPatientDetails(), patientDetails);
-        sendUpdatePatientDetailsRequest(operationsMap);
-        patientModel.setPatientDetails(patientDetails);
-        return null;
     }
 
     private void extractPatientDetails(String responseBody) {
@@ -97,11 +99,11 @@ public class PatientController {
         patientModel.setPatientDetails(patientDetails);
     }
 
-    private void sendUpdatePatientDetailsRequest(Map<JsonPatchOperation, Map.Entry<String, Optional<String>>> operationsMap) throws Exception {
-        WebClient client = PatchClient.builder()
-                .path(PATIENT)
+    private void sendUpdatePatientDetailsRequest(String body) throws Exception {
+        WebClient client = PutClient.builder()
+                .path(PATIENTS)
                 .pathVariable("id", String.valueOf(patientModel.getPatientId()))
-                .operations(operationsMap)
+                .body(body)
                 .build();
         HttpResponse response = client.execute();
         int statusCode = response.getStatusLine().getStatusCode();

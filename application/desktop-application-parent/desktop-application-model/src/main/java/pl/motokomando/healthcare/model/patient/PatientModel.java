@@ -2,6 +2,7 @@ package pl.motokomando.healthcare.model.patient;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import lombok.Getter;
@@ -25,6 +26,9 @@ public final class PatientModel {
 
     @Accessors(fluent = true)
     @Setter(NONE)
+    private final SimpleObjectProperty<PatientDetails> patientDetails = new SimpleObjectProperty<>();
+    @Accessors(fluent = true)
+    @Setter(NONE)
     private final IntegerProperty patientAppointmentsTableTotalPages = new SimpleIntegerProperty(1);
     @Accessors(fluent = true)
     @Setter(NONE)
@@ -32,11 +36,17 @@ public final class PatientModel {
             FXCollections.synchronizedObservableList(FXCollections.observableArrayList());
 
     private LocalDateTime patientRegistrationDate;
-    private PatientDetails patientDetails;
 
     private Integer patientAppointmentsTableCurrentPage = 1;
     private Integer tableCountPerPage = 19;
 
+    public PatientDetails getPatientDetails() {
+        return patientDetails.get();
+    }
+
+    public void setPatientDetails(PatientDetails patientDetails) {
+        this.patientDetails.set(patientDetails);
+    }
 
     public void setPatientAppointmentsTableTotalPages(Integer value) {
         patientAppointmentsTableTotalPages.set(value);

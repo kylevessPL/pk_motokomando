@@ -938,7 +938,7 @@ public class BaseView {
 
     private void addDoctor() {
         Platform.runLater(() -> addDoctorButton.setDisable(true));
-        DoctorDetails doctorDetails = createAddDoctorDetails();
+        DoctorDetails doctorDetails = createDoctorDetails();
         Task<Void> task = FXTasks.createTask(() -> controller.handleAddDoctorButtonClicked(doctorDetails));
         Thread thread = new Thread(task);
         thread.setDaemon(true);
@@ -1029,7 +1029,7 @@ public class BaseView {
                     .build();
     }
 
-    private DoctorDetails createAddDoctorDetails() {
+    private DoctorDetails createDoctorDetails() {
         String firstName = doctorFirstNameTextField.getText();
         String lastName = doctorLastNameTextField.getText();
         AcademicTitle academicTitle = AcademicTitle.findByName(

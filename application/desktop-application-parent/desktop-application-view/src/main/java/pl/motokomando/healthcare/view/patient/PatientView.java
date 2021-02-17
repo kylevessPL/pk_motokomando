@@ -20,6 +20,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import lombok.SneakyThrows;
 import org.controlsfx.validation.ValidationSupport;
 import org.controlsfx.validation.Validator;
 import pl.motokomando.healthcare.controller.patient.PatientController;
@@ -35,16 +36,21 @@ import utils.FXTasks;
 import utils.FXValidation;
 import utils.TextFieldLimiter;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
 import static javafx.scene.control.Alert.AlertType.ERROR;
+import static javafx.scene.control.Alert.AlertType.INFORMATION;
 import static javafx.scene.control.Alert.AlertType.WARNING;
 import static javafx.scene.control.ButtonType.OK;
 import static javafx.scene.control.TabPane.TabClosingPolicy.UNAVAILABLE;
@@ -606,6 +612,7 @@ public class PatientView {
     }
 
     private void observeModelAndUpdate() {
+        model.patientDetails().addListener((obs, oldValue, newValue) -> Platform.runLater(this::setPatientDetailsFields));
         model.patientAppointmentsTableTotalPages().addListener((obs, oldValue, newValue) ->
                 Platform.runLater(() -> patientAppointmentsTablePagination.setPageCount((int) newValue)));
     }
@@ -613,10 +620,11 @@ public class PatientView {
     private void delegateEventHandlers() {
         schedulePatientAppointmentsTableUpdate();
         setTextFieldsLimit();
-        updatePatientDetailsValidationSupport.invalidProperty().addListener((obs, wasInvalid, isNowInvalid) ->
+        updatePatientDetailsValidationSupport.validationResultProperty().addListener((obs, oldValue, newValue) ->
                 Platform.runLater(this::switchUpdatePatientDetailsButtonState));
         unlockUpdatePatientDetailsButton.setOnMouseClicked(e ->
                 Platform.runLater(this::switchUnlockUpdatePatientDetailsButtonsState));
+        updatePatientDetailsButton.setOnMouseClicked(e -> updatePatientDetails());
     }
 
     private void setTextFieldsLimit() {
@@ -631,6 +639,7 @@ public class PatientView {
     }
 
     private void switchUnlockUpdatePatientDetailsButtonsState() {
+        setPatientDetailsFields();
         updatePatientDetailsValidationSupport.getRegisteredControls().forEach(c -> c.setDisable(!c.isDisabled()));
         unlockUpdatePatientDetailsButton.setText(unlockUpdatePatientDetailsButton.getText().equals("Edytuj") ?
                 "Zablokuj" : "Edytuj");
@@ -639,7 +648,12 @@ public class PatientView {
 
     private void switchUpdatePatientDetailsButtonState() {
         updatePatientDetailsButton.setDisable(unlockUpdatePatientDetailsButton.getText().equals("Edytuj") ||
-                updatePatientDetailsValidationSupport.isInvalid());
+                updatePatientDetailsValidationSupport.isInvalid() || !isPatientDetailsFieldsChanged());
+    }
+
+    private boolean isPatientDetailsFieldsChanged() {
+        PatientDetails patientDetails = createPatientDetails();
+        return getPatientDetailsDiff(patientDetails).isPresent();
     }
 
     private void schedulePatientAppointmentsTableUpdate() {
@@ -669,7 +683,6 @@ public class PatientView {
         Thread thread = new Thread(task);
         thread.setDaemon(true);
         thread.start();
-        task.setOnSucceeded(e -> setPatientDetailsFields());
         task.setOnFailed(e -> getPatientDetailsFailureResult(task.getException().getMessage()));
     }
 
@@ -683,6 +696,71 @@ public class PatientView {
         Platform.runLater(() -> alert.showAndWait()
                 .filter(OK::equals)
                 .ifPresent(e -> currentStage().close()));
+    }
+
+    private void updatePatientDetails() {
+        Alert alert = FXAlert.builder()
+                .alertType(CONFIRMATION)
+                .contentText("Czy na pewno zaktualizować dane tego pacjenta?")
+                .alertTitle("Aktualizacja danych pacjenta")
+                .owner(currentStage())
+                .build();
+        Platform.runLater(() -> alert.showAndWait()
+                .filter(OK::equals)
+                .ifPresent(e -> processPatientDetailsUpdate()));
+    }
+
+    private void processPatientDetailsUpdate() {
+        Platform.runLater(() -> updatePatientDetailsButton.setDisable(true));
+        PatientDetails patientDetails = createPatientDetails();
+        Task<Void> task = FXTasks.createTask(() -> controller.handleUpdatePatientDetailsButtonClicked(patientDetails));
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
+        task.setOnSucceeded(e -> processUpdatePatientDetailsSuccessResult());
+        task.setOnFailed(e -> processUpdatePatientDetailsFailureResult(task.getException().getMessage()));
+    }
+
+    private void processUpdatePatientDetailsSuccessResult() {
+        Alert alert = FXAlert.builder()
+                .alertType(INFORMATION)
+                .alertTitle("Operacja ukończona pomyślnie")
+                .contentText("Pomyślnie zaktualizowano dane pacjenta")
+                .owner(currentStage())
+                .build();
+        Platform.runLater(alert::showAndWait);
+    }
+
+    private void processUpdatePatientDetailsFailureResult(String errorMessage) {
+        Alert alert = FXAlert.builder()
+                .alertType(ERROR)
+                .alertTitle("Nie udało się zaktualizować danych pacjenta")
+                .contentText(errorMessage)
+                .owner(currentStage())
+                .build();
+        Platform.runLater(alert::showAndWait);
+    }
+
+    @SneakyThrows
+    private Optional<Map<String, String>> getPatientDetailsDiff(PatientDetails patientDetails) {
+        Map<String, String> objectsDiff = FXTasks.getObjectsDiff(model.getPatientDetails(), patientDetails);
+        return Optional.of(objectsDiff).filter(e -> !e.isEmpty());
+    }
+
+    private PatientDetails createPatientDetails() {
+        String firstName = patientFirstNameTextField.getText();
+        String lastName = patientLastNameTextField.getText();
+        LocalDate birthDate = patientBirthDateDatePicker.getValue();
+        Sex sex = Sex.findByName(choosePatientSexComboBox.getSelectionModel().getSelectedItem());
+        BloodType bloodType = BloodType.findByName(choosePatientBloodTypeComboBox.getSelectionModel().getSelectedItem());
+        String streetName = patientStreetNameTextField.getText();
+        String houseNumber = patientHouseNumberTextField.getText();
+        String zipCode = patientZipCodeTextField.getText();
+        String city = patientCityTextField.getText();
+        BigDecimal pesel = new BigDecimal(patientPeselTextField.getText());
+        String phoneNumber = patientPhoneNumberTextField.getText();
+        return new PatientDetails(firstName, lastName, birthDate, sex, bloodType,
+                streetName, houseNumber, zipCode, city, pesel, phoneNumber);
     }
 
     private void setPatientDetailsFields() {
