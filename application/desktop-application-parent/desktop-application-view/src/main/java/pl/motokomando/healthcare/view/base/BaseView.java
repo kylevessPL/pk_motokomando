@@ -132,6 +132,9 @@ public class BaseView {
     private Label userLastNameLabel;
     private Label userEmailLabel;
     private Label userUsernameLabel;
+    private Label doctorFirstNameLabel;
+    private Label doctorLastNameLabel;
+    private Label doctorPhoneNumberLabel;
 
     private Pagination patientsTablePagination;
     private Pagination doctorsTablePagination;
@@ -311,8 +314,11 @@ public class BaseView {
         addDoctorPane.setPrefHeight(800.0);
         addDoctorPane.setPrefWidth(1600.0);
         createDoctorFirstNameTextField();
+        createDoctorFirstNameLabel();
         createDoctorLastNameTextField();
+        createDoctorLastNameLabel();
         createDoctorPhoneNumberTextField();
+        createDoctorPhoneNumberLabel();
         createChooseDoctorSpecialtyComboBox();
         createChooseDoctorAcademicTitleComboBox();
         createDoctorSpecialtyLabel();
@@ -322,10 +328,34 @@ public class BaseView {
         doctorsPane.getTabs().add(addDoctorTab);
     }
 
+    private void createDoctorFirstNameLabel(){
+        doctorFirstNameLabel = new Label();
+        doctorFirstNameLabel.setLayoutX(650.0);
+        doctorFirstNameLabel.setLayoutY(40.0);
+        doctorFirstNameLabel.setText("Imie");
+        addDoctorPane.getChildren().add(doctorFirstNameLabel);
+    }
+
+    private void createDoctorLastNameLabel(){
+        doctorLastNameLabel = new Label();
+        doctorLastNameLabel.setLayoutX(650.0);
+        doctorLastNameLabel.setLayoutY(140.0);
+        doctorLastNameLabel.setText("Nazwisko");
+        addDoctorPane.getChildren().add(doctorLastNameLabel);
+    }
+
+    private void createDoctorPhoneNumberLabel(){
+        doctorPhoneNumberLabel = new Label();
+        doctorPhoneNumberLabel.setLayoutX(650.0);
+        doctorPhoneNumberLabel.setLayoutY(240.0);
+        doctorPhoneNumberLabel.setText("Numer telefonu");
+        addDoctorPane.getChildren().add(doctorPhoneNumberLabel);
+    }
+
     private void createDoctorAcademicTitleLabel() {
         doctorAcademicTitleLabel = new Label();
         doctorAcademicTitleLabel.setLayoutX(650.0);
-        doctorAcademicTitleLabel.setLayoutY(460.0);
+        doctorAcademicTitleLabel.setLayoutY(440.0);
         doctorAcademicTitleLabel.setText("Tytuł naukowy:");
         addDoctorPane.getChildren().add(doctorAcademicTitleLabel);
     }
@@ -341,7 +371,7 @@ public class BaseView {
     private void createChooseDoctorAcademicTitleComboBox() {
         chooseDoctorAcademicTitleComboBox = new ComboBox<>();
         chooseDoctorAcademicTitleComboBox.setLayoutX(650.0);
-        chooseDoctorAcademicTitleComboBox.setLayoutY(490.0);
+        chooseDoctorAcademicTitleComboBox.setLayoutY(470.0);
         chooseDoctorAcademicTitleComboBox.setPrefHeight(40.0);
         chooseDoctorAcademicTitleComboBox.setPrefWidth(300.0);
         chooseDoctorAcademicTitleComboBox.setPromptText("Wybierz tytuł naukowy");
@@ -370,7 +400,7 @@ public class BaseView {
     private void createDoctorPhoneNumberTextField() {
         doctorPhoneNumberTextField = new TextField();
         doctorPhoneNumberTextField.setLayoutX(650.0);
-        doctorPhoneNumberTextField.setLayoutY(250.0);
+        doctorPhoneNumberTextField.setLayoutY(270.0);
         doctorPhoneNumberTextField.setPrefHeight(40.0);
         doctorPhoneNumberTextField.setPrefWidth(300.0);
         doctorPhoneNumberTextField.setPromptText("Numer telefonu");
@@ -380,7 +410,7 @@ public class BaseView {
     private void createDoctorLastNameTextField() {
         doctorLastNameTextField = new TextField();
         doctorLastNameTextField.setLayoutX(650.0);
-        doctorLastNameTextField.setLayoutY(150.0);
+        doctorLastNameTextField.setLayoutY(170.0);
         doctorLastNameTextField.setPrefHeight(40.0);
         doctorLastNameTextField.setPrefWidth(300.0);
         doctorLastNameTextField.setPromptText("Nazwisko");
@@ -400,7 +430,7 @@ public class BaseView {
     private void createDoctorFirstNameTextField() {
         doctorFirstNameTextField = new TextField();
         doctorFirstNameTextField.setLayoutX(650.0);
-        doctorFirstNameTextField.setLayoutY(50.0);
+        doctorFirstNameTextField.setLayoutY(70.0);
         doctorFirstNameTextField.setPrefHeight(40.0);
         doctorFirstNameTextField.setPrefWidth(300.0);
         doctorFirstNameTextField.setPromptText("Imie");

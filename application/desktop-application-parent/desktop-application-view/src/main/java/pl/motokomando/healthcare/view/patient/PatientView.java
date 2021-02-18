@@ -101,6 +101,16 @@ public class PatientView {
     private Button updatePatientDetailsButton;
     private Label scheduleAppointmentDoctorLabel;
     private Label scheduleAppointmentHourLabel;
+    private Label scheduleAppointmentChooseDoctorLabel;
+    private Label patientFirstNameLabel;
+    private Label patientLastNameLabel;
+    private Label patientPhoneNumberLabel;
+    private Label patientZipCodeLabel;
+    private Label patientStreetNameLabel;
+    private Label patientCityLabel;
+    private Label patientBirthDateLabel;
+    private Label patientHouseNumberLabel;
+    private Label patientPeselLabel;
 
     private Pagination patientAppointmentsTablePagination;
 
@@ -166,12 +176,21 @@ public class PatientView {
         scheduleAppointmentPane.setPrefWidth(200.0);
         createAppointmentDateDatePicker();
         createChooseDoctorComboBox();
+        createChooseDoctorLabel();
         createChooseAppointmentHourComboBox();
         createScheduleAppointmentButton();
         createScheduleAppointmentDoctorLabel();
         createScheduleAppointmentHourLabel();
         scheduleAppointmentTab.setContent(scheduleAppointmentPane);
         patientPane.getTabs().add(scheduleAppointmentTab);
+    }
+
+    private void createChooseDoctorLabel(){
+        scheduleAppointmentChooseDoctorLabel = new Label();
+        scheduleAppointmentChooseDoctorLabel.setLayoutX(300);
+        scheduleAppointmentChooseDoctorLabel.setLayoutY(150);
+        scheduleAppointmentChooseDoctorLabel.setText("Data wizyty");
+        scheduleAppointmentPane.getChildren().add(scheduleAppointmentChooseDoctorLabel);
     }
 
     private void createScheduleAppointmentHourLabel() {
@@ -221,7 +240,7 @@ public class PatientView {
     private void createAppointmentDateDatePicker() {
         appointmentDateDatePicker = new DatePicker();
         appointmentDateDatePicker.setLayoutX(300.0);
-        appointmentDateDatePicker.setLayoutY(170.0);
+        appointmentDateDatePicker.setLayoutY(180.0);
         appointmentDateDatePicker.setPrefHeight(40.0);
         appointmentDateDatePicker.setPrefWidth(300.0);
         appointmentDateDatePicker.setPromptText("Wybierz datę");
@@ -236,18 +255,27 @@ public class PatientView {
         patientDetailsPane.setPrefHeight(180.0);
         patientDetailsPane.setPrefWidth(200.0);
         createPatientFirstNameTextField();
+        createPatientFirstNameLabel();
         createPatientPhoneNumberTextField();
+        createPatientPhoneNumberLabel();
         createPatientPeselTextField();
+        createPatientPeselLabel();
         createPatientLastNameTextField();
+        createPatientLastNameLabel();
         createPatientZipCodeTextField();
+        createPatientZipCodeLabel();
         createPatientStreetNameTextField();
+        createPatientStreetNameLabel();
         createPatientCityTextField();
+        createPatientCityLabel();
         createChoosePatientSexComboBox();
         createPatientSexLabel();
         createChoosePatientBloodTypeComboBox();
         createPatientBloodTypeLabel();
         createPatientBirthDateDatePicker();
+        createPatientBirthDateLabel();
         createPatientHouseNumberTextField();
+        createPatientHouseNumberLabel();
         createPatientRegistrationInfoTextField();
         createPatientRegistrationDateLabel();
         createUpdatePatientDetailsButton();
@@ -255,6 +283,78 @@ public class PatientView {
         getPatientDetails();
         patientDetailsTab.setContent(patientDetailsPane);
         patientPane.getTabs().add(patientDetailsTab);
+    }
+
+    private void createPatientFirstNameLabel(){
+        patientFirstNameLabel = new Label();
+        patientFirstNameLabel.setLayoutX(50.0);
+        patientFirstNameLabel.setLayoutY(30.0);
+        patientFirstNameLabel.setText("Imie");
+        patientDetailsPane.getChildren().add(patientFirstNameLabel);
+    }
+
+    private void createPatientLastNameLabel(){
+        patientLastNameLabel = new Label();
+        patientLastNameLabel.setLayoutX(50.0);
+        patientLastNameLabel.setLayoutY(110.0);
+        patientLastNameLabel.setText("Nazwisko");
+        patientDetailsPane.getChildren().add(patientLastNameLabel);
+    }
+
+    private void createPatientBirthDateLabel(){
+        patientBirthDateLabel = new Label();
+        patientBirthDateLabel.setLayoutX(50.0);
+        patientBirthDateLabel.setLayoutY(270.0);
+        patientBirthDateLabel.setText("Data urodzin");
+        patientDetailsPane.getChildren().add(patientBirthDateLabel);
+    }
+
+    private void createPatientZipCodeLabel(){
+        patientZipCodeLabel = new Label();
+        patientZipCodeLabel.setLayoutX(350.0);
+        patientZipCodeLabel.setLayoutY(270.0);
+        patientZipCodeLabel.setText("Kod pocztowy");
+        patientDetailsPane.getChildren().add(patientZipCodeLabel);
+    }
+
+    private void createPatientStreetNameLabel(){
+        patientStreetNameLabel = new Label();
+        patientStreetNameLabel.setLayoutX(350.0);
+        patientStreetNameLabel.setLayoutY(30.0);
+        patientStreetNameLabel.setText("Ulica");
+        patientDetailsPane.getChildren().add(patientStreetNameLabel);
+    }
+
+    private void createPatientHouseNumberLabel(){
+        patientHouseNumberLabel = new Label();
+        patientHouseNumberLabel.setLayoutX(350.0);
+        patientHouseNumberLabel.setLayoutY(110.0);
+        patientHouseNumberLabel.setText("Numer domu");
+        patientDetailsPane.getChildren().add(patientHouseNumberLabel);
+    }
+
+    private void createPatientCityLabel(){
+        patientCityLabel = new Label();
+        patientCityLabel.setLayoutX(350.0);
+        patientCityLabel.setLayoutY(190.0);
+        patientCityLabel.setText("Miejscowość");
+        patientDetailsPane.getChildren().add(patientCityLabel);
+    }
+
+    private void createPatientPeselLabel(){
+        patientPeselLabel = new Label();
+        patientPeselLabel.setLayoutX(650.0);
+        patientPeselLabel.setLayoutY(110.0);
+        patientPeselLabel.setText("PESEL");
+        patientDetailsPane.getChildren().add(patientPeselLabel);
+    }
+
+    private void createPatientPhoneNumberLabel(){
+        patientPhoneNumberLabel = new Label();
+        patientPhoneNumberLabel.setLayoutX(650.0);
+        patientPhoneNumberLabel.setLayoutY(30.0);
+        patientPhoneNumberLabel.setText("Numer telefonu");
+        patientDetailsPane.getChildren().add(patientPhoneNumberLabel);
     }
 
     private void createUnlockUpdatePatientDetailsButton() {
@@ -299,7 +399,7 @@ public class PatientView {
     private void createPatientBloodTypeLabel() {
         patientBloodTypeLabel = new Label();
         patientBloodTypeLabel.setLayoutX(650.0);
-        patientBloodTypeLabel.setLayoutY(200.0);
+        patientBloodTypeLabel.setLayoutY(190.0);
         patientBloodTypeLabel.setText("Grupa krwi");
         patientDetailsPane.getChildren().add(patientBloodTypeLabel);
     }
@@ -307,7 +407,7 @@ public class PatientView {
     private void createPatientRegistrationDateLabel() {
         patientRegistrationDateLabel = new Label();
         patientRegistrationDateLabel.setLayoutX(650.0);
-        patientRegistrationDateLabel.setLayoutY(280.0);
+        patientRegistrationDateLabel.setLayoutY(270.0);
         patientRegistrationDateLabel.setText("Data rejestracji");
         patientDetailsPane.getChildren().add(patientRegistrationDateLabel);
     }
@@ -329,7 +429,7 @@ public class PatientView {
     private void createPatientSexLabel() {
         patientSexLabel = new Label();
         patientSexLabel.setLayoutX(50.0);
-        patientSexLabel.setLayoutY(200.0);
+        patientSexLabel.setLayoutY(190.0);
         patientSexLabel.setText("Płeć");
         patientDetailsPane.getChildren().add(patientSexLabel);
     }

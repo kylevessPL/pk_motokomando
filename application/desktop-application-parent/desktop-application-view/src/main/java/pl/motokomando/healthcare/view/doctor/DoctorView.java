@@ -16,8 +16,6 @@ import java.util.stream.Collectors;
 
 public class DoctorView {
 
-    private static final int TABLE_REFRESH_RATE = 10;
-
     private final ServiceStore serviceStore = ServiceStore.getInstance();
 
     private final ValidationSupport updatePatientDetailsValidationSupport = new ValidationSupport();
@@ -30,6 +28,9 @@ public class DoctorView {
     private TextField doctorFirstNameTextField;
     private TextField doctorLastNameTextField;
     private TextField doctorPhoneNumberTextField;
+    private Label doctorFirstNameLabel;
+    private Label doctorLastNameLabel;
+    private Label doctorPhoneNumberLabel;
     private ComboBox<String> chooseDoctorAcademicTitleComboBox;
     private Label doctorAcademicTitleLabel;
     private ComboBox<String> chooseDoctorMedicalSpecialtyComboBox;
@@ -37,8 +38,8 @@ public class DoctorView {
     private Button unlockUpdatePatientDetailsButton;
     private Button updatePatientDetailsButton;
 
-    public DoctorView(Integer patientId) {
-        initModel(patientId);
+    public DoctorView() {
+        //initModel(patientId);
         setController();
         addContent();
     }
@@ -75,6 +76,10 @@ public class DoctorView {
         createChooseDoctorMedicalSpecialtyComboBox();
         createDoctorMedicalSpecialtyLabel();
 
+        createDoctorFirstNameLabel();
+        createDoctorLastNameLabel();
+        createDoctorPhoneNumberLabel();
+
         createUpdateDoctorDetailsButton();
         createUnlockUpdateDoctorDetailsButton();
     }
@@ -100,7 +105,7 @@ public class DoctorView {
 
     private void createDoctorMedicalSpecialtyLabel() {
         doctorMedicalSpecialtyLabel = new Label();
-        doctorMedicalSpecialtyLabel.setLayoutX(650.0);
+        doctorMedicalSpecialtyLabel.setLayoutX(550.0);
         doctorMedicalSpecialtyLabel.setLayoutY(200.0);
         doctorMedicalSpecialtyLabel.setText("Specjalizacja");
         doctorDetailsPane.getChildren().add(doctorMedicalSpecialtyLabel);
@@ -108,7 +113,7 @@ public class DoctorView {
 
     private void createChooseDoctorMedicalSpecialtyComboBox() {
         chooseDoctorMedicalSpecialtyComboBox = new ComboBox<>();
-        chooseDoctorMedicalSpecialtyComboBox.setLayoutX(650.0);
+        chooseDoctorMedicalSpecialtyComboBox.setLayoutX(550.0);
         chooseDoctorMedicalSpecialtyComboBox.setLayoutY(220.0);
         chooseDoctorMedicalSpecialtyComboBox.setPrefHeight(30.0);
         chooseDoctorMedicalSpecialtyComboBox.setPrefWidth(200.0);
@@ -122,15 +127,38 @@ public class DoctorView {
 
     private void createDoctorAcademicTitleLabel() {
         doctorAcademicTitleLabel = new Label();
-        doctorAcademicTitleLabel.setLayoutX(50.0);
+        doctorAcademicTitleLabel.setLayoutX(150.0);
         doctorAcademicTitleLabel.setLayoutY(200.0);
         doctorAcademicTitleLabel.setText("Tytuł naukowy");
         doctorDetailsPane.getChildren().add(doctorAcademicTitleLabel);
     }
 
+    private void createDoctorFirstNameLabel() {
+        doctorFirstNameLabel = new Label();
+        doctorFirstNameLabel.setLayoutX(150.0);
+        doctorFirstNameLabel.setLayoutY(40.0);
+        doctorFirstNameLabel.setText("Imie");
+        doctorDetailsPane.getChildren().add(doctorFirstNameLabel);
+    }
+
+    private void createDoctorLastNameLabel() {
+        doctorLastNameLabel = new Label();
+        doctorLastNameLabel.setLayoutX(150.0);
+        doctorLastNameLabel.setLayoutY(120.0);
+        doctorLastNameLabel.setText("Nazwisko");
+        doctorDetailsPane.getChildren().add(doctorLastNameLabel);
+    }
+    private void createDoctorPhoneNumberLabel() {
+        doctorPhoneNumberLabel = new Label();
+        doctorPhoneNumberLabel.setLayoutX(550.0);
+        doctorPhoneNumberLabel.setLayoutY(40.0);
+        doctorPhoneNumberLabel.setText("Numer telefonu");
+        doctorDetailsPane.getChildren().add(doctorPhoneNumberLabel);
+    }
+
     private void createChooseDoctorAcademicTitleComboBox() {
         chooseDoctorAcademicTitleComboBox = new ComboBox<>();
-        chooseDoctorAcademicTitleComboBox.setLayoutX(50.0);
+        chooseDoctorAcademicTitleComboBox.setLayoutX(150.0);
         chooseDoctorAcademicTitleComboBox.setLayoutY(220.0);
         chooseDoctorAcademicTitleComboBox.setPrefHeight(30.0);
         chooseDoctorAcademicTitleComboBox.setPrefWidth(200.0);
@@ -144,7 +172,7 @@ public class DoctorView {
 
     private void createDoctorLastNameTextField() {
         doctorLastNameTextField = new TextField();
-        doctorLastNameTextField.setLayoutX(50.0);
+        doctorLastNameTextField.setLayoutX(150.0);
         doctorLastNameTextField.setLayoutY(140.0);
         doctorLastNameTextField.setPrefHeight(30.0);
         doctorLastNameTextField.setPrefWidth(200.0);
@@ -154,7 +182,7 @@ public class DoctorView {
 
     private void createDoctorPhoneNumberTextField() {
         doctorPhoneNumberTextField = new TextField();
-        doctorPhoneNumberTextField.setLayoutX(650.0);
+        doctorPhoneNumberTextField.setLayoutX(550.0);
         doctorPhoneNumberTextField.setLayoutY(60.0);
         doctorPhoneNumberTextField.setPrefHeight(30.0);
         doctorPhoneNumberTextField.setPrefWidth(200.0);
@@ -164,7 +192,7 @@ public class DoctorView {
 
     private void createDoctorFirstNameTextField() {
         doctorFirstNameTextField = new TextField();
-        doctorFirstNameTextField.setLayoutX(50.0);
+        doctorFirstNameTextField.setLayoutX(150.0);
         doctorFirstNameTextField.setLayoutY(60.0);
         doctorFirstNameTextField.setPrefHeight(30.0);
         doctorFirstNameTextField.setPrefWidth(200.0);
