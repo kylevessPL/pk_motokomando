@@ -468,16 +468,25 @@ public class BaseView {
         addPatientPane.setPrefHeight(180.0);
         addPatientPane.setPrefWidth(200.0);
         createPatientFirstNameTextField();
+
         createPatientLastNameTextField();
+
         createPatientBirthDateDatePicker();
+
         createChoosePatientSexComboBox();
         createChoosePatientBloodTypeComboBox();
         createPatientStreetNameTextField();
+
         createPatientHouseNumberTextField();
+
         createPatientZipCodeTextField();
+
         createPatientCityTextField();
+
         createPatientPeselTextField();
+
         createPatientPhoneNumberTextField();
+
         createAddPatientButton();
         createPatientSexLabel();
         createPatientBloodTypeLabel();
@@ -526,7 +535,7 @@ public class BaseView {
     private void createPatientPeselTextField() {
         patientPeselTextField = new TextField();
         patientPeselTextField.setLayoutX(950.0);
-        patientPeselTextField.setLayoutY(450.0);
+        patientPeselTextField.setLayoutY(370.0);
         patientPeselTextField.setPrefHeight(40.0);
         patientPeselTextField.setPrefWidth(300.0);
         patientPeselTextField.setPromptText("PESEL");

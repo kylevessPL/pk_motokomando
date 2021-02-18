@@ -111,6 +111,7 @@ public class PatientView {
     private Label patientBirthDateLabel;
     private Label patientHouseNumberLabel;
     private Label patientPeselLabel;
+    private Button patientAppointmentCanelButton;
 
     private Pagination patientAppointmentsTablePagination;
 
@@ -164,8 +165,19 @@ public class PatientView {
         patientAppointmentsPane.setPrefHeight(180.0);
         patientAppointmentsPane.setPrefWidth(200.0);
         createPatientAppointmentsTable();
+        createAppointmentCancelButton();
         patientAppointmentsTab.setContent(patientAppointmentsPane);
         patientPane.getTabs().add(patientAppointmentsTab);
+    }
+
+    private void createAppointmentCancelButton(){
+        patientAppointmentCanelButton = new Button();
+        patientAppointmentCanelButton.setLayoutX(780.0);
+        patientAppointmentCanelButton.setLayoutY(15.0);
+        patientAppointmentCanelButton.setMnemonicParsing(false);
+        patientAppointmentCanelButton.setText("Anuluj");
+        patientAppointmentCanelButton.setDisable(true);
+        patientAppointmentsPane.getChildren().add(patientAppointmentCanelButton);
     }
 
     private void createScheduleAppointmentTab() {
