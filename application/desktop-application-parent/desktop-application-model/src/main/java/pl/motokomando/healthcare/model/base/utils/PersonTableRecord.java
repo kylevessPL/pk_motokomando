@@ -7,7 +7,7 @@ import lombok.experimental.Accessors;
 
 @Getter
 @RequiredArgsConstructor
-public final class BaseTableRecord {
+public final class PersonTableRecord {
 
     private final Integer id;
     @Accessors(fluent = true)

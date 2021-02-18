@@ -9,7 +9,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
-import pl.motokomando.healthcare.model.utils.ServiceStore;
 import pl.motokomando.healthcare.view.authentication.AuthenticationView;
 
 @SpringBootApplication
@@ -26,13 +25,11 @@ public class HealthcareApplication extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        final ServiceStore serviceStore = ServiceStore.getInstance();
         Scene scene = new Scene(new AuthenticationView().asParent(), 700, 500);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Healthcare Management - Panel Logowania");
         primaryStage.getIcons().add(new Image(AuthenticationView.class
                 .getResourceAsStream("/images/favicon.png")));
-        primaryStage.setOnHidden(e -> serviceStore.cancelAllBaseServices());
         primaryStage.show();
     }
 

@@ -17,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import pl.motokomando.healthcare.controller.authentication.AuthenticationController;
 import pl.motokomando.healthcare.model.authentication.AuthenticationModel;
 import pl.motokomando.healthcare.model.authentication.utils.AuthenticationStatus;
+import pl.motokomando.healthcare.model.utils.ServiceStore;
 import pl.motokomando.healthcare.view.base.BaseView;
 
 import static javafx.scene.control.ProgressIndicator.INDETERMINATE_PROGRESS;
@@ -24,6 +25,8 @@ import static javafx.scene.layout.Region.USE_PREF_SIZE;
 import static pl.motokomando.healthcare.model.authentication.utils.AuthenticationStatus.NOT_AUTHENTICATED;
 
 public class AuthenticationView {
+
+    private final ServiceStore serviceStore = ServiceStore.getInstance();
 
     private AuthenticationModel authenticationModel;
 
@@ -166,6 +169,7 @@ public class AuthenticationView {
             Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
             Stage stage = currentStage();
             stage.close();
+            stage.setOnHidden(e -> serviceStore.cancelAllBaseServices());
             stage.setScene(scene);
             stage.setX((screenBounds.getWidth() - scene.getWidth()) / 2);
             stage.setY((screenBounds.getHeight() - scene.getHeight()) / 2);

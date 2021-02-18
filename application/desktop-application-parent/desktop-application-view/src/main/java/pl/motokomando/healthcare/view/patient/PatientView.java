@@ -1,6 +1,12 @@
 package pl.motokomando.healthcare.view.patient;
 
+import com.calendarfx.model.Calendar;
+import com.calendarfx.model.CalendarSource;
+import com.calendarfx.model.Entry;
+import com.calendarfx.view.page.WeekPage;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.SetChangeListener;
 import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
 import javafx.scene.Node;
@@ -28,9 +34,11 @@ import pl.motokomando.healthcare.model.base.utils.BloodType;
 import pl.motokomando.healthcare.model.base.utils.PatientDetails;
 import pl.motokomando.healthcare.model.base.utils.Sex;
 import pl.motokomando.healthcare.model.patient.PatientModel;
+import pl.motokomando.healthcare.model.patient.utils.DoctorAppointment;
+import pl.motokomando.healthcare.model.patient.utils.DoctorBasic;
 import pl.motokomando.healthcare.model.patient.utils.PatientAppointmentsTableRecord;
 import pl.motokomando.healthcare.model.utils.ServiceStore;
-import utils.DefaultDatePickerConverter;
+import pl.motokomando.healthcare.view.patient.utils.ChooseDoctorComboBoxConverter;
 import utils.FXAlert;
 import utils.FXTasks;
 import utils.FXValidation;
@@ -38,8 +46,10 @@ import utils.TextFieldLimiter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -47,12 +57,15 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
+import static java.time.temporal.ChronoUnit.DAYS;
 import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
 import static javafx.scene.control.Alert.AlertType.ERROR;
 import static javafx.scene.control.Alert.AlertType.INFORMATION;
 import static javafx.scene.control.Alert.AlertType.WARNING;
 import static javafx.scene.control.ButtonType.OK;
+import static javafx.scene.control.SelectionMode.SINGLE;
 import static javafx.scene.control.TabPane.TabClosingPolicy.UNAVAILABLE;
 import static javafx.scene.layout.Region.USE_PREF_SIZE;
 import static utils.DateConstraints.PAST;
@@ -93,14 +106,13 @@ public class PatientView {
     private AnchorPane patientAppointmentsPane;
     private TableView<PatientAppointmentsTableRecord> patientAppointmentsTable;
     private Tab scheduleAppointmentTab;
+    private TextField appointmentDateChoiceTextField;
     private AnchorPane scheduleAppointmentPane;
-    private DatePicker appointmentDateDatePicker;
-    private ComboBox<String> chooseDoctorComboBox;
-    private ComboBox<String> chooseAppointmentHourComboBox;
+    private ComboBox<DoctorBasic> chooseDoctorComboBox;
     private Button scheduleAppointmentButton;
     private Button updatePatientDetailsButton;
     private Label scheduleAppointmentDoctorLabel;
-    private Label scheduleAppointmentHourLabel;
+    private WeekPage appointmentsCalendar;
 
     private Pagination patientAppointmentsTablePagination;
 
@@ -145,6 +157,18 @@ public class PatientView {
         createPatientDetailsTab();
         createScheduleAppointmentTab();
         createPatientAppointmentsTab();
+        getPatientDetails();
+        getDoctorList();
+    }
+
+    private void getDoctorList() {
+        Task<Void> task = FXTasks.createTask(() -> controller.getAllDoctors());
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
+        task.setOnSucceeded(e -> Platform.runLater(() ->
+                chooseDoctorComboBox.setItems(FXCollections.observableArrayList(model.getDoctorBasicList()))));
+        task.setOnFailed(e -> processGeneralFailureResult(task.getException().getMessage()));
     }
 
     private void createPatientAppointmentsTab() {
@@ -164,22 +188,53 @@ public class PatientView {
         scheduleAppointmentPane = new AnchorPane();
         scheduleAppointmentPane.setPrefHeight(180.0);
         scheduleAppointmentPane.setPrefWidth(200.0);
-        createAppointmentDateDatePicker();
         createChooseDoctorComboBox();
-        createChooseAppointmentHourComboBox();
         createScheduleAppointmentButton();
         createScheduleAppointmentDoctorLabel();
-        createScheduleAppointmentHourLabel();
+        createAppointmentDateChoiceTextField();
+        createAppointmentDateCalendar();
         scheduleAppointmentTab.setContent(scheduleAppointmentPane);
         patientPane.getTabs().add(scheduleAppointmentTab);
     }
 
-    private void createScheduleAppointmentHourLabel() {
-        scheduleAppointmentHourLabel = new Label();
-        scheduleAppointmentHourLabel.setLayoutX(300.0);
-        scheduleAppointmentHourLabel.setLayoutY(250.0);
-        scheduleAppointmentHourLabel.setText("Godzina");
-        scheduleAppointmentPane.getChildren().add(scheduleAppointmentHourLabel);
+    private void createAppointmentDateChoiceTextField() {
+        appointmentDateChoiceTextField = new TextField();
+        appointmentDateChoiceTextField.setDisable(true);
+        appointmentDateChoiceTextField.setEditable(true);
+        appointmentDateChoiceTextField.setLayoutX(580.0);
+        appointmentDateChoiceTextField.setLayoutY(240.0);
+        appointmentDateChoiceTextField.setPrefHeight(30.0);
+        appointmentDateChoiceTextField.setPrefWidth(200.0);
+        appointmentDateChoiceTextField.setStyle("-fx-opacity: 1.0;");
+        appointmentDateChoiceTextField.setPromptText("Nie wybrano daty");
+        scheduleAppointmentPane.getChildren().add(appointmentDateChoiceTextField);
+    }
+
+    private void createAppointmentDateCalendar() {
+        appointmentsCalendar = new WeekPage();
+        appointmentsCalendar.getDetailedWeekView().getWeekDayHeaderView().setNumberOfDays(5);
+        appointmentsCalendar.getDetailedWeekView().getWeekView().setNumberOfDays(5);
+        appointmentsCalendar.getDetailedWeekView().setAdjustToFirstDayOfWeek(true);
+        appointmentsCalendar.setStartTime(LocalTime.of(8, 0));
+        appointmentsCalendar.setEndTime(LocalTime.of(18, 0));
+        appointmentsCalendar.getDetailedWeekView().setTrimTimeBounds(true);
+        appointmentsCalendar.setContextMenuCallback(null);
+        appointmentsCalendar.setEntryContextMenuCallback(null);
+        appointmentsCalendar.setEntryDetailsCallback(e -> null);
+        appointmentsCalendar.setEntryDetailsPopOverContentCallback(e -> null);
+        appointmentsCalendar.setDateDetailsCallback(e -> null);
+        appointmentsCalendar.setEntryFactory(e -> null);
+        appointmentsCalendar.setEntryEditPolicy(e -> false);
+        appointmentsCalendar.selectionModeProperty().set(SINGLE);
+        appointmentsCalendar.setPrefHeight(500);
+        appointmentsCalendar.setPrefWidth(450);
+        appointmentsCalendar.setLayoutX(30);
+        appointmentsCalendar.setLayoutY(30);
+        CalendarSource calendarSource = new CalendarSource("default");
+        Calendar calendar = new Calendar("default");
+        calendarSource.getCalendars().add(calendar);
+        appointmentsCalendar.getCalendarSources().setAll(calendarSource);
+        scheduleAppointmentPane.getChildren().add(appointmentsCalendar);
     }
 
     private void createScheduleAppointmentDoctorLabel() {
@@ -192,41 +247,23 @@ public class PatientView {
 
     private void createScheduleAppointmentButton() {
         scheduleAppointmentButton = new Button();
-        scheduleAppointmentButton.setLayoutX(401.0);
+        scheduleAppointmentButton.setDisable(true);
+        scheduleAppointmentButton.setLayoutX(640.0);
         scheduleAppointmentButton.setLayoutY(400.0);
         scheduleAppointmentButton.setMnemonicParsing(false);
         scheduleAppointmentButton.setText("Zarezerwuj");
         scheduleAppointmentPane.getChildren().add(scheduleAppointmentButton);
     }
 
-    private void createChooseAppointmentHourComboBox() {
-        chooseAppointmentHourComboBox = new ComboBox<>();
-        chooseAppointmentHourComboBox.setLayoutX(300.0);
-        chooseAppointmentHourComboBox.setLayoutY(280.0);
-        chooseAppointmentHourComboBox.setPrefHeight(40.0);
-        chooseAppointmentHourComboBox.setPrefWidth(300.0);
-        setWorkingHours(chooseAppointmentHourComboBox);
-        scheduleAppointmentPane.getChildren().add(chooseAppointmentHourComboBox);
-    }
-
     private void createChooseDoctorComboBox() {
         chooseDoctorComboBox = new ComboBox<>();
-        chooseDoctorComboBox.setLayoutX(300.0);
+        chooseDoctorComboBox.setLayoutX(540.0);
         chooseDoctorComboBox.setLayoutY(80.0);
         chooseDoctorComboBox.setPrefHeight(40.0);
         chooseDoctorComboBox.setPrefWidth(300.0);
+        chooseDoctorComboBox.setPromptText("Wybierz lekarza");
+        chooseDoctorComboBox.setConverter(new ChooseDoctorComboBoxConverter());
         scheduleAppointmentPane.getChildren().add(chooseDoctorComboBox);
-    }
-
-    private void createAppointmentDateDatePicker() {
-        appointmentDateDatePicker = new DatePicker();
-        appointmentDateDatePicker.setLayoutX(300.0);
-        appointmentDateDatePicker.setLayoutY(170.0);
-        appointmentDateDatePicker.setPrefHeight(40.0);
-        appointmentDateDatePicker.setPrefWidth(300.0);
-        appointmentDateDatePicker.setPromptText("Wybierz datę");
-        patientBirthDateDatePicker.setConverter(new DefaultDatePickerConverter());
-        scheduleAppointmentPane.getChildren().add(appointmentDateDatePicker);
     }
 
     private void createPatientDetailsTab() {
@@ -436,6 +473,7 @@ public class PatientView {
         patientAppointmentsTable.setLayoutY(36.0);
         patientAppointmentsTable.setPrefHeight(450.0);
         patientAppointmentsTable.setPrefWidth(800.0);
+        patientAppointmentsTable.setPlaceholder(new Label("Pacjent nie umawiał jeszcze żadnych wizyt"));
         setPatientAppointmentsTableColumns(patientAppointmentsTable);
         setupPatientAppointmentsTablePagination();
         patientAppointmentsTable.setItems(model.patientAppointmentsTablePageContent());
@@ -461,10 +499,10 @@ public class PatientView {
         Thread thread = new Thread(task);
         thread.setDaemon(true);
         thread.start();
-        task.setOnFailed(e -> processUpdatePatientAppointmentsTableFailureResult(task.getException().getMessage()));
+        task.setOnFailed(e -> processGeneralFailureResult(task.getException().getMessage()));
     }
 
-    private void processUpdatePatientAppointmentsTableFailureResult(String errorMessage) {
+    private void processGeneralFailureResult(String errorMessage) {
         Alert alert = FXAlert.builder()
                 .alertType(WARNING)
                 .alertTitle("Nie udało się pobrać niektórych danych")
@@ -619,12 +657,111 @@ public class PatientView {
 
     private void delegateEventHandlers() {
         schedulePatientAppointmentsTableUpdate();
+        scheduleAppointmentCalendarUpdate();
         setTextFieldsLimit();
         updatePatientDetailsValidationSupport.validationResultProperty().addListener((obs, oldValue, newValue) ->
                 Platform.runLater(this::switchUpdatePatientDetailsButtonState));
         unlockUpdatePatientDetailsButton.setOnMouseClicked(e ->
                 Platform.runLater(this::switchUnlockUpdatePatientDetailsButtonsState));
+        chooseDoctorComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) ->
+                updateAppointmentsCalendarData());
         updatePatientDetailsButton.setOnMouseClicked(e -> updatePatientDetails());
+        appointmentDateChoiceTextField.textProperty().addListener((obs, oldValue, newValue) ->
+                Platform.runLater(() -> scheduleAppointmentButton.setDisable(false)));
+        appointmentsCalendar.getDetailedWeekView().dateProperty().addListener((obs, oldValue, newValue) ->
+                updateAppointmentsCalendarData());
+        appointmentsCalendar.getSelections().addListener((SetChangeListener<Entry<?>>) change ->
+                setAppointmentDateChoice());
+    }
+
+    private void scheduleAppointmentCalendarUpdate() {
+        ScheduledService<Void> service = FXTasks.createService(this::updateAppointmentsCalendarData);
+        serviceStore.addPatientService(service);
+        service.setPeriod(Duration.seconds(TABLE_REFRESH_RATE));
+        service.start();
+    }
+
+    private void setAppointmentDateChoice() {
+        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+        appointmentsCalendar.getSelections().stream().findFirst().ifPresent(e ->
+                appointmentDateChoiceTextField.setText(e.getStartDate().atTime(e.getStartTime()).format(formatter)));
+    }
+
+    private Void updateAppointmentsCalendarData() {
+        Platform.runLater(() -> appointmentsCalendar.getCalendars().get(0).clear());
+        if (chooseDoctorComboBox.getSelectionModel().isEmpty() ||
+                !appointmentsCalendar.getDetailedWeekView().getEndDate().isAfter(LocalDate.now())) {
+            return null;
+        }
+        Integer doctorId = chooseDoctorComboBox.getSelectionModel().getSelectedItem().getId();
+        LocalDate startDate;
+        if (!appointmentsCalendar.getDetailedWeekView().getStartDate().isAfter(LocalDate.now())) {
+            startDate = LocalDate.now().plusDays(1);
+        } else {
+            startDate = appointmentsCalendar.getDetailedWeekView().getStartDate();
+        }
+        LocalDate endDate = appointmentsCalendar.getDetailedWeekView().getEndDate();
+        Task<Optional<List<DoctorAppointment>>> task = FXTasks.createTask(() ->
+                controller.getDoctorScheduledAppointments(doctorId, startDate, endDate));
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
+        task.setOnSucceeded(e -> task.getValue().ifPresent(doctorAppointmentList ->
+                setCalendarEvents(doctorAppointmentList, startDate, endDate)));
+        task.setOnFailed(e -> processGeneralFailureResult(task.getException().getMessage()));
+        return null;
+    }
+
+    private void setCalendarEvents(List<DoctorAppointment> doctorAppointmentList,
+                                   LocalDate startDate, LocalDate endDate) {
+        List<LocalDateTime> notAvailableDates = doctorAppointmentList
+                .stream()
+                .map(DoctorAppointment::getAppointmentDate)
+                .collect(Collectors.toList());
+        List<Entry<?>> calendarEntries = new ArrayList<>();
+        Stream.iterate(startDate, date -> date.plusDays(1))
+                .limit(DAYS.between(startDate, endDate) + 1)
+                .forEach(date -> createAppointmentCalendarEntries(date, calendarEntries, notAvailableDates));
+        Platform.runLater(() -> appointmentsCalendar.getCalendars().get(0).addEntries(calendarEntries));
+        if (!appointmentDateChoiceTextField.getText().isEmpty()) {
+            checkAppointmentDateChoiceAvailability(calendarEntries);
+        }
+    }
+
+    private void checkAppointmentDateChoiceAvailability(List<Entry<?>> calendarEntries) {
+        final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+        String textField = appointmentDateChoiceTextField.getText();
+        LocalDate date = LocalDate.parse(textField.substring(0, textField.indexOf(" ")), dateFormatter);
+        LocalTime time = LocalTime.parse(textField.substring(textField.indexOf(" ") + 1), timeFormatter);
+        calendarEntries
+                .stream()
+                .filter(e -> e.getStartDate().equals(date) && e.getStartTime().equals(time))
+                .findFirst()
+                .map(e -> {
+                    appointmentsCalendar.select(e);
+                    return e;
+                }).orElseGet(() -> {
+                    Platform.runLater(() -> appointmentDateChoiceTextField.clear());
+                    return null;
+                });
+    }
+
+    private void createAppointmentCalendarEntries(LocalDate date,
+                                                  List<Entry<?>> calendarEntries,
+                                                  List<LocalDateTime> notAvailableDates) {
+        final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+        LocalDateTime currentDate = date.atTime(appointmentsCalendar.getStartTime());
+        while (!currentDate.isAfter(date.atTime(appointmentsCalendar.getEndTime()))) {
+            if (!notAvailableDates.contains(currentDate)) {
+                Entry<String> entry = new Entry<>(currentDate.toLocalTime().format(formatter));
+                entry.changeStartDate(date);
+                entry.changeStartTime(currentDate.toLocalTime());
+                entry.changeEndTime(currentDate.toLocalTime().plusMinutes(30));
+                calendarEntries.add(entry);
+            }
+            currentDate = currentDate.plusMinutes(30);
+        }
     }
 
     private void setTextFieldsLimit() {
@@ -660,22 +797,13 @@ public class PatientView {
         ScheduledService<Void> service = FXTasks.createService(() -> controller.updatePatientAppointmentsTablePageData());
         serviceStore.addPatientService(service);
         service.setPeriod(Duration.seconds(TABLE_REFRESH_RATE));
-        service.setOnFailed(e -> processUpdatePatientAppointmentsTableFailureResult(service.getException().getMessage()));
+        service.setOnFailed(e -> processGeneralFailureResult(service.getException().getMessage()));
         service.start();
     }
 
     private void setPatientAppointmentsTableColumns(TableView<PatientAppointmentsTableRecord> patientAppointmentsTable) {
         List<TableColumn<PatientAppointmentsTableRecord, String>> columnList = createPatientAppointmentsTableColumns();
         patientAppointmentsTable.getColumns().addAll(columnList);
-    }
-
-    void setWorkingHours(ComboBox<String> comboBoxHour) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-        LocalTime workingHours = LocalTime.of(8, 0, 0);
-        while (!workingHours.isAfter(LocalTime.of(18, 0, 0))) {
-            comboBoxHour.getItems().add(workingHours.format(formatter));
-            workingHours = workingHours.plusMinutes(30);
-        }
     }
 
     private void getPatientDetails() {

@@ -7,5 +7,6 @@ public final class WellKnownEndpoints {
     public static final String PATIENT = "/api/v1/patients/{id}";
     public static final String PATIENT_APPOINTMENTS = "/api/v1/patients/{id}/appointments";
     public static final String DOCTORS = "/api/v1/doctors";
+    public static final String DOCTOR_APPOINTMENTS = "/api/v1/doctors/{id}/appointments";
     
 }
