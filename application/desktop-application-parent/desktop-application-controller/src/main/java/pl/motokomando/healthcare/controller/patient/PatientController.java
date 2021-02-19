@@ -13,6 +13,7 @@ import org.apache.http.util.EntityUtils;
 import pl.motokomando.healthcare.controller.utils.GetClient;
 import pl.motokomando.healthcare.controller.utils.LocalDateAdapter;
 import pl.motokomando.healthcare.controller.utils.LocalDateTimeAdapter;
+import pl.motokomando.healthcare.controller.utils.PostClient;
 import pl.motokomando.healthcare.controller.utils.WebClient;
 import pl.motokomando.healthcare.controller.utils.WebUtils;
 import pl.motokomando.healthcare.model.base.utils.PatientDetails;
@@ -35,6 +36,8 @@ import java.util.stream.Collectors;
 
 import static java.lang.Integer.MAX_VALUE;
 import static java.time.format.DateTimeFormatter.ISO_DATE;
+import static java.time.format.DateTimeFormatter.ISO_DATE_TIME;
+import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_OK;
 import static pl.motokomando.healthcare.controller.utils.ResponseHeaders.CURRENT_PAGE;
 import static pl.motokomando.healthcare.controller.utils.ResponseHeaders.TOTAL_PAGES;
@@ -90,6 +93,28 @@ public class PatientController {
             doctorAppointmentList = createDoctorScheduledAppointmentList(EntityUtils.toString(responseBody));
         }
         return Optional.ofNullable(doctorAppointmentList);
+    }
+
+    public Void handleScheduleAppointmentButtonClicked(Integer doctorId, LocalDateTime date) throws Exception {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("doctorId", doctorId);
+        jsonObject.addProperty("appointmentDate", date.format(ISO_DATE_TIME));
+        String body = new Gson().toJson(jsonObject);
+        sendScheduleAppointmentRequest(body);
+        return null;
+    }
+
+    private void sendScheduleAppointmentRequest(String body) throws Exception {
+        WebClient client = PostClient.builder()
+                .path(PATIENT_APPOINTMENTS)
+                .pathVariable("id", String.valueOf(patientModel.getPatientId()))
+                .body(body)
+                .build();
+        HttpResponse response = client.execute();
+        int statusCode = response.getStatusLine().getStatusCode();
+        if (statusCode != SC_CREATED) {
+            WebUtils.mapErrorResponseAsException(response);
+        }
     }
 
     private List<DoctorAppointment> createDoctorScheduledAppointmentList(String responseBody) {

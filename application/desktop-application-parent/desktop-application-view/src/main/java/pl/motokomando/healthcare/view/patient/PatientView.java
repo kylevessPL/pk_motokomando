@@ -657,28 +657,84 @@ public class PatientView {
 
     private void delegateEventHandlers() {
         schedulePatientAppointmentsTableUpdate();
-        scheduleAppointmentCalendarUpdate();
         setTextFieldsLimit();
         updatePatientDetailsValidationSupport.validationResultProperty().addListener((obs, oldValue, newValue) ->
                 Platform.runLater(this::switchUpdatePatientDetailsButtonState));
         unlockUpdatePatientDetailsButton.setOnMouseClicked(e ->
                 Platform.runLater(this::switchUnlockUpdatePatientDetailsButtonsState));
         chooseDoctorComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) ->
-                updateAppointmentsCalendarData());
+                processDoctorChange());
         updatePatientDetailsButton.setOnMouseClicked(e -> updatePatientDetails());
-        appointmentDateChoiceTextField.textProperty().addListener((obs, oldValue, newValue) ->
-                Platform.runLater(() -> scheduleAppointmentButton.setDisable(false)));
+        appointmentDateChoiceTextField.textProperty().addListener((obs, oldValue, newValue) -> Platform.runLater(() ->
+                scheduleAppointmentButton.setDisable(appointmentDateChoiceTextField.getText().isEmpty())));
+        scheduleAppointmentButton.setOnMouseClicked(e -> scheduleAppointment());
         appointmentsCalendar.getDetailedWeekView().dateProperty().addListener((obs, oldValue, newValue) ->
                 updateAppointmentsCalendarData());
         appointmentsCalendar.getSelections().addListener((SetChangeListener<Entry<?>>) change ->
                 setAppointmentDateChoice());
     }
 
-    private void scheduleAppointmentCalendarUpdate() {
-        ScheduledService<Void> service = FXTasks.createService(this::updateAppointmentsCalendarData);
-        serviceStore.addPatientService(service);
-        service.setPeriod(Duration.seconds(TABLE_REFRESH_RATE));
-        service.start();
+    private void processDoctorChange() {
+        Platform.runLater(() -> appointmentDateChoiceTextField.clear());
+        updateAppointmentsCalendarData();
+    }
+
+    private void scheduleAppointment() {
+        final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+        String appointmentChoice = appointmentDateChoiceTextField.getText();
+        LocalDate date = LocalDate.parse(appointmentChoice.substring(0, appointmentChoice.indexOf(" ")), dateFormatter);
+        LocalTime time = LocalTime.parse(appointmentChoice.substring(appointmentChoice.indexOf(" ") + 1), timeFormatter);
+        DoctorBasic doctorChoice = chooseDoctorComboBox.getSelectionModel().getSelectedItem();
+        String contentText = String.format("Czy na pewno chcesz umówić wizytę u doktora %s w terminie %s?",
+                doctorChoice.getFirstName() + " " + doctorChoice.getLastName(), appointmentChoice);
+        Alert alert = FXAlert.builder()
+                .alertType(CONFIRMATION)
+                .contentText(contentText)
+                .alertTitle("Rezerwacja wizyty")
+                .owner(currentStage())
+                .build();
+        Platform.runLater(() -> alert.showAndWait()
+                .filter(OK::equals)
+                .ifPresent(e -> processScheduleAppointment(doctorChoice, date, time)));
+    }
+
+    private void processScheduleAppointment(DoctorBasic doctorChoice, LocalDate date, LocalTime time) {
+        Platform.runLater(() -> scheduleAppointmentButton.setDisable(true));
+        LocalDateTime dateTime = LocalDateTime.of(date, time);
+        Integer doctorId = doctorChoice.getId();
+        Task<Void> task = FXTasks.createTask(() ->
+                controller.handleScheduleAppointmentButtonClicked(doctorId, dateTime));
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
+        task.setOnSucceeded(e -> processScheduleAppointmentSuccessResult());
+        task.setOnFailed(e -> processScheduleAppointmentFailureResult(task.getException().getMessage()));
+    }
+
+    private void processScheduleAppointmentSuccessResult() {
+        Alert alert = FXAlert.builder()
+                .alertType(INFORMATION)
+                .alertTitle("Operacja ukończona pomyślnie")
+                .contentText("Pomyślnie umówiono wizytę")
+                .owner(currentStage())
+                .build();
+        Platform.runLater(() -> {
+            appointmentDateChoiceTextField.clear();
+            updateAppointmentsCalendarData();
+            updatePatientAppointmentsTablePageData();
+            alert.showAndWait();
+        });
+    }
+
+    private void processScheduleAppointmentFailureResult(String errorMessage) {
+        Alert alert = FXAlert.builder()
+                .alertType(ERROR)
+                .alertTitle("Nie udało się umówić wizyty")
+                .contentText(errorMessage)
+                .owner(currentStage())
+                .build();
+        Platform.runLater(alert::showAndWait);
     }
 
     private void setAppointmentDateChoice() {
@@ -687,11 +743,11 @@ public class PatientView {
                 appointmentDateChoiceTextField.setText(e.getStartDate().atTime(e.getStartTime()).format(formatter)));
     }
 
-    private Void updateAppointmentsCalendarData() {
+    private void updateAppointmentsCalendarData() {
         Platform.runLater(() -> appointmentsCalendar.getCalendars().get(0).clear());
         if (chooseDoctorComboBox.getSelectionModel().isEmpty() ||
                 !appointmentsCalendar.getDetailedWeekView().getEndDate().isAfter(LocalDate.now())) {
-            return null;
+            return;
         }
         Integer doctorId = chooseDoctorComboBox.getSelectionModel().getSelectedItem().getId();
         LocalDate startDate;
@@ -709,7 +765,6 @@ public class PatientView {
         task.setOnSucceeded(e -> task.getValue().ifPresent(doctorAppointmentList ->
                 setCalendarEvents(doctorAppointmentList, startDate, endDate)));
         task.setOnFailed(e -> processGeneralFailureResult(task.getException().getMessage()));
-        return null;
     }
 
     private void setCalendarEvents(List<DoctorAppointment> doctorAppointmentList,
@@ -723,28 +778,6 @@ public class PatientView {
                 .limit(DAYS.between(startDate, endDate) + 1)
                 .forEach(date -> createAppointmentCalendarEntries(date, calendarEntries, notAvailableDates));
         Platform.runLater(() -> appointmentsCalendar.getCalendars().get(0).addEntries(calendarEntries));
-        if (!appointmentDateChoiceTextField.getText().isEmpty()) {
-            checkAppointmentDateChoiceAvailability(calendarEntries);
-        }
-    }
-
-    private void checkAppointmentDateChoiceAvailability(List<Entry<?>> calendarEntries) {
-        final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-        String textField = appointmentDateChoiceTextField.getText();
-        LocalDate date = LocalDate.parse(textField.substring(0, textField.indexOf(" ")), dateFormatter);
-        LocalTime time = LocalTime.parse(textField.substring(textField.indexOf(" ") + 1), timeFormatter);
-        calendarEntries
-                .stream()
-                .filter(e -> e.getStartDate().equals(date) && e.getStartTime().equals(time))
-                .findFirst()
-                .map(e -> {
-                    appointmentsCalendar.select(e);
-                    return e;
-                }).orElseGet(() -> {
-                    Platform.runLater(() -> appointmentDateChoiceTextField.clear());
-                    return null;
-                });
     }
 
     private void createAppointmentCalendarEntries(LocalDate date,
