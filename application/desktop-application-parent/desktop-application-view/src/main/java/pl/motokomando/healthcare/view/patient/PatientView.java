@@ -522,6 +522,7 @@ public class PatientView {
     private TableColumn<PatientAppointmentsTableRecord, String> createPatientAppointmentsTableColumn() {
         TableColumn<PatientAppointmentsTableRecord, String> column = new TableColumn<>();
         column.setPrefWidth(400.0);
+        column.setStyle("-fx-alignment: center-left;");
         return column;
     }
 

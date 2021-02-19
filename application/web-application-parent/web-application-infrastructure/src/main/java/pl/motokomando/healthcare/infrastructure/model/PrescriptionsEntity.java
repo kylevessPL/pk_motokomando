@@ -30,7 +30,7 @@ public class PrescriptionsEntity {
     private Timestamp issueDate;
     @Column(name = "expiration_date", nullable = false)
     private LocalDate expirationDate;
-    @Column(name = "notes", length = 100)
+    @Column(name = "notes", length = 500)
     private String notes;
 
 }
