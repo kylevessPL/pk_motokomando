@@ -10,6 +10,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -57,6 +59,7 @@ public class AppointmentView {
     private Button saveBillDetailsButton;
     private Button diagnosisButton;
     private TextArea diagnosisTextArea;
+    private ImageView imageViewLogo;
 
     public AppointmentView() {
         initModel();
@@ -105,6 +108,7 @@ public class AppointmentView {
         billPane = new AnchorPane();
         billPane.setPrefHeight(200.0);
         billPane.setPrefWidth(200.0);
+        createLogoImage(billPane);
         createBillAmountTextField();
         createBillAmountLabel();
         createSaveBillDetailsButton();
@@ -112,10 +116,21 @@ public class AppointmentView {
         appointmentPane.getTabs().add(billTab);
     }
 
+    private void createLogoImage(AnchorPane backgroundPane) {
+        Image logoImage = new Image(this.getClass().getResourceAsStream("/images/logo.png"));
+        imageViewLogo = new ImageView(logoImage);
+        imageViewLogo.setLayoutX(50);
+        imageViewLogo.setLayoutY(210);
+        imageViewLogo.setFitHeight(275);
+        imageViewLogo.setFitWidth(1100);
+        imageViewLogo.setOpacity(0.3);
+        backgroundPane.getChildren().add(imageViewLogo);
+    }
+
     private void createSaveBillDetailsButton() {
         saveBillDetailsButton = new Button();
-        saveBillDetailsButton.setLayoutX(550.0);
-        saveBillDetailsButton.setLayoutY(360.0);
+        saveBillDetailsButton.setLayoutX(555.0);
+        saveBillDetailsButton.setLayoutY(400.0);
         saveBillDetailsButton.setMnemonicParsing(false);
         saveBillDetailsButton.setText("Zatwierdź");
         saveBillDetailsButton.setFont(new Font(16.0));
@@ -178,6 +193,7 @@ public class AppointmentView {
         doctorPane = new AnchorPane();
         doctorPane.setPrefHeight(180.0);
         doctorPane.setPrefWidth(200.0);
+        createLogoImage(doctorPane);
         createChooseDoctorComboBox();
         createChooseDoctorLabel();
         createSaveDoctorDetailsButton();
@@ -188,7 +204,7 @@ public class AppointmentView {
     private void createSaveDoctorDetailsButton() {
         saveDoctorDetailsButton = new Button();
         saveDoctorDetailsButton.setLayoutX(555.0);
-        saveDoctorDetailsButton.setLayoutY(361.0);
+        saveDoctorDetailsButton.setLayoutY(400.0);
         saveDoctorDetailsButton.setMnemonicParsing(false);
         saveDoctorDetailsButton.setText("Zatwierdź");
         saveDoctorDetailsButton.setFont(new Font(16.0));
