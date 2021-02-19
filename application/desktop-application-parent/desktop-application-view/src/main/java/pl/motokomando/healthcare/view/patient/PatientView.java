@@ -9,8 +9,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.SetChangeListener;
 import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -20,10 +22,13 @@ import javafx.scene.control.Pagination;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import lombok.SneakyThrows;
@@ -38,6 +43,7 @@ import pl.motokomando.healthcare.model.patient.utils.DoctorAppointment;
 import pl.motokomando.healthcare.model.patient.utils.DoctorBasic;
 import pl.motokomando.healthcare.model.patient.utils.PatientAppointmentsTableRecord;
 import pl.motokomando.healthcare.model.utils.ServiceStore;
+import pl.motokomando.healthcare.view.appointment.AppointmentView;
 import pl.motokomando.healthcare.view.patient.utils.ChooseDoctorComboBoxConverter;
 import utils.FXAlert;
 import utils.FXTasks;
@@ -68,6 +74,7 @@ import static javafx.scene.control.ButtonType.OK;
 import static javafx.scene.control.SelectionMode.SINGLE;
 import static javafx.scene.control.TabPane.TabClosingPolicy.UNAVAILABLE;
 import static javafx.scene.layout.Region.USE_PREF_SIZE;
+import static javafx.stage.Modality.WINDOW_MODAL;
 import static utils.DateConstraints.PAST;
 
 public class PatientView {
@@ -672,6 +679,18 @@ public class PatientView {
                 updateAppointmentsCalendarData());
         appointmentsCalendar.getSelections().addListener((SetChangeListener<Entry<?>>) change ->
                 setAppointmentDateChoice());
+        patientAppointmentsTable.setRowFactory(tv -> setPatientAppointmentsTableRowFactory());
+    }
+
+    private TableRow<PatientAppointmentsTableRecord> setPatientAppointmentsTableRowFactory() {
+        TableRow<PatientAppointmentsTableRecord> row = new TableRow<>();
+        row.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2 && !row.isEmpty()) {
+                PatientAppointmentsTableRecord record = patientAppointmentsTable.getItems().get(row.getIndex());
+                openAppointmentScene(record.getId());
+            }
+        });
+        return row;
     }
 
     private void processDoctorChange() {
@@ -939,6 +958,26 @@ public class PatientView {
         patientPhoneNumberTextField.setText(patientDetails.getPhoneNumber());
         patientRegistrationTextField.setText(model.getPatientRegistrationDate()
                 .format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")));
+    }
+
+    private void openAppointmentScene(Integer appointmentId) {
+        Scene scene = new Scene(new AppointmentView(appointmentId).asParent(), 1200, 700);
+        Platform.runLater(() -> {
+            Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+            Stage subStage = new Stage();
+            subStage.setScene(scene);
+            subStage.setX((screenBounds.getWidth() - scene.getWidth()) / 2);
+            subStage.setY((screenBounds.getHeight() - scene.getHeight()) / 2);
+            subStage.setTitle("Wizyta lekarska");
+            subStage.getIcons().add(new Image(this.getClass().getResourceAsStream("/images/favicon.png")));
+            subStage.initOwner(currentStage());
+            subStage.initModality(WINDOW_MODAL);
+            subStage.setOnHidden(e -> {
+                updatePatientAppointmentsTablePageData();
+                serviceStore.cancelAllAppointmentServices();
+            });
+            subStage.show();
+        });
     }
 
 }

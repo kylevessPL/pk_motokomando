@@ -1097,7 +1097,7 @@ public class BaseView {
             subStage.setScene(scene);
             subStage.setX((screenBounds.getWidth() - scene.getWidth()) / 2);
             subStage.setY((screenBounds.getHeight() - scene.getHeight()) / 2);
-            subStage.setTitle("Healthcare Management");
+            subStage.setTitle("Panel pacjenta");
             subStage.getIcons().add(new Image(this.getClass().getResourceAsStream("/images/favicon.png")));
             subStage.initOwner(currentStage());
             subStage.initModality(WINDOW_MODAL);
