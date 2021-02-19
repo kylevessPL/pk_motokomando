@@ -75,6 +75,7 @@ import static javafx.scene.control.SelectionMode.SINGLE;
 import static javafx.scene.control.TabPane.TabClosingPolicy.UNAVAILABLE;
 import static javafx.scene.layout.Region.USE_PREF_SIZE;
 import static javafx.stage.Modality.WINDOW_MODAL;
+import static pl.motokomando.healthcare.model.patient.utils.AppointmentStatus.CANCELLED;
 import static utils.DateConstraints.PAST;
 
 public class PatientView {
@@ -522,7 +523,7 @@ public class PatientView {
     private TableColumn<PatientAppointmentsTableRecord, String> createPatientAppointmentsTableColumn() {
         TableColumn<PatientAppointmentsTableRecord, String> column = new TableColumn<>();
         column.setPrefWidth(400.0);
-        column.setStyle("-fx-alignment: center-left;");
+        column.setStyle("-fx-alignment: center;");
         return column;
     }
 
@@ -688,10 +689,30 @@ public class PatientView {
         row.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2 && !row.isEmpty()) {
                 PatientAppointmentsTableRecord record = patientAppointmentsTable.getItems().get(row.getIndex());
-                openAppointmentScene(record.getId());
+                if (record.appointmentStatus().get().equals(CANCELLED.getName())) {
+                    Alert alert = FXAlert.builder()
+                            .alertType(WARNING)
+                            .alertTitle("Informacja o wizycie")
+                            .contentText("Wizyta została anulowana")
+                            .owner(currentStage())
+                            .build();
+                    Platform.runLater(alert::showAndWait);
+                } else {
+                    openAppointmentScene(record.getId());
+                }
             }
         });
         return row;
+    }
+
+    private void processOpenAppointmentSceneFailureResult(String errorMessage) {
+        Alert alert = FXAlert.builder()
+                .alertType(ERROR)
+                .alertTitle("Nie udało się wyświetlić szczegółów wizyty")
+                .contentText(errorMessage)
+                .owner(currentStage())
+                .build();
+        Platform.runLater(alert::showAndWait);
     }
 
     private void processDoctorChange() {

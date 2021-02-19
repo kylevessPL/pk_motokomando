@@ -1,5 +1,6 @@
 package pl.motokomando.healthcare.model.appointment;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import lombok.Getter;
@@ -25,9 +26,15 @@ public final class AppointmentModel {
     @Accessors(fluent = true)
     @Setter(NONE)
     private final ObservableList<MedicinesTableRecord> appointmentMedicinesTableContent = FXCollections.observableArrayList();
+    @Accessors(fluent = true)
+    @Setter(NONE)
+    private final SimpleStringProperty prescriptionNotes = new SimpleStringProperty();
 
     @Setter(NONE)
     private Integer tableCount = 10;
+
+    private Integer prescriptionId;
+    private Integer billId;
 
     public void setMedicinesTableContent(List<MedicinesTableRecord> tableContent) {
         medicinesTableContent.setAll(tableContent);
@@ -35,6 +42,10 @@ public final class AppointmentModel {
 
     public void setAppointmentMedicinesTableContent(List<MedicinesTableRecord> tableContent) {
         appointmentMedicinesTableContent.setAll(tableContent);
+    }
+
+    public void setPrescriptionNotes(String notes) {
+        prescriptionNotes.set(notes);
     }
 
 }

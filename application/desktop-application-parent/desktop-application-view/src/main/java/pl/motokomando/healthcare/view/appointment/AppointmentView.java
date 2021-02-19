@@ -1,14 +1,18 @@
 package pl.motokomando.healthcare.view.appointment;
 
+import javafx.beans.binding.Bindings;
 import javafx.concurrent.Task;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -26,6 +30,7 @@ import pl.motokomando.healthcare.view.appointment.utils.PackagingVariantsColumnC
 import utils.FXTasks;
 
 import static javafx.scene.control.ProgressIndicator.INDETERMINATE_PROGRESS;
+import static javafx.scene.control.SelectionMode.MULTIPLE;
 import static javafx.scene.control.TabPane.TabClosingPolicy.UNAVAILABLE;
 import static javafx.scene.input.KeyCode.ENTER;
 import static javafx.scene.layout.Region.USE_PREF_SIZE;
@@ -248,6 +253,7 @@ public class AppointmentView {
         medicinesTable.setLayoutY(99.0);
         medicinesTable.setPrefHeight(450.0);
         medicinesTable.setPrefWidth(1100.0);
+        medicinesTable.getSelectionModel().setSelectionMode(MULTIPLE);
         medicinesTable.setPlaceholder(new Label("Wprowadź zapytanie w polu wyszukiwania, aby znaleźć leki"));
         setMedicinesTableColumns(medicinesTable);
         medicinesTable.setItems(model.medicinesTableContent());
@@ -329,7 +335,6 @@ public class AppointmentView {
     private TableColumn<MedicinesTableRecord, Void> createMedicinesTableNinthColumn() {
         TableColumn<MedicinesTableRecord, Void> column9 = createMedicinesTableColumn();
         column9.setText("Rodzaj opakowania");
-        column9.setStyle("-fx-alignment: center-left;");
         column9.setCellFactory(new PackagingVariantsColumnCallback(appointmentPane));
         return column9;
     }
@@ -358,7 +363,7 @@ public class AppointmentView {
 
     private TableColumn<MedicinesTableRecord, String> createMedicinesTableFifthColumn() {
         TableColumn<MedicinesTableRecord, String> column5 = createMedicinesTableColumn();
-        column5.setText("Ogólny typ");
+        column5.setText("Rodzaj");
         column5.setStyle("-fx-alignment: center-left;");
         column5.setCellValueFactory(c -> c.getValue().genericName());
         return column5;
@@ -402,6 +407,21 @@ public class AppointmentView {
 
     private void delegateEventHandlers() {
         medicineSearchQueryTextField.setOnKeyPressed(this::medicineSearchQueryTextFieldEnterPressed);
+        medicinesTable.setRowFactory(param -> createMedicinesTableContextMenu());
+    }
+
+    private TableRow<MedicinesTableRecord> createMedicinesTableContextMenu() {
+        final TableRow<MedicinesTableRecord> row = new TableRow<>();
+        final ContextMenu contextMenu = new ContextMenu();
+        final MenuItem menuItem = new MenuItem("Dodaj do recepty");
+        //menuItem.setOnAction(event -> m.getItems().remove(row.getItem()));
+        contextMenu.getItems().add(menuItem);
+        row.contextMenuProperty().bind(
+                Bindings.when(row.emptyProperty())
+                        .then((ContextMenu) null)
+                        .otherwise(contextMenu)
+        );
+        return row;
     }
 
     private void medicineSearchQueryTextFieldEnterPressed(KeyEvent event) {
