@@ -135,6 +135,15 @@ public class BaseView {
     private Label doctorFirstNameLabel;
     private Label doctorLastNameLabel;
     private Label doctorPhoneNumberLabel;
+    private Label patientFirstNameLabel;
+    private Label patientLastNameLabel;
+    private Label patientBirthDateLabel;
+    private Label patientPhoneNumberLabel;
+    private Label patientStreetNameLabel;
+    private Label patientHouseNumberLabel;
+    private Label patientZipCodeLabel;
+    private Label patientCityLabel;
+    private Label patientPeselLabel;
 
     private Pagination patientsTablePagination;
     private Pagination doctorsTablePagination;
@@ -468,30 +477,102 @@ public class BaseView {
         addPatientPane.setPrefHeight(180.0);
         addPatientPane.setPrefWidth(200.0);
         createPatientFirstNameTextField();
-
+        createPatientFirstNameLabel();
         createPatientLastNameTextField();
-
+        createPatientLastNameLabel();
         createPatientBirthDateDatePicker();
-
+        createPatientBirthDateLabel();
         createChoosePatientSexComboBox();
         createChoosePatientBloodTypeComboBox();
         createPatientStreetNameTextField();
-
+        createPatientStreetNameLabel();
         createPatientHouseNumberTextField();
-
+        createPatientHouseNumberLabel();
         createPatientZipCodeTextField();
-
+        createPatientZipCodeLabel();
         createPatientCityTextField();
-
+        createPatientCityLabel();
         createPatientPeselTextField();
-
+        createPatientPeselLabel();
         createPatientPhoneNumberTextField();
-
+        createPatientPhoneNumberLabel();
         createAddPatientButton();
         createPatientSexLabel();
         createPatientBloodTypeLabel();
         addPatientTab.setContent(addPatientPane);
         patientsPane.getTabs().add(addPatientTab);
+    }
+
+    private void createPatientFirstNameLabel(){
+        patientFirstNameLabel = new Label();
+        patientFirstNameLabel.setLayoutX(350.0);
+        patientFirstNameLabel.setLayoutY(20.0);
+        patientFirstNameLabel.setText("Imie");
+        addPatientPane.getChildren().add(patientFirstNameLabel);
+    }
+
+    private void createPatientLastNameLabel(){
+        patientLastNameLabel = new Label();
+        patientLastNameLabel.setLayoutX(350.0);
+        patientLastNameLabel.setLayoutY(100.0);
+        patientLastNameLabel.setText("Nazwisko");
+        addPatientPane.getChildren().add(patientLastNameLabel);
+    }
+
+    private void createPatientBirthDateLabel(){
+        patientBirthDateLabel = new Label();
+        patientBirthDateLabel.setLayoutX(350.0);
+        patientBirthDateLabel.setLayoutY(180.0);
+        patientBirthDateLabel.setText("Data urodzenia");
+        addPatientPane.getChildren().add(patientBirthDateLabel);
+    }
+
+    private void createPatientPhoneNumberLabel(){
+        patientPhoneNumberLabel = new Label();
+        patientPhoneNumberLabel.setLayoutX(350.0);
+        patientPhoneNumberLabel.setLayoutY(420.0);
+        patientPhoneNumberLabel.setText("Numer telefonu");
+        addPatientPane.getChildren().add(patientPhoneNumberLabel);
+    }
+
+    private void createPatientStreetNameLabel(){
+        patientStreetNameLabel = new Label();
+        patientStreetNameLabel.setLayoutX(950.0);
+        patientStreetNameLabel.setLayoutY(20.0);
+        patientStreetNameLabel.setText("Ulica");
+        addPatientPane.getChildren().add(patientStreetNameLabel);
+    }
+
+    private void createPatientHouseNumberLabel(){
+        patientHouseNumberLabel = new Label();
+        patientHouseNumberLabel.setLayoutX(950.0);
+        patientHouseNumberLabel.setLayoutY(100.0);
+        patientHouseNumberLabel.setText("Numer domu");
+        addPatientPane.getChildren().add(patientHouseNumberLabel);
+    }
+
+    private void createPatientZipCodeLabel(){
+        patientZipCodeLabel = new Label();
+        patientZipCodeLabel.setLayoutX(950.0);
+        patientZipCodeLabel.setLayoutY(180.0);
+        patientZipCodeLabel.setText("Kod pocztowy");
+        addPatientPane.getChildren().add(patientZipCodeLabel);
+    }
+
+    private void createPatientCityLabel(){
+        patientCityLabel = new Label();
+        patientCityLabel.setLayoutX(950.0);
+        patientCityLabel.setLayoutY(260.0);
+        patientCityLabel.setText("Miejscowość");
+        addPatientPane.getChildren().add(patientCityLabel);
+    }
+
+    private void createPatientPeselLabel(){
+        patientPeselLabel = new Label();
+        patientPeselLabel.setLayoutX(950.0);
+        patientPeselLabel.setLayoutY(340.0);
+        patientPeselLabel.setText("Miejscowość");
+        addPatientPane.getChildren().add(patientPeselLabel);
     }
 
     private void createPatientBloodTypeLabel() {
