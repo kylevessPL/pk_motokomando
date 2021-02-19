@@ -21,6 +21,7 @@ import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Screen;
@@ -144,6 +145,7 @@ public class BaseView {
     private Label patientZipCodeLabel;
     private Label patientCityLabel;
     private Label patientPeselLabel;
+    private ImageView imageViewLogo;
 
     private Pagination patientsTablePagination;
     private Pagination doctorsTablePagination;
@@ -195,6 +197,7 @@ public class BaseView {
         userInfoTab = new Tab();
         userInfoTab.setText("Konto");
         userInfoPane = new AnchorPane();
+        createLogoImage(userInfoPane);
         createUserFirstNameLabel();
         createUserFirstNameTextField();
         createUserLastNameLabel();
@@ -322,6 +325,7 @@ public class BaseView {
         addDoctorPane = new AnchorPane();
         addDoctorPane.setPrefHeight(800.0);
         addDoctorPane.setPrefWidth(1600.0);
+        createLogoImage(addDoctorPane);
         createDoctorFirstNameTextField();
         createDoctorFirstNameLabel();
         createDoctorLastNameTextField();
@@ -341,7 +345,7 @@ public class BaseView {
         doctorFirstNameLabel = new Label();
         doctorFirstNameLabel.setLayoutX(650.0);
         doctorFirstNameLabel.setLayoutY(40.0);
-        doctorFirstNameLabel.setText("Imie");
+        doctorFirstNameLabel.setText("Imię");
         addDoctorPane.getChildren().add(doctorFirstNameLabel);
     }
 
@@ -412,7 +416,7 @@ public class BaseView {
         doctorPhoneNumberTextField.setLayoutY(270.0);
         doctorPhoneNumberTextField.setPrefHeight(40.0);
         doctorPhoneNumberTextField.setPrefWidth(300.0);
-        doctorPhoneNumberTextField.setPromptText("Numer telefonu");
+        doctorPhoneNumberTextField.setPromptText("Podaj numer");
         addDoctorPane.getChildren().add(doctorPhoneNumberTextField);
     }
 
@@ -422,7 +426,7 @@ public class BaseView {
         doctorLastNameTextField.setLayoutY(170.0);
         doctorLastNameTextField.setPrefHeight(40.0);
         doctorLastNameTextField.setPrefWidth(300.0);
-        doctorLastNameTextField.setPromptText("Nazwisko");
+        doctorLastNameTextField.setPromptText("Podaj nazwisko");
         addDoctorPane.getChildren().add(doctorLastNameTextField);
     }
 
@@ -442,7 +446,7 @@ public class BaseView {
         doctorFirstNameTextField.setLayoutY(70.0);
         doctorFirstNameTextField.setPrefHeight(40.0);
         doctorFirstNameTextField.setPrefWidth(300.0);
-        doctorFirstNameTextField.setPromptText("Imie");
+        doctorFirstNameTextField.setPromptText("Podaj imię");
         addDoctorPane.getChildren().add(doctorFirstNameTextField);
     }
 
@@ -476,6 +480,7 @@ public class BaseView {
         addPatientPane = new AnchorPane();
         addPatientPane.setPrefHeight(180.0);
         addPatientPane.setPrefWidth(200.0);
+        createLogoImage(addPatientPane);
         createPatientFirstNameTextField();
         createPatientFirstNameLabel();
         createPatientLastNameTextField();
@@ -503,11 +508,22 @@ public class BaseView {
         patientsPane.getTabs().add(addPatientTab);
     }
 
+    private void createLogoImage(AnchorPane backgroundPane) {
+        Image logoImage = new Image(this.getClass().getResourceAsStream("/images/logo.png"));
+        imageViewLogo = new ImageView(logoImage);
+        imageViewLogo.setLayoutX(50);
+        imageViewLogo.setLayoutY(150);
+        imageViewLogo.setFitHeight(350);
+        imageViewLogo.setFitWidth(1500);
+        imageViewLogo.setOpacity(0.3);
+        backgroundPane.getChildren().add(imageViewLogo);
+    }
+
     private void createPatientFirstNameLabel(){
         patientFirstNameLabel = new Label();
         patientFirstNameLabel.setLayoutX(350.0);
         patientFirstNameLabel.setLayoutY(20.0);
-        patientFirstNameLabel.setText("Imie");
+        patientFirstNameLabel.setText("Imię");
         addPatientPane.getChildren().add(patientFirstNameLabel);
     }
 
@@ -571,7 +587,7 @@ public class BaseView {
         patientPeselLabel = new Label();
         patientPeselLabel.setLayoutX(950.0);
         patientPeselLabel.setLayoutY(340.0);
-        patientPeselLabel.setText("Miejscowość");
+        patientPeselLabel.setText("PESEL");
         addPatientPane.getChildren().add(patientPeselLabel);
     }
 
@@ -594,7 +610,7 @@ public class BaseView {
     private void createAddPatientButton() {
         addPatientButton = new Button();
         addPatientButton.setLayoutX(700.0);
-        addPatientButton.setLayoutY(630.0);
+        addPatientButton.setLayoutY(580.0);
         addPatientButton.setMnemonicParsing(false);
         addPatientButton.setPrefHeight(45.0);
         addPatientButton.setPrefWidth(200.0);
@@ -609,7 +625,7 @@ public class BaseView {
         patientPhoneNumberTextField.setLayoutY(450.0);
         patientPhoneNumberTextField.setPrefHeight(40.0);
         patientPhoneNumberTextField.setPrefWidth(300.0);
-        patientPhoneNumberTextField.setPromptText("Numer Telefonu");
+        patientPhoneNumberTextField.setPromptText("Podaj numer");
         addPatientPane.getChildren().add(patientPhoneNumberTextField);
     }
 
@@ -619,7 +635,7 @@ public class BaseView {
         patientPeselTextField.setLayoutY(370.0);
         patientPeselTextField.setPrefHeight(40.0);
         patientPeselTextField.setPrefWidth(300.0);
-        patientPeselTextField.setPromptText("PESEL");
+        patientPeselTextField.setPromptText("Podaj PESEL");
         addPatientPane.getChildren().add(patientPeselTextField);
     }
 
@@ -629,7 +645,7 @@ public class BaseView {
         patientCityTextField.setLayoutY(290.0);
         patientCityTextField.setPrefHeight(40.0);
         patientCityTextField.setPrefWidth(300.0);
-        patientCityTextField.setPromptText("Miejscowość");
+        patientCityTextField.setPromptText("Podaj miejscowość");
         addPatientPane.getChildren().add(patientCityTextField);
     }
 
@@ -639,7 +655,7 @@ public class BaseView {
         patientZipCodeTextField.setLayoutY(210.0);
         patientZipCodeTextField.setPrefHeight(40.0);
         patientZipCodeTextField.setPrefWidth(300.0);
-        patientZipCodeTextField.setPromptText("Kod pocztowy");
+        patientZipCodeTextField.setPromptText("Podaj kod pocztowy");
         addPatientPane.getChildren().add(patientZipCodeTextField);
     }
 
@@ -649,7 +665,7 @@ public class BaseView {
         patientHouseNumberTextField.setLayoutY(130.0);
         patientHouseNumberTextField.setPrefHeight(40.0);
         patientHouseNumberTextField.setPrefWidth(300.0);
-        patientHouseNumberTextField.setPromptText("Numer domu");
+        patientHouseNumberTextField.setPromptText("Podaj numer domu");
         addPatientPane.getChildren().add(patientHouseNumberTextField);
     }
 
@@ -659,7 +675,7 @@ public class BaseView {
         patientStreetNameTextField.setLayoutY(50.0);
         patientStreetNameTextField.setPrefHeight(40.0);
         patientStreetNameTextField.setPrefWidth(300.0);
-        patientStreetNameTextField.setPromptText("Ulica");
+        patientStreetNameTextField.setPromptText("Podaj ulicę");
         addPatientPane.getChildren().add(patientStreetNameTextField);
     }
 
@@ -697,7 +713,7 @@ public class BaseView {
         patientBirthDateDatePicker.setLayoutY(210.0);
         patientBirthDateDatePicker.setPrefHeight(40.0);
         patientBirthDateDatePicker.setPrefWidth(300.0);
-        patientBirthDateDatePicker.setPromptText("Data urodzenia");
+        patientBirthDateDatePicker.setPromptText("Zaznacz datę urodzenia");
         patientBirthDateDatePicker.setConverter(new DefaultDatePickerConverter());
         addPatientPane.getChildren().add(patientBirthDateDatePicker);
     }
@@ -708,7 +724,7 @@ public class BaseView {
         patientLastNameTextField.setLayoutY(130.0);
         patientLastNameTextField.setPrefHeight(40.0);
         patientLastNameTextField.setPrefWidth(300.0);
-        patientLastNameTextField.setPromptText("Nazwisko");
+        patientLastNameTextField.setPromptText("Podaj nazwisko");
         addPatientPane.getChildren().add(patientLastNameTextField);
     }
 
@@ -718,7 +734,7 @@ public class BaseView {
         patientFirstNameTextField.setLayoutY(50.0);
         patientFirstNameTextField.setPrefHeight(40.0);
         patientFirstNameTextField.setPrefWidth(300.0);
-        patientFirstNameTextField.setPromptText("Imie");
+        patientFirstNameTextField.setPromptText("Podaj imię");
         addPatientPane.getChildren().add(patientFirstNameTextField);
     }
 

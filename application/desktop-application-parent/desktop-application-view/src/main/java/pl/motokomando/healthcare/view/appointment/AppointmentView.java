@@ -125,7 +125,7 @@ public class AppointmentView {
     private void createBillAmountLabel() {
         billAmountLabel = new Label();
         billAmountLabel.setLayoutX(500.0);
-        billAmountLabel.setLayoutY(168.0);
+        billAmountLabel.setLayoutY(160.0);
         billAmountLabel.setText("Kwota (PLN):");
         billAmountLabel.setFont(new Font(16.0));
         billPane.getChildren().add(billAmountLabel);
@@ -134,7 +134,7 @@ public class AppointmentView {
     private void createBillAmountTextField() {
         billAmountTextField = new TextField();
         billAmountTextField.setLayoutX(500.0);
-        billAmountTextField.setLayoutY(193.0);
+        billAmountTextField.setLayoutY(190.0);
         billAmountTextField.setPrefHeight(50.0);
         billAmountTextField.setFont(new Font(16.0));
         billPane.getChildren().add(billAmountTextField);
@@ -198,7 +198,7 @@ public class AppointmentView {
     private void createChooseDoctorLabel() {
         chooseDoctorLabel = new Label();
         chooseDoctorLabel.setLayoutX(450.0);
-        chooseDoctorLabel.setLayoutY(168.0);
+        chooseDoctorLabel.setLayoutY(160.0);
         chooseDoctorLabel.setText("Wybierz lekarza:");
         chooseDoctorLabel.setFont(new Font(16.0));
         doctorPane.getChildren().add(chooseDoctorLabel);
@@ -207,7 +207,7 @@ public class AppointmentView {
     private void createChooseDoctorComboBox() {
         chooseDoctorComboBox = new ComboBox<>();
         chooseDoctorComboBox.setLayoutX(450.0);
-        chooseDoctorComboBox.setLayoutY(193.0);
+        chooseDoctorComboBox.setLayoutY(190.0);
         chooseDoctorComboBox.setPrefHeight(40.0);
         chooseDoctorComboBox.setPrefWidth(300.0);
         doctorPane.getChildren().add(chooseDoctorComboBox);

@@ -2,6 +2,8 @@ package pl.motokomando.healthcare.view.doctor;
 
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import org.controlsfx.validation.ValidationSupport;
@@ -37,6 +39,7 @@ public class DoctorView {
     private Label doctorMedicalSpecialtyLabel;
     private Button unlockUpdatePatientDetailsButton;
     private Button updatePatientDetailsButton;
+    private ImageView imageViewLogo;
 
     public DoctorView() {
         //initModel(patientId);
@@ -68,6 +71,7 @@ public class DoctorView {
         doctorDetailsPane = new AnchorPane();
         doctorDetailsPane.setPrefHeight(600.0);
         doctorDetailsPane.setPrefWidth(900.0);
+        createLogoImage();
         createDoctorFirstNameTextField();
         createDoctorPhoneNumberTextField();
         createDoctorLastNameTextField();
@@ -82,6 +86,17 @@ public class DoctorView {
 
         createUpdateDoctorDetailsButton();
         createUnlockUpdateDoctorDetailsButton();
+    }
+
+    private void createLogoImage() {
+        Image logoImage = new Image(this.getClass().getResourceAsStream("/images/logo.png"));
+        imageViewLogo = new ImageView(logoImage);
+        imageViewLogo.setLayoutX(50);
+        imageViewLogo.setLayoutY(200);
+        imageViewLogo.setFitHeight(200);
+        imageViewLogo.setFitWidth(800);
+        imageViewLogo.setOpacity(0.3);
+        doctorDetailsPane.getChildren().add(imageViewLogo);
     }
 
     private void createUnlockUpdateDoctorDetailsButton() {
@@ -106,7 +121,7 @@ public class DoctorView {
     private void createDoctorMedicalSpecialtyLabel() {
         doctorMedicalSpecialtyLabel = new Label();
         doctorMedicalSpecialtyLabel.setLayoutX(550.0);
-        doctorMedicalSpecialtyLabel.setLayoutY(200.0);
+        doctorMedicalSpecialtyLabel.setLayoutY(155.0);
         doctorMedicalSpecialtyLabel.setText("Specjalizacja");
         doctorDetailsPane.getChildren().add(doctorMedicalSpecialtyLabel);
     }
@@ -114,7 +129,7 @@ public class DoctorView {
     private void createChooseDoctorMedicalSpecialtyComboBox() {
         chooseDoctorMedicalSpecialtyComboBox = new ComboBox<>();
         chooseDoctorMedicalSpecialtyComboBox.setLayoutX(550.0);
-        chooseDoctorMedicalSpecialtyComboBox.setLayoutY(220.0);
+        chooseDoctorMedicalSpecialtyComboBox.setLayoutY(185.0);
         chooseDoctorMedicalSpecialtyComboBox.setPrefHeight(30.0);
         chooseDoctorMedicalSpecialtyComboBox.setPrefWidth(200.0);
         chooseDoctorMedicalSpecialtyComboBox.setPromptText("Wybierz specjalizację");
@@ -128,7 +143,7 @@ public class DoctorView {
     private void createDoctorAcademicTitleLabel() {
         doctorAcademicTitleLabel = new Label();
         doctorAcademicTitleLabel.setLayoutX(150.0);
-        doctorAcademicTitleLabel.setLayoutY(200.0);
+        doctorAcademicTitleLabel.setLayoutY(190.0);
         doctorAcademicTitleLabel.setText("Tytuł naukowy");
         doctorDetailsPane.getChildren().add(doctorAcademicTitleLabel);
     }
@@ -136,22 +151,22 @@ public class DoctorView {
     private void createDoctorFirstNameLabel() {
         doctorFirstNameLabel = new Label();
         doctorFirstNameLabel.setLayoutX(150.0);
-        doctorFirstNameLabel.setLayoutY(40.0);
-        doctorFirstNameLabel.setText("Imie");
+        doctorFirstNameLabel.setLayoutY(30.0);
+        doctorFirstNameLabel.setText("Imię");
         doctorDetailsPane.getChildren().add(doctorFirstNameLabel);
     }
 
     private void createDoctorLastNameLabel() {
         doctorLastNameLabel = new Label();
         doctorLastNameLabel.setLayoutX(150.0);
-        doctorLastNameLabel.setLayoutY(120.0);
+        doctorLastNameLabel.setLayoutY(110.0);
         doctorLastNameLabel.setText("Nazwisko");
         doctorDetailsPane.getChildren().add(doctorLastNameLabel);
     }
     private void createDoctorPhoneNumberLabel() {
         doctorPhoneNumberLabel = new Label();
         doctorPhoneNumberLabel.setLayoutX(550.0);
-        doctorPhoneNumberLabel.setLayoutY(40.0);
+        doctorPhoneNumberLabel.setLayoutY(65.0);
         doctorPhoneNumberLabel.setText("Numer telefonu");
         doctorDetailsPane.getChildren().add(doctorPhoneNumberLabel);
     }
@@ -162,7 +177,7 @@ public class DoctorView {
         chooseDoctorAcademicTitleComboBox.setLayoutY(220.0);
         chooseDoctorAcademicTitleComboBox.setPrefHeight(30.0);
         chooseDoctorAcademicTitleComboBox.setPrefWidth(200.0);
-        chooseDoctorAcademicTitleComboBox.setPromptText("Wybierz tytuł naukowy");
+        chooseDoctorAcademicTitleComboBox.setPromptText("Wybierz tytuł");
         chooseDoctorAcademicTitleComboBox.getItems().setAll(Arrays
                 .stream(AcademicTitle.values())
                 .map(AcademicTitle::getName)
@@ -176,17 +191,17 @@ public class DoctorView {
         doctorLastNameTextField.setLayoutY(140.0);
         doctorLastNameTextField.setPrefHeight(30.0);
         doctorLastNameTextField.setPrefWidth(200.0);
-        doctorLastNameTextField.setPromptText("Nazwisko");
+        doctorLastNameTextField.setPromptText("Podaj nazwisko");
         doctorDetailsPane.getChildren().add(doctorLastNameTextField);
     }
 
     private void createDoctorPhoneNumberTextField() {
         doctorPhoneNumberTextField = new TextField();
         doctorPhoneNumberTextField.setLayoutX(550.0);
-        doctorPhoneNumberTextField.setLayoutY(60.0);
+        doctorPhoneNumberTextField.setLayoutY(95.0);
         doctorPhoneNumberTextField.setPrefHeight(30.0);
         doctorPhoneNumberTextField.setPrefWidth(200.0);
-        doctorPhoneNumberTextField.setPromptText("Numer telefonu");
+        doctorPhoneNumberTextField.setPromptText("Podaj numer");
         doctorDetailsPane.getChildren().add(doctorPhoneNumberTextField);
     }
 
@@ -196,7 +211,7 @@ public class DoctorView {
         doctorFirstNameTextField.setLayoutY(60.0);
         doctorFirstNameTextField.setPrefHeight(30.0);
         doctorFirstNameTextField.setPrefWidth(200.0);
-        doctorFirstNameTextField.setPromptText("Imię");
+        doctorFirstNameTextField.setPromptText("Podaj imię");
         doctorDetailsPane.getChildren().add(doctorFirstNameTextField);
     }
 }
