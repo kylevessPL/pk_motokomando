@@ -172,7 +172,7 @@ public class PatientView {
 
     private void createAppointmentCancelButton(){
         patientAppointmentCanelButton = new Button();
-        patientAppointmentCanelButton.setLayoutX(780.0);
+        patientAppointmentCanelButton.setLayoutX(785.0);
         patientAppointmentCanelButton.setLayoutY(15.0);
         patientAppointmentCanelButton.setMnemonicParsing(false);
         patientAppointmentCanelButton.setText("Anuluj");

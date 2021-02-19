@@ -48,6 +48,7 @@ public class AppointmentView {
     private TableView<MedicineRecord> prescriptionMedicinesTable;
     private TextField medicineNameTextField;
     private Button addMedicineToPrescriptionButton;
+    private Button searchMedicineToPrescriptionButton;
     private ComboBox<String> chooseDoctorComboBox;
     private Label chooseDoctorLabel;
     private Button saveDoctorDetailsButton;
@@ -113,8 +114,8 @@ public class AppointmentView {
 
     private void createSaveBillDetailsButton() {
         saveBillDetailsButton = new Button();
-        saveBillDetailsButton.setLayoutX(525.0);
-        saveBillDetailsButton.setLayoutY(361.0);
+        saveBillDetailsButton.setLayoutX(550.0);
+        saveBillDetailsButton.setLayoutY(360.0);
         saveBillDetailsButton.setMnemonicParsing(false);
         saveBillDetailsButton.setText("Zatwierdź");
         saveBillDetailsButton.setFont(new Font(16.0));
@@ -253,15 +254,26 @@ public class AppointmentView {
         addPrescriptionMedicinePane.setPrefWidth(200.0);
         createPrescriptionMedicinesTable();
         createMedicineNameTextField();
+        createSearchMedicineToPrescriptionButton();
         createAddMedicineToPrescriptionButton();
         addPrescriptionMedicineTab.setContent(addPrescriptionMedicinePane);
         prescriptionPane.getTabs().add(addPrescriptionMedicineTab);
     }
 
+    private void createSearchMedicineToPrescriptionButton(){
+        searchMedicineToPrescriptionButton = new Button();
+        searchMedicineToPrescriptionButton.setLayoutX(1080.0);
+        searchMedicineToPrescriptionButton.setLayoutY(40.0);
+        searchMedicineToPrescriptionButton.setMnemonicParsing(false);
+        searchMedicineToPrescriptionButton.setText("Szukaj");
+        searchMedicineToPrescriptionButton.setFont(new Font(16.0));
+        addPrescriptionMedicinePane.getChildren().add(searchMedicineToPrescriptionButton);
+    }
+
     private void createAddMedicineToPrescriptionButton() {
         addMedicineToPrescriptionButton = new Button();
         addMedicineToPrescriptionButton.setLayoutX(528.0);
-        addMedicineToPrescriptionButton.setLayoutY(580.0);
+        addMedicineToPrescriptionButton.setLayoutY(570.0);
         addMedicineToPrescriptionButton.setMnemonicParsing(false);
         addMedicineToPrescriptionButton.setText("Dodaj do recepty");
         addMedicineToPrescriptionButton.setFont(new Font(16.0));
@@ -273,7 +285,7 @@ public class AppointmentView {
         medicineNameTextField.setLayoutX(50.0);
         medicineNameTextField.setLayoutY(40.0);
         medicineNameTextField.setPrefHeight(40.0);
-        medicineNameTextField.setPrefWidth(1500.0);
+        medicineNameTextField.setPrefWidth(1020.0);
         medicineNameTextField.setPromptText("Wprowadź nazwę leku");
         addPrescriptionMedicinePane.getChildren().add(medicineNameTextField);
     }
