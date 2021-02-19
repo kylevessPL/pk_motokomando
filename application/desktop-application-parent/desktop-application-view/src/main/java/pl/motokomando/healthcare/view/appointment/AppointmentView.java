@@ -1,27 +1,38 @@
 package pl.motokomando.healthcare.view.appointment;
 
+import javafx.beans.binding.Bindings;
+import javafx.concurrent.Task;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import pl.motokomando.healthcare.controller.appointment.AppointmentController;
 import pl.motokomando.healthcare.model.appointment.AppointmentModel;
-import pl.motokomando.healthcare.view.appointment.utils.MedicineRecord;
+import pl.motokomando.healthcare.model.appointment.utils.MedicinesTableRecord;
+import pl.motokomando.healthcare.model.appointment.utils.ProductType;
+import pl.motokomando.healthcare.view.appointment.utils.ActiveIngredientsColumnCallback;
+import pl.motokomando.healthcare.view.appointment.utils.AdministrationRouteColumnCallback;
+import pl.motokomando.healthcare.view.appointment.utils.PackagingVariantsColumnCallback;
+import utils.FXTasks;
 
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
+import static javafx.scene.control.ProgressIndicator.INDETERMINATE_PROGRESS;
+import static javafx.scene.control.SelectionMode.MULTIPLE;
 import static javafx.scene.control.TabPane.TabClosingPolicy.UNAVAILABLE;
+import static javafx.scene.input.KeyCode.ENTER;
 import static javafx.scene.layout.Region.USE_PREF_SIZE;
 
 public class AppointmentView {
@@ -44,9 +55,9 @@ public class AppointmentView {
     private AnchorPane doctorPane;
     private AnchorPane prescriptionMedicinesPane;
     private AnchorPane addPrescriptionMedicinePane;
-    private TableView<MedicineRecord> medicinesTable;
-    private TableView<MedicineRecord> prescriptionMedicinesTable;
-    private TextField medicineNameTextField;
+    private TableView<MedicinesTableRecord> medicinesTable;
+    private TableView<MedicinesTableRecord> prescriptionMedicinesTable;
+    private TextField medicineSearchQueryTextField;
     private Button addMedicineToPrescriptionButton;
     private ComboBox<String> chooseDoctorComboBox;
     private Label chooseDoctorLabel;
@@ -62,6 +73,8 @@ public class AppointmentView {
         setController();
         createPane();
         addContent();
+        delegateEventHandlers();
+        observeModelAndUpdate();
     }
 
     public Parent asParent() {
@@ -229,7 +242,7 @@ public class AppointmentView {
         prescriptionMedicinesPane = new AnchorPane();
         prescriptionMedicinesPane.setPrefHeight(200.0);
         prescriptionMedicinesPane.setPrefWidth(200.0);
-        createMedicinesTable();
+        createPrescriptionMedicinesTable();
         prescriptionMedicinesTab.setContent(prescriptionMedicinesPane);
         prescriptionPane.getTabs().add(prescriptionMedicinesTab);
     }
@@ -237,11 +250,14 @@ public class AppointmentView {
     private void createMedicinesTable() {
         medicinesTable = new TableView<>();
         medicinesTable.setLayoutX(50.0);
-        medicinesTable.setLayoutY(50.0);
-        medicinesTable.setPrefHeight(500.0);
+        medicinesTable.setLayoutY(99.0);
+        medicinesTable.setPrefHeight(450.0);
         medicinesTable.setPrefWidth(1100.0);
-        setMedicinesTableContent(medicinesTable);
-        prescriptionMedicinesPane.getChildren().add(medicinesTable);
+        medicinesTable.getSelectionModel().setSelectionMode(MULTIPLE);
+        medicinesTable.setPlaceholder(new Label("Wprowadź zapytanie w polu wyszukiwania, aby znaleźć leki"));
+        setMedicinesTableColumns(medicinesTable);
+        medicinesTable.setItems(model.medicinesTableContent());
+        addPrescriptionMedicinePane.getChildren().add(medicinesTable);
     }
 
     private void createAddPrescriptionMedicineTab() {
@@ -251,7 +267,7 @@ public class AppointmentView {
         addPrescriptionMedicinePane = new AnchorPane();
         addPrescriptionMedicinePane.setPrefHeight(200.0);
         addPrescriptionMedicinePane.setPrefWidth(200.0);
-        createPrescriptionMedicinesTable();
+        createMedicinesTable();
         createMedicineNameTextField();
         createAddMedicineToPrescriptionButton();
         addPrescriptionMedicineTab.setContent(addPrescriptionMedicinePane);
@@ -269,51 +285,163 @@ public class AppointmentView {
     }
 
     private void createMedicineNameTextField() {
-        medicineNameTextField = new TextField();
-        medicineNameTextField.setLayoutX(50.0);
-        medicineNameTextField.setLayoutY(40.0);
-        medicineNameTextField.setPrefHeight(40.0);
-        medicineNameTextField.setPrefWidth(1500.0);
-        medicineNameTextField.setPromptText("Wprowadź nazwę leku");
-        addPrescriptionMedicinePane.getChildren().add(medicineNameTextField);
+        medicineSearchQueryTextField = new TextField();
+        medicineSearchQueryTextField.setLayoutX(50.0);
+        medicineSearchQueryTextField.setLayoutY(40.0);
+        medicineSearchQueryTextField.setPrefHeight(40.0);
+        medicineSearchQueryTextField.setPrefWidth(1500.0);
+        medicineSearchQueryTextField.setPromptText("Wprowadź nazwę leku");
+        addPrescriptionMedicinePane.getChildren().add(medicineSearchQueryTextField);
     }
 
     private void createPrescriptionMedicinesTable() {
         prescriptionMedicinesTable = new TableView<>();
         prescriptionMedicinesTable.setLayoutX(50.0);
-        prescriptionMedicinesTable.setLayoutY(99.0);
-        prescriptionMedicinesTable.setPrefHeight(450.0);
+        prescriptionMedicinesTable.setLayoutY(50.0);
+        prescriptionMedicinesTable.setPrefHeight(500);
         prescriptionMedicinesTable.setPrefWidth(1100.0);
-        setMedicinesTableContent(prescriptionMedicinesTable);
-        addPrescriptionMedicinePane.getChildren().add(prescriptionMedicinesTable);
+        prescriptionMedicinesTable.setPlaceholder(new Label("Brak leków powiązanych z receptą"));
+        setMedicinesTableColumns(prescriptionMedicinesTable);
+        prescriptionMedicinesPane.getChildren().add(prescriptionMedicinesTable);
     }
 
-    private TableColumn<MedicineRecord, String> createMedicinesTableColumn() {
-        TableColumn<MedicineRecord, String> column = new TableColumn<>();
+    private <T> TableColumn<MedicinesTableRecord, T> createMedicinesTableColumn() {
+        TableColumn<MedicinesTableRecord, T> column = new TableColumn<>();
         column.setPrefWidth(122.0);
         return column;
     }
 
-    private List<TableColumn<MedicineRecord, String>> createMedicinesTableColumns() {
-        List<TableColumn<MedicineRecord, String>> columnList = IntStream
-                .range(0, 9)
-                .mapToObj(i -> createMedicinesTableColumn())
-                .collect(Collectors.toList());
-        columnList.get(0).setText("Nazwa");
-        columnList.get(1).setText("Numer NDC");
-        columnList.get(2).setText("Nazwa firmy");
-        columnList.get(3).setText("Typ");
-        columnList.get(4).setText("Ogólny typ");
-        columnList.get(5).setText("Skład");
-        columnList.get(6).setText("Sposób podania");
-        columnList.get(7).setText("Dawkowanie");
-        columnList.get(8).setText("Rodzaj opakowania");
-        return columnList;
+    private void setMedicinesTableColumns(TableView<MedicinesTableRecord> medicinesTable) {
+        TableColumn<MedicinesTableRecord, String> column1 = createMedicinesTableFirstColumn();
+        TableColumn<MedicinesTableRecord, String> column2 = createMedicinesTableSecondColumn();
+        TableColumn<MedicinesTableRecord, String> column3 = createMedicinesTableThirdColumn();
+        TableColumn<MedicinesTableRecord, ProductType> column4 = createMedicinesTableFourthColumn();
+        TableColumn<MedicinesTableRecord, String> column5 = createMedicinesTableFifthColumn();
+        TableColumn<MedicinesTableRecord, Void> column6 = createMedicinesTableSixthColumn();
+        TableColumn<MedicinesTableRecord, Void> column7 = createMedicinesTableSeventhColumn();
+        TableColumn<MedicinesTableRecord, String> column8 = createMedicinesTableEigthColumn();
+        TableColumn<MedicinesTableRecord, Void> column9 = createMedicinesTableNinthColumn();
+        medicinesTable.getColumns().add(column1);
+        medicinesTable.getColumns().add(column2);
+        medicinesTable.getColumns().add(column3);
+        medicinesTable.getColumns().add(column4);
+        medicinesTable.getColumns().add(column5);
+        medicinesTable.getColumns().add(column6);
+        medicinesTable.getColumns().add(column7);
+        medicinesTable.getColumns().add(column8);
+        medicinesTable.getColumns().add(column9);
     }
 
-    private void setMedicinesTableContent(TableView<MedicineRecord> medicinesTable) {
-        List<TableColumn<MedicineRecord, String>> columnList = createMedicinesTableColumns();
-        medicinesTable.getColumns().addAll(columnList);
+    private TableColumn<MedicinesTableRecord, Void> createMedicinesTableNinthColumn() {
+        TableColumn<MedicinesTableRecord, Void> column9 = createMedicinesTableColumn();
+        column9.setText("Rodzaj opakowania");
+        column9.setCellFactory(new PackagingVariantsColumnCallback(appointmentPane));
+        return column9;
     }
 
+    private TableColumn<MedicinesTableRecord, String> createMedicinesTableEigthColumn() {
+        TableColumn<MedicinesTableRecord, String> column8 = createMedicinesTableColumn();
+        column8.setText("Dawkowanie");
+        column8.setStyle("-fx-alignment: center;");
+        column8.setCellValueFactory(c -> c.getValue().dosageForm());
+        return column8;
+    }
+
+    private TableColumn<MedicinesTableRecord, Void> createMedicinesTableSeventhColumn() {
+        TableColumn<MedicinesTableRecord, Void> column7 = createMedicinesTableColumn();
+        column7.setText("Sposób podania");
+        column7.setCellFactory(new AdministrationRouteColumnCallback(appointmentPane));
+        return column7;
+    }
+
+    private TableColumn<MedicinesTableRecord, Void> createMedicinesTableSixthColumn() {
+        TableColumn<MedicinesTableRecord, Void> column6 = createMedicinesTableColumn();
+        column6.setText("Skład");
+        column6.setCellFactory(new ActiveIngredientsColumnCallback(appointmentPane));
+        return column6;
+    }
+
+    private TableColumn<MedicinesTableRecord, String> createMedicinesTableFifthColumn() {
+        TableColumn<MedicinesTableRecord, String> column5 = createMedicinesTableColumn();
+        column5.setText("Rodzaj");
+        column5.setStyle("-fx-alignment: center-left;");
+        column5.setCellValueFactory(c -> c.getValue().genericName());
+        return column5;
+    }
+
+    private TableColumn<MedicinesTableRecord, ProductType> createMedicinesTableFourthColumn() {
+        TableColumn<MedicinesTableRecord, ProductType> column4 = createMedicinesTableColumn();
+        column4.setText("Typ");
+        column4.setStyle("-fx-alignment: center;");
+        column4.setCellValueFactory(c -> c.getValue().productType());
+        return column4;
+    }
+
+    private TableColumn<MedicinesTableRecord, String> createMedicinesTableThirdColumn() {
+        TableColumn<MedicinesTableRecord, String> column3 = createMedicinesTableColumn();
+        column3.setText("Nazwa firmy");
+        column3.setStyle("-fx-alignment: center-left;");
+        column3.setCellValueFactory(c -> c.getValue().manufacturer());
+        return column3;
+    }
+
+    private TableColumn<MedicinesTableRecord, String> createMedicinesTableSecondColumn() {
+        TableColumn<MedicinesTableRecord, String> column2 = createMedicinesTableColumn();
+        column2.setText("Numer NDC");
+        column2.setStyle("-fx-alignment: center;");
+        column2.setCellValueFactory(c -> c.getValue().productNDC());
+        return column2;
+    }
+
+    private TableColumn<MedicinesTableRecord, String> createMedicinesTableFirstColumn() {
+        TableColumn<MedicinesTableRecord, String> column1 = createMedicinesTableColumn();
+        column1.setText("Nazwa");
+        column1.setStyle("-fx-alignment: center-left;");
+        column1.setCellValueFactory(c -> c.getValue().productName());
+        return column1;
+    }
+
+    private void observeModelAndUpdate() {
+
+    }
+
+    private void delegateEventHandlers() {
+        medicineSearchQueryTextField.setOnKeyPressed(this::medicineSearchQueryTextFieldEnterPressed);
+        medicinesTable.setRowFactory(param -> createMedicinesTableContextMenu());
+    }
+
+    private TableRow<MedicinesTableRecord> createMedicinesTableContextMenu() {
+        final TableRow<MedicinesTableRecord> row = new TableRow<>();
+        final ContextMenu contextMenu = new ContextMenu();
+        final MenuItem menuItem = new MenuItem("Dodaj do recepty");
+        //menuItem.setOnAction(event -> m.getItems().remove(row.getItem()));
+        contextMenu.getItems().add(menuItem);
+        row.contextMenuProperty().bind(
+                Bindings.when(row.emptyProperty())
+                        .then((ContextMenu) null)
+                        .otherwise(contextMenu)
+        );
+        return row;
+    }
+
+    private void medicineSearchQueryTextFieldEnterPressed(KeyEvent event) {
+        if (event.getCode().equals(ENTER)) {
+            searchMedicine();
+        }
+    }
+
+    private void searchMedicine() {
+        String query = medicineSearchQueryTextField.getText();
+        Task<Void> task = FXTasks.createTask(() -> controller.handleMedicinesSearchAction(query));
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
+        task.setOnRunning(e -> {
+            ProgressIndicator progressIndicator = new ProgressIndicator(INDETERMINATE_PROGRESS);
+            progressIndicator.setMaxSize(40, 40);
+            medicinesTable.setPlaceholder(progressIndicator);
+        });
+        task.setOnSucceeded(e -> medicinesTable.setPlaceholder(new Label("Brak wyników pasujących do wyszukiwania")));
+        task.setOnFailed(e -> medicinesTable.setPlaceholder(new Label("Nie udało się załadować wyników wyszukiwania")));
+    }
 }

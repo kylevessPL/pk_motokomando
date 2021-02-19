@@ -104,6 +104,22 @@ public class PatientController {
         return null;
     }
 
+    public Void updatePatientAppointmentsTablePageData() throws Exception {
+        int page = patientModel.getPatientAppointmentsTableCurrentPage();
+        int size = patientModel.getTableCountPerPage();
+        Map<String, String> pathVariables = Collections.singletonMap("id", String.valueOf(patientModel.getPatientId()));
+        HttpResponse response = WebUtils.sendGetPageRequest(PATIENT_APPOINTMENTS, pathVariables, page, size);
+        Map<String, String> headers = WebUtils.extractPageHeaders(response);
+        setPatientAppointmentsTablePageDetails(headers);
+        HttpEntity responseBody = response.getEntity();
+        List<PatientAppointmentsTableRecord> tableContent = Collections.emptyList();
+        if (responseBody != null) {
+            tableContent = createPatientAppointmentsTableContent(EntityUtils.toString(responseBody));
+        }
+        patientModel.setPatientAppointmentsTablePageContent(tableContent);
+        return null;
+    }
+
     private void sendScheduleAppointmentRequest(String body) throws Exception {
         WebClient client = PostClient.builder()
                 .path(PATIENT_APPOINTMENTS)
@@ -177,22 +193,6 @@ public class PatientController {
                 .create();
         PatientDetails patientDetails = gson.fromJson(json, PatientDetails.class);
         patientModel.setPatientDetails(patientDetails);
-    }
-
-    public Void updatePatientAppointmentsTablePageData() throws Exception {
-        int page = patientModel.getPatientAppointmentsTableCurrentPage();
-        int size = patientModel.getTableCountPerPage();
-        Map<String, String> pathVariables = Collections.singletonMap("id", String.valueOf(patientModel.getPatientId()));
-        HttpResponse response = WebUtils.sendGetPageRequest(PATIENT_APPOINTMENTS, pathVariables, page, size);
-        Map<String, String> headers = WebUtils.extractPageHeaders(response);
-        setPatientAppointmentsTablePageDetails(headers);
-        HttpEntity responseBody = response.getEntity();
-        List<PatientAppointmentsTableRecord> tableContent = Collections.emptyList();
-        if (responseBody != null) {
-            tableContent = createPatientAppointmentsTableContent(EntityUtils.toString(responseBody));
-        }
-        patientModel.setPatientAppointmentsTablePageContent(tableContent);
-        return null;
     }
 
     public void updatePatientAppointmentsTableCurrentPage(Integer pageNumber) {

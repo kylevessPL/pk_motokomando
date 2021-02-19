@@ -640,6 +640,7 @@ public class BaseView {
     private TableColumn<PersonTableRecord, String> createPersonTableColumn() {
         TableColumn<PersonTableRecord, String> column = new TableColumn<>();
         column.setPrefWidth(750.0);
+        column.setStyle("-fx-alignment: center-left;");
         return column;
     }
 
