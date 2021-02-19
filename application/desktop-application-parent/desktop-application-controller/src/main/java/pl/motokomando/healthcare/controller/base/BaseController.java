@@ -10,16 +10,13 @@ import javafx.collections.ObservableList;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
-import pl.motokomando.healthcare.controller.utils.GetClient;
 import pl.motokomando.healthcare.controller.utils.LocalDateAdapter;
-import pl.motokomando.healthcare.controller.utils.PutClient;
-import pl.motokomando.healthcare.controller.utils.WebClient;
-import pl.motokomando.healthcare.controller.utils.WebResponseUtils;
+import pl.motokomando.healthcare.controller.utils.WebUtils;
 import pl.motokomando.healthcare.model.base.BaseModel;
-import pl.motokomando.healthcare.model.base.utils.BasePagedResponse;
-import pl.motokomando.healthcare.model.base.utils.BaseTableRecord;
 import pl.motokomando.healthcare.model.base.utils.DoctorDetails;
 import pl.motokomando.healthcare.model.base.utils.PatientDetails;
+import pl.motokomando.healthcare.model.base.utils.PersonTableRecord;
+import pl.motokomando.healthcare.model.utils.PersonPagedResponse;
 import pl.motokomando.healthcare.model.utils.SessionStore;
 
 import java.lang.reflect.Type;
@@ -30,8 +27,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static org.apache.http.HttpStatus.SC_NO_CONTENT;
-import static org.apache.http.HttpStatus.SC_OK;
 import static pl.motokomando.healthcare.controller.utils.ResponseHeaders.CURRENT_PAGE;
 import static pl.motokomando.healthcare.controller.utils.ResponseHeaders.TOTAL_PAGES;
 import static pl.motokomando.healthcare.controller.utils.WellKnownEndpoints.DOCTORS;
@@ -50,7 +45,7 @@ public class BaseController {
     public Void handleAddDoctorButtonClicked(DoctorDetails doctorDetails) throws Exception {
         Gson gson = new Gson();
         String body = gson.toJson(doctorDetails);
-        sendAddPersonRequest(DOCTORS, body);
+        WebUtils.sendUpdatePersonRequest(DOCTORS, body);
         return null;
     }
 
@@ -59,20 +54,20 @@ public class BaseController {
                 .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
                 .create();
         String body = gson.toJson(patientDetails);
-        sendAddPersonRequest(PATIENTS, body);
+        WebUtils.sendUpdatePersonRequest(PATIENTS, body);
         return null;
     }
 
     public Void updateDoctorsTablePageData() throws Exception {
         int page = baseModel.getDoctorsTableCurrentPage();
         int size = baseModel.getTableCountPerPage();
-        HttpResponse response = sendGetBasePagedRequest(DOCTORS, page, size);
-        Map<String, String> headers = WebResponseUtils.extractPageHeaders(response);
+        HttpResponse response = WebUtils.sendGetPageRequest(DOCTORS, Collections.emptyMap(), page, size);
+        Map<String, String> headers = WebUtils.extractPageHeaders(response);
         setDoctorsTablePageDetails(headers);
         HttpEntity responseBody = response.getEntity();
-        List<BaseTableRecord> tableContent = Collections.emptyList();
+        List<PersonTableRecord> tableContent = Collections.emptyList();
         if (responseBody != null) {
-            tableContent = createBaseTableContent(EntityUtils.toString(responseBody));
+            tableContent = createPersonTableContent(EntityUtils.toString(responseBody));
         }
         baseModel.setDoctorsTablePageContent(tableContent);
         return null;
@@ -81,13 +76,13 @@ public class BaseController {
     public Void updatePatientsTablePageData() throws Exception {
         int page = baseModel.getPatientsTableCurrentPage();
         int size = baseModel.getTableCountPerPage();
-        HttpResponse response = sendGetBasePagedRequest(PATIENTS, page, size);
-        Map<String, String> headers = WebResponseUtils.extractPageHeaders(response);
+        HttpResponse response = WebUtils.sendGetPageRequest(PATIENTS, Collections.emptyMap(), page, size);
+        Map<String, String> headers = WebUtils.extractPageHeaders(response);
         setPatientsTablePageDetails(headers);
         HttpEntity responseBody = response.getEntity();
-        List<BaseTableRecord> tableContent = Collections.emptyList();
+        List<PersonTableRecord> tableContent = Collections.emptyList();
         if (responseBody != null) {
-            tableContent = createBaseTableContent(EntityUtils.toString(responseBody));
+            tableContent = createPersonTableContent(EntityUtils.toString(responseBody));
         }
         baseModel.setPatientsTablePageContent(tableContent);
         return null;
@@ -110,17 +105,6 @@ public class BaseController {
         sessionStore.setUserInfo(null);
     }
 
-    private void sendAddPersonRequest(String path, String body) throws Exception {
-        WebClient client = PutClient.builder()
-                .path(path)
-                .body(body)
-                .build();
-        HttpResponse response = client.execute();
-        if (response.getStatusLine().getStatusCode() != SC_NO_CONTENT) {
-            WebResponseUtils.mapErrorResponseAsException(response);
-        }
-    }
-
     private void setPatientsTablePageDetails(Map<String, String> headers) {
         Integer currentPage = Integer.valueOf(headers.getOrDefault(CURRENT_PAGE, "1"));
         Integer totalPages = Integer.valueOf(headers.getOrDefault(TOTAL_PAGES, "1"));
@@ -135,31 +119,17 @@ public class BaseController {
         baseModel.setDoctorsTableTotalPages(totalPages);
     }
 
-    private List<BaseTableRecord> createBaseTableContent(String responseBody) {
+    private List<PersonTableRecord> createPersonTableContent(String responseBody) {
         JsonArray jsonArray = JsonParser.parseString(responseBody).getAsJsonArray();
-        Type listType = new TypeToken<ArrayList<BasePagedResponse>>(){}.getType();
-        List<BasePagedResponse> recordList = new Gson().fromJson(jsonArray, listType);
-        return mapBasePagedResponseToBaseRecord(recordList);
+        Type listType = new TypeToken<ArrayList<PersonPagedResponse>>(){}.getType();
+        List<PersonPagedResponse> recordList = new Gson().fromJson(jsonArray, listType);
+        return mapPersonPagedResponseToBaseRecord(recordList);
     }
 
-    private HttpResponse sendGetBasePagedRequest(String path, int page, int size) throws Exception {
-        WebClient client = GetClient.builder()
-                .path(path)
-                .parameter("page", String.valueOf(page))
-                .parameter("size", String.valueOf(size))
-                .build();
-        HttpResponse response = client.execute();
-        int statusCode = response.getStatusLine().getStatusCode();
-        if (statusCode != SC_NO_CONTENT && statusCode != SC_OK) {
-            WebResponseUtils.mapErrorResponseAsException(response);
-        }
-        return response;
-    }
-
-    private List<BaseTableRecord> mapBasePagedResponseToBaseRecord(List<BasePagedResponse> response) {
+    private List<PersonTableRecord> mapPersonPagedResponseToBaseRecord(List<PersonPagedResponse> response) {
         return response
                 .stream()
-                .map(e -> new BaseTableRecord(
+                .map(e -> new PersonTableRecord(
                         e.getId(),
                         new SimpleStringProperty(e.getFirstName()),
                         new SimpleStringProperty(e.getLastName())))
