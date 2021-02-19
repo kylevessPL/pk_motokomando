@@ -20,8 +20,8 @@
                 <configuration>
                     <driver>org.postgresql.Driver</driver>
                     <url>jdbc:postgresql://localhost:5432/healthcare-db</url>
-                    <username>${settings.servers.healthcare-db.username}</username>
-                    <password>${settings.servers.healthcare-db.password}</password>
+                    <username>healthcare_admin</username>
+                    <password>3c;ZP~B^3JBf@nA*</password>
                     <changeLogFile>src/main/resources/db/changelog/db.changelog-master.xml</changeLogFile>
                     <outputChangeLogFile>src/main/resources/db/changelog/db.changelog-master.xml</outputChangeLogFile>
                 </configuration>
@@ -42,12 +42,6 @@
                 </executions>
             </plugin>
         </plugins>
-        <extensions>
-            <extension>
-                <groupId>com.github.shyiko.servers-maven-extension</groupId>
-                <artifactId>servers-maven-extension</artifactId>
-            </extension>
-        </extensions>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>

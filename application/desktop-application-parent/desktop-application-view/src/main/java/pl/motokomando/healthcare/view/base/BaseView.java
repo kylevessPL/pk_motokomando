@@ -33,11 +33,11 @@ import org.controlsfx.validation.Validator;
 import pl.motokomando.healthcare.controller.base.BaseController;
 import pl.motokomando.healthcare.model.base.BaseModel;
 import pl.motokomando.healthcare.model.base.utils.AcademicTitle;
-import pl.motokomando.healthcare.model.base.utils.BaseTableRecord;
 import pl.motokomando.healthcare.model.base.utils.BloodType;
 import pl.motokomando.healthcare.model.base.utils.DoctorDetails;
 import pl.motokomando.healthcare.model.base.utils.MedicalSpecialty;
 import pl.motokomando.healthcare.model.base.utils.PatientDetails;
+import pl.motokomando.healthcare.model.base.utils.PersonTableRecord;
 import pl.motokomando.healthcare.model.base.utils.Sex;
 import pl.motokomando.healthcare.model.utils.ServiceStore;
 import pl.motokomando.healthcare.model.utils.SessionStore;
@@ -89,7 +89,7 @@ public class BaseView {
     private TabPane doctorsPane;
     private Tab findDoctorTab;
     private AnchorPane findDoctorPane;
-    private TableView<BaseTableRecord> doctorsTable;
+    private TableView<PersonTableRecord> doctorsTable;
     private Tab addDoctorTab;
     private AnchorPane addDoctorPane;
     private TextField doctorFirstNameTextField;
@@ -104,7 +104,7 @@ public class BaseView {
     private TabPane patientsPane;
     private Tab findPatientTab;
     private AnchorPane findPatientPane;
-    private TableView<BaseTableRecord> patientsTable;
+    private TableView<PersonTableRecord> patientsTable;
     private Tab addPatientTab;
     private AnchorPane addPatientPane;
     private TextField patientFirstNameTextField;
@@ -620,32 +620,34 @@ public class BaseView {
         patientsTable.setLayoutY(50.0);
         patientsTable.setPrefHeight(600.0);
         patientsTable.setPrefWidth(1500.0);
+        patientsTable.setPlaceholder(new Label("Brak pacjentów w bazie"));
         setPatientsTableColumns(patientsTable);
         setupPatientsTablePagination();
         patientsTable.setItems(model.patientsTablePageContent());
         findPatientPane.getChildren().add(patientsTable);
     }
 
-    private void setPatientsTableColumns(TableView<BaseTableRecord> patientsTable) {
-        List<TableColumn<BaseTableRecord, String>> columnList = createBaseTableColumns();
+    private void setPatientsTableColumns(TableView<PersonTableRecord> patientsTable) {
+        List<TableColumn<PersonTableRecord, String>> columnList = createPersonTableColumns();
         patientsTable.getColumns().addAll(columnList);
     }
 
-    private void setDoctorsTableColumns(TableView<BaseTableRecord> doctorsTable) {
-        List<TableColumn<BaseTableRecord, String>> columnList = createBaseTableColumns();
+    private void setDoctorsTableColumns(TableView<PersonTableRecord> doctorsTable) {
+        List<TableColumn<PersonTableRecord, String>> columnList = createPersonTableColumns();
         doctorsTable.getColumns().addAll(columnList);
     }
 
-    private TableColumn<BaseTableRecord, String> createBaseTableColumn() {
-        TableColumn<BaseTableRecord, String> column = new TableColumn<>();
+    private TableColumn<PersonTableRecord, String> createPersonTableColumn() {
+        TableColumn<PersonTableRecord, String> column = new TableColumn<>();
         column.setPrefWidth(750.0);
+        column.setStyle("-fx-alignment: center-left;");
         return column;
     }
 
-    private List<TableColumn<BaseTableRecord, String>> createBaseTableColumns() {
-        List<TableColumn<BaseTableRecord, String>> columnList = IntStream
+    private List<TableColumn<PersonTableRecord, String>> createPersonTableColumns() {
+        List<TableColumn<PersonTableRecord, String>> columnList = IntStream
                 .range(0, 2)
-                .mapToObj(i -> createBaseTableColumn())
+                .mapToObj(i -> createPersonTableColumn())
                 .collect(Collectors.toList());
         columnList.get(0).setText("Imię");
         columnList.get(0).setCellValueFactory(c -> c.getValue().firstName());
@@ -660,6 +662,7 @@ public class BaseView {
         doctorsTable.setLayoutY(50.0);
         doctorsTable.setPrefHeight(600.0);
         doctorsTable.setPrefWidth(1500.0);
+        doctorsTable.setPlaceholder(new Label("Brak lekarzy w bazie"));
         setDoctorsTableColumns(doctorsTable);
         setupDoctorsTablePagination();
         doctorsTable.setItems(model.doctorsTablePageContent());
@@ -903,7 +906,7 @@ public class BaseView {
         ScheduledService<Void> service = FXTasks.createService(() -> controller.updatePatientsTablePageData());
         serviceStore.addBaseService(service);
         service.setPeriod(Duration.seconds(TABLE_REFRESH_RATE));
-        service.setOnFailed(e -> processUpdateBaseTableFailureResult(service.getException().getMessage()));
+        service.setOnFailed(e -> processGeneralFailureResult(service.getException().getMessage()));
         service.start();
     }
 
@@ -911,11 +914,11 @@ public class BaseView {
         ScheduledService<Void> service = FXTasks.createService(() -> controller.updateDoctorsTablePageData());
         serviceStore.addBaseService(service);
         service.setPeriod(Duration.seconds(TABLE_REFRESH_RATE));
-        service.setOnFailed(e -> processUpdateBaseTableFailureResult(service.getException().getMessage()));
+        service.setOnFailed(e -> processGeneralFailureResult(service.getException().getMessage()));
         service.start();
     }
 
-    private void processUpdateBaseTableFailureResult(String errorMessage) {
+    private void processGeneralFailureResult(String errorMessage) {
         Alert alert = FXAlert.builder()
                 .alertType(WARNING)
                 .alertTitle("Nie udało się pobrać niektórych danych")
@@ -925,11 +928,11 @@ public class BaseView {
         Platform.runLater(alert::showAndWait);
     }
 
-    private TableRow<BaseTableRecord> setPatientsTableRowFactory() {
-        TableRow<BaseTableRecord> row = new TableRow<>();
+    private TableRow<PersonTableRecord> setPatientsTableRowFactory() {
+        TableRow<PersonTableRecord> row = new TableRow<>();
         row.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2 && !row.isEmpty()) {
-                BaseTableRecord record = patientsTable.getItems().get(row.getIndex());
+                PersonTableRecord record = patientsTable.getItems().get(row.getIndex());
                 openPatientScene(record.getId());
             }
         });
@@ -963,7 +966,7 @@ public class BaseView {
         Thread thread = new Thread(task);
         thread.setDaemon(true);
         thread.start();
-        task.setOnFailed(e -> processUpdateBaseTableFailureResult(task.getException().getMessage()));
+        task.setOnFailed(e -> processGeneralFailureResult(task.getException().getMessage()));
     }
 
     private void updateDoctorsTablePageData() {
@@ -971,7 +974,7 @@ public class BaseView {
         Thread thread = new Thread(task);
         thread.setDaemon(true);
         thread.start();
-        task.setOnFailed(e -> processUpdateBaseTableFailureResult(task.getException().getMessage()));
+        task.setOnFailed(e -> processGeneralFailureResult(task.getException().getMessage()));
     }
 
     private void processAddPatientSuccessResult() {
@@ -1095,11 +1098,14 @@ public class BaseView {
             subStage.setScene(scene);
             subStage.setX((screenBounds.getWidth() - scene.getWidth()) / 2);
             subStage.setY((screenBounds.getHeight() - scene.getHeight()) / 2);
-            subStage.setTitle("Healthcare Management");
+            subStage.setTitle("Panel pacjenta");
             subStage.getIcons().add(new Image(this.getClass().getResourceAsStream("/images/favicon.png")));
             subStage.initOwner(currentStage());
             subStage.initModality(WINDOW_MODAL);
-            subStage.setOnHidden(e -> serviceStore.cancelAllPatientServices());
+            subStage.setOnHidden(e -> {
+                updatePatientsTablePageData();
+                serviceStore.cancelAllPatientServices();
+            });
             subStage.show();
         });
     }
