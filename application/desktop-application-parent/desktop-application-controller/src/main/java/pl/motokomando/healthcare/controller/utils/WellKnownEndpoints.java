@@ -11,6 +11,8 @@ public final class WellKnownEndpoints {
     public static final String DOCTORS = "/api/v1/doctors";
     public static final String DOCTOR_APPOINTMENTS = "/api/v1/doctors/{id}/appointments";
     public static final String MEDICINES = "/api/v1/medicines";
+    public static final String BILLS = "/api/v1/bills";
+    public static final String BILL = "/api/v1/bills/{id}";
     public static final String PRESCRIPTIONS = "/api/v1/prescriptions";
     public static final String PRESCRIPTION = "/api/v1/prescriptions/{id}";
     public static final String PRESCRIPTION_MEDICINES = "/api/v1/prescriptions/{id}/medicines";

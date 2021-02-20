@@ -41,8 +41,11 @@ import static org.apache.http.HttpStatus.SC_CREATED;
 import static org.apache.http.HttpStatus.SC_NOT_FOUND;
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static org.apache.http.HttpStatus.SC_OK;
+import static pl.motokomando.healthcare.controller.utils.WellKnownEndpoints.BILL;
+import static pl.motokomando.healthcare.controller.utils.WellKnownEndpoints.BILLS;
 import static pl.motokomando.healthcare.controller.utils.WellKnownEndpoints.DOCTOR;
 import static pl.motokomando.healthcare.controller.utils.WellKnownEndpoints.MEDICINES;
+import static pl.motokomando.healthcare.controller.utils.WellKnownEndpoints.PATIENT_APPOINTMENT;
 import static pl.motokomando.healthcare.controller.utils.WellKnownEndpoints.PATIENT_APPOINTMENTS;
 import static pl.motokomando.healthcare.controller.utils.WellKnownEndpoints.PRESCRIPTION;
 import static pl.motokomando.healthcare.controller.utils.WellKnownEndpoints.PRESCRIPTIONS;
@@ -81,6 +84,15 @@ public class AppointmentController {
                 WebUtils.createAddOperationsMap(Collections.singletonMap("notes", notes));
         sendUpdatePrescriptionRequest(operationsMap);
         appointmentModel.setPrescriptionNotes(notes);
+        return null;
+    }
+
+    public Void handleUpdateBillAmountButtonClicked(String billAmount) throws Exception {
+        checkBillExistence();
+        Map<JsonPatchOperation, Map.Entry<String, Optional<String>>> operationsMap =
+                WebUtils.createAddOperationsMap(Collections.singletonMap("amount", billAmount));
+        sendUpdateBillRequest(operationsMap);
+        appointmentModel.setBillAmount(billAmount);
         return null;
     }
 
@@ -128,11 +140,40 @@ public class AppointmentController {
         return response;
     }
 
+    private void sendUpdateAppointmentRequest(
+            Map<JsonPatchOperation, Map.Entry<String, Optional<String>>> operationsMap) throws Exception {
+        WebClient client = PatchClient.builder()
+                .path(PATIENT_APPOINTMENT)
+                .pathVariable("patientId", String.valueOf(appointmentModel.getPatientId()))
+                .pathVariable("appointmentId", String.valueOf(appointmentModel.getAppointmentId()))
+                .operations(operationsMap)
+                .build();
+        HttpResponse response = client.execute();
+        int statusCode = response.getStatusLine().getStatusCode();
+        if (statusCode != SC_NO_CONTENT) {
+            WebUtils.mapErrorResponseAsException(response);
+        }
+    }
+
     private void sendUpdatePrescriptionRequest(
             Map<JsonPatchOperation, Map.Entry<String, Optional<String>>> operationsMap) throws Exception {
         WebClient client = PatchClient.builder()
                 .path(PRESCRIPTION)
                 .pathVariable("id", String.valueOf(appointmentModel.getPrescriptionId()))
+                .operations(operationsMap)
+                .build();
+        HttpResponse response = client.execute();
+        int statusCode = response.getStatusLine().getStatusCode();
+        if (statusCode != SC_NO_CONTENT) {
+            WebUtils.mapErrorResponseAsException(response);
+        }
+    }
+
+    private void sendUpdateBillRequest(
+            Map<JsonPatchOperation, Map.Entry<String, Optional<String>>> operationsMap) throws Exception {
+        WebClient client = PatchClient.builder()
+                .path(BILL)
+                .pathVariable("id", String.valueOf(appointmentModel.getBillId()))
                 .operations(operationsMap)
                 .build();
         HttpResponse response = client.execute();
@@ -149,14 +190,33 @@ public class AppointmentController {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("expirationDate", LocalDate.now().plusDays(30).format(ISO_DATE));
         String body = new Gson().toJson(jsonObject);
-        HttpResponse response = sendCreatePrescriptionRequest(body);
+        HttpResponse response = sendCreateResourceRequest(PRESCRIPTIONS, body);
         Integer prescriptionId = WebUtils.extractHeaderResourceId(response);
+        Map<JsonPatchOperation, Map.Entry<String, Optional<String>>> operationsMap =
+                WebUtils.createAddOperationsMap(Collections.singletonMap("prescriptionId", String.valueOf(prescriptionId)));
+        sendUpdateAppointmentRequest(operationsMap);
         appointmentModel.setPrescriptionId(prescriptionId);
     }
 
-    private HttpResponse sendCreatePrescriptionRequest(String body) throws Exception {
+    private void checkBillExistence() throws Exception {
+        if (appointmentModel.getBillId() != null) {
+            return;
+        }
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("amount", "0");
+        String body = new Gson().toJson(jsonObject);
+        HttpResponse response = sendCreateResourceRequest(BILLS, body);
+        Integer billId = WebUtils.extractHeaderResourceId(response);
+        Map<JsonPatchOperation, Map.Entry<String, Optional<String>>> operationsMap =
+                WebUtils.createAddOperationsMap(Collections.singletonMap("billId", String.valueOf(billId)));
+        sendUpdateAppointmentRequest(operationsMap);
+        appointmentModel.setBillId(billId);
+    }
+
+
+    private HttpResponse sendCreateResourceRequest(String path, String body) throws Exception {
         WebClient client = PostClient.builder()
-                .path(PRESCRIPTIONS)
+                .path(path)
                 .body(body)
                 .build();
         HttpResponse response = client.execute();
@@ -271,17 +331,21 @@ public class AppointmentController {
     private List<MedicinesTableRecord> mapMedicinesResponseToMedicinesTableRecord(List<MedicinesResponse> response) {
         return response
                 .stream()
-                .map(e -> new MedicinesTableRecord(
-                        new SimpleStringProperty(e.getProductNDC()),
-                        new SimpleStringProperty(e.getManufacturer()),
-                        new SimpleStringProperty(e.getProductName()),
-                        new SimpleStringProperty(e.getGenericName()),
-                        new SimpleObjectProperty<>(e.getProductType()),
-                        new SimpleListProperty<>(FXCollections.observableArrayList(e.getActiveIngredients())),
-                        new SimpleObjectProperty<>(e.getAdministrationRoute()),
-                        new SimpleStringProperty(e.getDosageForm()),
-                        new SimpleObjectProperty<>(e.getPackagingVariants())))
+                .map(this::createMedicinesTableRecord)
                 .collect(Collectors.toList());
+    }
+
+    private MedicinesTableRecord createMedicinesTableRecord(MedicinesResponse e) {
+        return new MedicinesTableRecord(
+                new SimpleStringProperty(e.getProductNDC()),
+                new SimpleStringProperty(e.getManufacturer()),
+                new SimpleStringProperty(e.getProductName()),
+                new SimpleStringProperty(e.getGenericName()),
+                new SimpleObjectProperty<>(e.getProductType()),
+                new SimpleListProperty<>(FXCollections.observableArrayList(e.getActiveIngredients())),
+                new SimpleObjectProperty<>(e.getAdministrationRoute()),
+                new SimpleStringProperty(e.getDosageForm()),
+                new SimpleObjectProperty<>(e.getPackagingVariants()));
     }
 
 }

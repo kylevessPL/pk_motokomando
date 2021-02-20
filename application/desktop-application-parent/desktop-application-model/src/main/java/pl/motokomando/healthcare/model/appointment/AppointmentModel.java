@@ -42,6 +42,9 @@ public final class AppointmentModel {
     private final SimpleStringProperty prescriptionNotes = new SimpleStringProperty();
     @Accessors(fluent = true)
     @Setter(NONE)
+    private final SimpleStringProperty billAmount = new SimpleStringProperty();
+    @Accessors(fluent = true)
+    @Setter(NONE)
     private final SimpleObjectProperty<LocalDate> prescriptionExpirationDate = new SimpleObjectProperty<>();
     @Accessors(fluent = true)
     @Setter(NONE)
@@ -68,6 +71,10 @@ public final class AppointmentModel {
 
     public void setPrescriptionNotes(String notes) {
         prescriptionNotes.set(notes);
+    }
+
+    public void setBillAmount(String amount) {
+        billAmount.set(amount);
     }
 
     public void setDoctorDetails(DoctorBasic doctorDetails) {
