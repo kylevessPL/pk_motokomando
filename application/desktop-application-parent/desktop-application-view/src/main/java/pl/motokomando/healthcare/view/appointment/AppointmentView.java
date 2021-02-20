@@ -59,6 +59,10 @@ public class AppointmentView {
     private Button diagnosisButton;
     private TextArea diagnosisTextArea;
     private ImageView imageViewLogo;
+    private TextField medicineExpiryDateTextField;
+    private TextField medicineDateOfIssueTextField;
+    private Label medicineExpiryDateLabel;
+    private Label medicineDateOfIssueLabel;
 
     public AppointmentView() {
         initModel();
@@ -246,15 +250,55 @@ public class AppointmentView {
         prescriptionMedicinesPane.setPrefHeight(200.0);
         prescriptionMedicinesPane.setPrefWidth(200.0);
         createMedicinesTable();
+        createMedicineExpiryDateTextField();
+        createMedicineExpiryDateLabel();
+        createMedicineDateOfIssueTextField();
+        createMedicineDateOfIssueLabel();
         prescriptionMedicinesTab.setContent(prescriptionMedicinesPane);
         prescriptionPane.getTabs().add(prescriptionMedicinesTab);
+    }
+
+    private void createMedicineExpiryDateLabel() {
+        medicineExpiryDateLabel = new Label();
+        medicineExpiryDateLabel.setLayoutX(800.0);
+        medicineExpiryDateLabel.setLayoutY(540.0);
+        medicineExpiryDateLabel.setText("Data ważności");
+        prescriptionMedicinesPane.getChildren().add(medicineExpiryDateLabel);
+    }
+
+    private void createMedicineDateOfIssueLabel() {
+        medicineDateOfIssueLabel = new Label();
+        medicineDateOfIssueLabel.setLayoutX(1000.0);
+        medicineDateOfIssueLabel.setLayoutY(540.0);
+        medicineDateOfIssueLabel.setText("Data wystawienia");
+        prescriptionMedicinesPane.getChildren().add(medicineDateOfIssueLabel);
+    }
+
+    private void createMedicineExpiryDateTextField() {
+        medicineExpiryDateTextField = new TextField();
+        medicineExpiryDateTextField.setLayoutX(800.0);
+        medicineExpiryDateTextField.setLayoutY(570.0);
+        medicineExpiryDateTextField.setPrefHeight(40.0);
+        medicineExpiryDateTextField.setPrefWidth(150.0);
+        medicineExpiryDateTextField.setPromptText("Data ważności");
+        prescriptionMedicinesPane.getChildren().add(medicineExpiryDateTextField);
+    }
+
+    private void createMedicineDateOfIssueTextField() {
+        medicineDateOfIssueTextField = new TextField();
+        medicineDateOfIssueTextField.setLayoutX(1000.0);
+        medicineDateOfIssueTextField.setLayoutY(570.0);
+        medicineDateOfIssueTextField.setPrefHeight(40.0);
+        medicineDateOfIssueTextField.setPrefWidth(150.0);
+        medicineDateOfIssueTextField.setPromptText("Data wystawienia");
+        prescriptionMedicinesPane.getChildren().add(medicineDateOfIssueTextField);
     }
 
     private void createMedicinesTable() {
         medicinesTable = new TableView<>();
         medicinesTable.setLayoutX(50.0);
         medicinesTable.setLayoutY(50.0);
-        medicinesTable.setPrefHeight(500.0);
+        medicinesTable.setPrefHeight(480.0);
         medicinesTable.setPrefWidth(1100.0);
         setMedicinesTableContent(medicinesTable);
         prescriptionMedicinesPane.getChildren().add(medicinesTable);
