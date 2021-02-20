@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static org.apache.http.HttpHeaders.LOCATION;
 import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static org.apache.http.HttpStatus.SC_OK;
 import static pl.motokomando.healthcare.controller.utils.JsonPatchOperation.ADD;
@@ -75,6 +76,12 @@ public class WebUtils {
             WebUtils.mapErrorResponseAsException(response);
         }
         return response;
+    }
+
+    public static Integer extractHeaderResourceId(HttpResponse response) {
+        String location = response.getFirstHeader(LOCATION).getValue();
+        String[] parts = location.split("/");
+        return Integer.parseInt(parts[parts.length - 1].trim());
     }
 
 }

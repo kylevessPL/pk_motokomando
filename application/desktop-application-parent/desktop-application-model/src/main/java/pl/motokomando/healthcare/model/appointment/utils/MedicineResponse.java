@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 @RequiredArgsConstructor
-public final class MedicinesResponse {
+public final class MedicineResponse {
 
     private final String productNDC;
     private final String manufacturer;
