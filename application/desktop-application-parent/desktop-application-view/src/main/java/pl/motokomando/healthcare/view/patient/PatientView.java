@@ -40,8 +40,8 @@ import pl.motokomando.healthcare.model.base.utils.PatientDetails;
 import pl.motokomando.healthcare.model.base.utils.Sex;
 import pl.motokomando.healthcare.model.patient.PatientModel;
 import pl.motokomando.healthcare.model.patient.utils.DoctorAppointment;
-import pl.motokomando.healthcare.model.patient.utils.DoctorBasic;
 import pl.motokomando.healthcare.model.patient.utils.PatientAppointmentsTableRecord;
+import pl.motokomando.healthcare.model.utils.DoctorBasic;
 import pl.motokomando.healthcare.model.utils.ServiceStore;
 import pl.motokomando.healthcare.view.appointment.AppointmentView;
 import pl.motokomando.healthcare.view.patient.utils.ChooseDoctorComboBoxConverter;
@@ -983,7 +983,8 @@ public class PatientView {
     }
 
     private void openAppointmentScene(Integer appointmentId) {
-        Scene scene = new Scene(new AppointmentView(appointmentId).asParent(), 1200, 700);
+        Scene scene = new Scene(new AppointmentView(model.getPatientId(), appointmentId).asParent(),
+                1200, 700);
         Platform.runLater(() -> {
             Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
             Stage subStage = new Stage();

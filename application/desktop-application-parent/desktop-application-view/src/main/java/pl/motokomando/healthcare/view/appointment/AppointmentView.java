@@ -68,8 +68,8 @@ public class AppointmentView {
     private Button diagnosisButton;
     private TextArea diagnosisTextArea;
 
-    public AppointmentView(Integer appointmentId) {
-        initModel(appointmentId);
+    public AppointmentView(Integer patientId, Integer appointmentId) {
+        initModel(patientId, appointmentId);
         setController();
         createPane();
         addContent();
@@ -85,8 +85,8 @@ public class AppointmentView {
         return (Stage) appointmentPane.getScene().getWindow();
     }
 
-    private void initModel(Integer appointmentId) {
-        model = new AppointmentModel(appointmentId);
+    private void initModel(Integer patientId, Integer appointmentId) {
+        model = new AppointmentModel(patientId, appointmentId);
     }
 
     private void setController() {

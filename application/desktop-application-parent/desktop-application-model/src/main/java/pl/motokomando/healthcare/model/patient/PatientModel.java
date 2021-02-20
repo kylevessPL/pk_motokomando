@@ -10,8 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import pl.motokomando.healthcare.model.base.utils.PatientDetails;
-import pl.motokomando.healthcare.model.patient.utils.DoctorBasic;
 import pl.motokomando.healthcare.model.patient.utils.PatientAppointmentsTableRecord;
+import pl.motokomando.healthcare.model.utils.DoctorBasic;
 
 import java.time.LocalDateTime;
 import java.util.List;
