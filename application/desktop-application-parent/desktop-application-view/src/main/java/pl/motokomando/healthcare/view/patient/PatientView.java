@@ -121,6 +121,7 @@ public class PatientView {
     private Button updatePatientDetailsButton;
     private Label scheduleAppointmentDoctorLabel;
     private WeekPage appointmentsCalendar;
+    private Label appointmentDateChoiceLabel;
 
     private Pagination patientAppointmentsTablePagination;
 
@@ -200,6 +201,7 @@ public class PatientView {
         createScheduleAppointmentButton();
         createScheduleAppointmentDoctorLabel();
         createAppointmentDateChoiceTextField();
+        createAppointmentDateChoiceLabel();
         createAppointmentDateCalendar();
         scheduleAppointmentTab.setContent(scheduleAppointmentPane);
         patientPane.getTabs().add(scheduleAppointmentTab);
@@ -209,10 +211,10 @@ public class PatientView {
         appointmentDateChoiceTextField = new TextField();
         appointmentDateChoiceTextField.setDisable(true);
         appointmentDateChoiceTextField.setEditable(true);
-        appointmentDateChoiceTextField.setLayoutX(580.0);
-        appointmentDateChoiceTextField.setLayoutY(240.0);
+        appointmentDateChoiceTextField.setLayoutX(565.0);
+        appointmentDateChoiceTextField.setLayoutY(280.0);
         appointmentDateChoiceTextField.setPrefHeight(30.0);
-        appointmentDateChoiceTextField.setPrefWidth(200.0);
+        appointmentDateChoiceTextField.setPrefWidth(250.0);
         appointmentDateChoiceTextField.setStyle("-fx-opacity: 1.0;");
         appointmentDateChoiceTextField.setPromptText("Nie wybrano daty");
         scheduleAppointmentPane.getChildren().add(appointmentDateChoiceTextField);
@@ -247,10 +249,18 @@ public class PatientView {
 
     private void createScheduleAppointmentDoctorLabel() {
         scheduleAppointmentDoctorLabel = new Label();
-        scheduleAppointmentDoctorLabel.setLayoutX(300.0);
-        scheduleAppointmentDoctorLabel.setLayoutY(50.0);
+        scheduleAppointmentDoctorLabel.setLayoutX(565.0);
+        scheduleAppointmentDoctorLabel.setLayoutY(130.0);
         scheduleAppointmentDoctorLabel.setText("Lekarz");
         scheduleAppointmentPane.getChildren().add(scheduleAppointmentDoctorLabel);
+    }
+
+    private void createAppointmentDateChoiceLabel() {
+        appointmentDateChoiceLabel = new Label();
+        appointmentDateChoiceLabel.setLayoutX(565.0);
+        appointmentDateChoiceLabel.setLayoutY(250.0);
+        appointmentDateChoiceLabel.setText("Data");
+        scheduleAppointmentPane.getChildren().add(appointmentDateChoiceLabel);
     }
 
     private void createScheduleAppointmentButton() {
@@ -265,10 +275,10 @@ public class PatientView {
 
     private void createChooseDoctorComboBox() {
         chooseDoctorComboBox = new ComboBox<>();
-        chooseDoctorComboBox.setLayoutX(540.0);
-        chooseDoctorComboBox.setLayoutY(80.0);
+        chooseDoctorComboBox.setLayoutX(565.0);
+        chooseDoctorComboBox.setLayoutY(160.0);
         chooseDoctorComboBox.setPrefHeight(40.0);
-        chooseDoctorComboBox.setPrefWidth(300.0);
+        chooseDoctorComboBox.setPrefWidth(250.0);
         chooseDoctorComboBox.setPromptText("Wybierz lekarza");
         chooseDoctorComboBox.setConverter(new ChooseDoctorComboBoxConverter());
         scheduleAppointmentPane.getChildren().add(chooseDoctorComboBox);
