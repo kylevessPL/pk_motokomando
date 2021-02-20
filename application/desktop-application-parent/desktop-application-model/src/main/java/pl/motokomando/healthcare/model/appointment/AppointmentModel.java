@@ -42,7 +42,9 @@ public final class AppointmentModel {
     private final SimpleStringProperty prescriptionNotes = new SimpleStringProperty();
     @Accessors(fluent = true)
     @Setter(NONE)
-    private final SimpleStringProperty billAmount = new SimpleStringProperty();
+    private final SimpleStringProperty billAmount = new SimpleStringProperty("0");
+    @Accessors(fluent = true)
+    private final SimpleObjectProperty<LocalDateTime> billIssueDate = new SimpleObjectProperty<>();
     @Accessors(fluent = true)
     @Setter(NONE)
     private final SimpleObjectProperty<LocalDate> prescriptionExpirationDate = new SimpleObjectProperty<>();
@@ -69,6 +71,14 @@ public final class AppointmentModel {
         prescriptionMedicinesTableContent.setAll(tableContent);
     }
 
+    public String getBillAmount() {
+        return billAmount.get();
+    }
+
+    public String getPrescriptionNotes() {
+        return prescriptionNotes.get();
+    }
+
     public void setPrescriptionNotes(String notes) {
         prescriptionNotes.set(notes);
     }
@@ -79,6 +89,10 @@ public final class AppointmentModel {
 
     public void setDoctorDetails(DoctorBasic doctorDetails) {
         this.doctorDetails.set(doctorDetails);
+    }
+
+    public void setBillIssueDate(LocalDateTime date) {
+        billIssueDate.set(date);
     }
 
     public void setPrescriptionExpirationDate(LocalDate date) {

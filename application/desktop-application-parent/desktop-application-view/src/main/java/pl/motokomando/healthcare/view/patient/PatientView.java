@@ -705,16 +705,6 @@ public class PatientView {
         return row;
     }
 
-    private void processOpenAppointmentSceneFailureResult(String errorMessage) {
-        Alert alert = FXAlert.builder()
-                .alertType(ERROR)
-                .alertTitle("Nie udało się wyświetlić szczegółów wizyty")
-                .contentText(errorMessage)
-                .owner(currentStage())
-                .build();
-        Platform.runLater(alert::showAndWait);
-    }
-
     private void processDoctorChange() {
         Platform.runLater(() -> appointmentDateChoiceTextField.clear());
         updateAppointmentsCalendarData();
@@ -920,7 +910,10 @@ public class PatientView {
         thread.setDaemon(true);
         thread.start();
         task.setOnSucceeded(e -> processUpdatePatientDetailsSuccessResult());
-        task.setOnFailed(e -> processUpdatePatientDetailsFailureResult(task.getException().getMessage()));
+        task.setOnFailed(e -> {
+            Platform.runLater(() -> updatePatientDetailsButton.setDisable(false));
+            processUpdatePatientDetailsFailureResult(task.getException().getMessage());
+        });
     }
 
     private void processUpdatePatientDetailsSuccessResult() {

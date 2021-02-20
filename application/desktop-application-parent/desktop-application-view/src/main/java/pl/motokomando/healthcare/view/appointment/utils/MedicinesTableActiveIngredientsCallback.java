@@ -19,7 +19,7 @@ import static javafx.geometry.Pos.CENTER;
 import static javafx.scene.control.Alert.AlertType.INFORMATION;
 
 @RequiredArgsConstructor
-public final class ActiveIngredientsColumnCallback implements Callback<TableColumn<MedicinesTableRecord, Void>, TableCell<MedicinesTableRecord, Void>> {
+public final class MedicinesTableActiveIngredientsCallback implements Callback<TableColumn<MedicinesTableRecord, Void>, TableCell<MedicinesTableRecord, Void>> {
 
     private final TabPane pane;
 

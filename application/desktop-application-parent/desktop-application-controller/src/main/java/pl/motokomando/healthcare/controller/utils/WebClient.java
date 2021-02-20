@@ -3,6 +3,7 @@ package pl.motokomando.healthcare.controller.utils;
 import lombok.NonNull;
 import lombok.Singular;
 import lombok.experimental.SuperBuilder;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -27,6 +28,7 @@ import static org.apache.http.HttpHost.DEFAULT_SCHEME_NAME;
 import static org.apache.http.entity.ContentType.APPLICATION_JSON;
 
 @SuperBuilder(toBuilder = true)
+@Slf4j
 public abstract class WebClient {
 
     protected static final String HOST = "localhost:8080";
