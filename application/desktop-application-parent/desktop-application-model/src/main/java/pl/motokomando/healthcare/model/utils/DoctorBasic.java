@@ -1,4 +1,4 @@
-package pl.motokomando.healthcare.model.patient.utils;
+package pl.motokomando.healthcare.model.utils;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

@@ -8,7 +8,7 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.util.Callback;
 import lombok.RequiredArgsConstructor;
-import pl.motokomando.healthcare.model.appointment.utils.MedicinesTableRecord;
+import pl.motokomando.healthcare.model.appointment.utils.PrescriptionMedicinesTableRecord;
 import utils.FXAlert;
 
 import java.util.Arrays;
@@ -18,20 +18,20 @@ import static javafx.geometry.Pos.CENTER;
 import static javafx.scene.control.Alert.AlertType.INFORMATION;
 
 @RequiredArgsConstructor
-public final class PackagingVariantsColumnCallback implements Callback<TableColumn<MedicinesTableRecord, Void>, TableCell<MedicinesTableRecord, Void>> {
+public final class PrescriptionMedicinesTablePackagingVariantsCallback implements Callback<TableColumn<PrescriptionMedicinesTableRecord, Void>, TableCell<PrescriptionMedicinesTableRecord, Void>> {
 
     private final TabPane pane;
 
     @Override
-    public TableCell<MedicinesTableRecord, Void> call(final TableColumn<MedicinesTableRecord, Void> param) {
-        TableCell<MedicinesTableRecord, Void> cell = new TableCell<MedicinesTableRecord, Void>() {
+    public TableCell<PrescriptionMedicinesTableRecord, Void> call(final TableColumn<PrescriptionMedicinesTableRecord, Void> param) {
+        TableCell<PrescriptionMedicinesTableRecord, Void> cell = new TableCell<PrescriptionMedicinesTableRecord, Void>() {
             private final Button button = new Button("Wyświetl");
             {
                 button.setOnAction((ActionEvent event) -> {
                     String[] packagingVariants = getTableView()
                             .getItems()
                             .get(getIndex())
-                            .packagingVariants().get();
+                            .getRecord().packagingVariants().get();
                     String contentText = Arrays
                             .stream(packagingVariants)
                             .map(e -> "\t• " + e)

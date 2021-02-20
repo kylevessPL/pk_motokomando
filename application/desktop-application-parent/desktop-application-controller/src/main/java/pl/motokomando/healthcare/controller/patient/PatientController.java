@@ -19,9 +19,9 @@ import pl.motokomando.healthcare.controller.utils.WebUtils;
 import pl.motokomando.healthcare.model.base.utils.PatientDetails;
 import pl.motokomando.healthcare.model.patient.PatientModel;
 import pl.motokomando.healthcare.model.patient.utils.DoctorAppointment;
-import pl.motokomando.healthcare.model.patient.utils.DoctorBasic;
 import pl.motokomando.healthcare.model.patient.utils.PatientAppointmentsPagedResponse;
 import pl.motokomando.healthcare.model.patient.utils.PatientAppointmentsTableRecord;
+import pl.motokomando.healthcare.model.utils.DoctorBasic;
 
 import java.lang.reflect.Type;
 import java.time.LocalDate;
