@@ -49,7 +49,6 @@ public class AppointmentView {
     private TableView<MedicineRecord> medicinesTable;
     private TableView<MedicineRecord> prescriptionMedicinesTable;
     private TextField medicineNameTextField;
-    private Button addMedicineToPrescriptionButton;
     private Button searchMedicineToPrescriptionButton;
     private ComboBox<String> chooseDoctorComboBox;
     private Label chooseDoctorLabel;
@@ -271,7 +270,6 @@ public class AppointmentView {
         createPrescriptionMedicinesTable();
         createMedicineNameTextField();
         createSearchMedicineToPrescriptionButton();
-        createAddMedicineToPrescriptionButton();
         addPrescriptionMedicineTab.setContent(addPrescriptionMedicinePane);
         prescriptionPane.getTabs().add(addPrescriptionMedicineTab);
     }
@@ -284,16 +282,6 @@ public class AppointmentView {
         searchMedicineToPrescriptionButton.setText("Szukaj");
         searchMedicineToPrescriptionButton.setFont(new Font(16.0));
         addPrescriptionMedicinePane.getChildren().add(searchMedicineToPrescriptionButton);
-    }
-
-    private void createAddMedicineToPrescriptionButton() {
-        addMedicineToPrescriptionButton = new Button();
-        addMedicineToPrescriptionButton.setLayoutX(528.0);
-        addMedicineToPrescriptionButton.setLayoutY(570.0);
-        addMedicineToPrescriptionButton.setMnemonicParsing(false);
-        addMedicineToPrescriptionButton.setText("Dodaj do recepty");
-        addMedicineToPrescriptionButton.setFont(new Font(16.0));
-        addPrescriptionMedicinePane.getChildren().add(addMedicineToPrescriptionButton);
     }
 
     private void createMedicineNameTextField() {
