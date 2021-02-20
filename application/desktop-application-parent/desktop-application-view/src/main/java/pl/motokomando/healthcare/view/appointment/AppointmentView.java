@@ -756,10 +756,7 @@ public class AppointmentView {
         thread.setDaemon(true);
         thread.start();
         task.setOnSucceeded(e -> updatePrescriptionMedicinesTable());
-        task.setOnFailed(e -> {
-            task.getException().printStackTrace();
-            getAppointmentDetailsFailureResult(task.getException().getMessage());
-        });
+        task.setOnFailed(e -> getAppointmentDetailsFailureResult(task.getException().getMessage()));
     }
 
 }
