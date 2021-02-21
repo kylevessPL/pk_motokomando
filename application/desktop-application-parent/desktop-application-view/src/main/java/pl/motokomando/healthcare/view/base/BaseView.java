@@ -21,6 +21,7 @@ import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Screen;
@@ -43,12 +44,13 @@ import pl.motokomando.healthcare.model.utils.ServiceStore;
 import pl.motokomando.healthcare.model.utils.SessionStore;
 import pl.motokomando.healthcare.model.utils.UserInfo;
 import pl.motokomando.healthcare.view.authentication.AuthenticationView;
+import pl.motokomando.healthcare.view.doctor.DoctorView;
 import pl.motokomando.healthcare.view.patient.PatientView;
-import utils.DefaultDatePickerConverter;
-import utils.FXAlert;
-import utils.FXTasks;
-import utils.FXValidation;
-import utils.TextFieldLimiter;
+import pl.motokomando.healthcare.view.utils.DefaultDatePickerConverter;
+import pl.motokomando.healthcare.view.utils.FXAlert;
+import pl.motokomando.healthcare.view.utils.FXTasks;
+import pl.motokomando.healthcare.view.utils.FXValidation;
+import pl.motokomando.healthcare.view.utils.TextFieldLimiter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -67,7 +69,7 @@ import static javafx.scene.control.ButtonType.OK;
 import static javafx.scene.control.TabPane.TabClosingPolicy.UNAVAILABLE;
 import static javafx.scene.layout.Region.USE_PREF_SIZE;
 import static javafx.stage.Modality.WINDOW_MODAL;
-import static utils.DateConstraints.PAST;
+import static pl.motokomando.healthcare.view.utils.DateConstraints.PAST;
 
 public class BaseView {
 
@@ -132,6 +134,19 @@ public class BaseView {
     private Label userLastNameLabel;
     private Label userEmailLabel;
     private Label userUsernameLabel;
+    private Label doctorFirstNameLabel;
+    private Label doctorLastNameLabel;
+    private Label doctorPhoneNumberLabel;
+    private Label patientFirstNameLabel;
+    private Label patientLastNameLabel;
+    private Label patientBirthDateLabel;
+    private Label patientPhoneNumberLabel;
+    private Label patientStreetNameLabel;
+    private Label patientHouseNumberLabel;
+    private Label patientZipCodeLabel;
+    private Label patientCityLabel;
+    private Label patientPeselLabel;
+    private ImageView backgroundImage;
 
     private Pagination patientsTablePagination;
     private Pagination doctorsTablePagination;
@@ -183,6 +198,7 @@ public class BaseView {
         userInfoTab = new Tab();
         userInfoTab.setText("Konto");
         userInfoPane = new AnchorPane();
+        createBackgroundImage(userInfoPane);
         createUserFirstNameLabel();
         createUserFirstNameTextField();
         createUserLastNameLabel();
@@ -310,9 +326,13 @@ public class BaseView {
         addDoctorPane = new AnchorPane();
         addDoctorPane.setPrefHeight(800.0);
         addDoctorPane.setPrefWidth(1600.0);
+        createBackgroundImage(addDoctorPane);
         createDoctorFirstNameTextField();
+        createDoctorFirstNameLabel();
         createDoctorLastNameTextField();
+        createDoctorLastNameLabel();
         createDoctorPhoneNumberTextField();
+        createDoctorPhoneNumberLabel();
         createChooseDoctorSpecialtyComboBox();
         createChooseDoctorAcademicTitleComboBox();
         createDoctorSpecialtyLabel();
@@ -322,10 +342,34 @@ public class BaseView {
         doctorsPane.getTabs().add(addDoctorTab);
     }
 
+    private void createDoctorFirstNameLabel() {
+        doctorFirstNameLabel = new Label();
+        doctorFirstNameLabel.setLayoutX(650.0);
+        doctorFirstNameLabel.setLayoutY(40.0);
+        doctorFirstNameLabel.setText("Imię");
+        addDoctorPane.getChildren().add(doctorFirstNameLabel);
+    }
+
+    private void createDoctorLastNameLabel() {
+        doctorLastNameLabel = new Label();
+        doctorLastNameLabel.setLayoutX(650.0);
+        doctorLastNameLabel.setLayoutY(140.0);
+        doctorLastNameLabel.setText("Nazwisko");
+        addDoctorPane.getChildren().add(doctorLastNameLabel);
+    }
+
+    private void createDoctorPhoneNumberLabel() {
+        doctorPhoneNumberLabel = new Label();
+        doctorPhoneNumberLabel.setLayoutX(650.0);
+        doctorPhoneNumberLabel.setLayoutY(240.0);
+        doctorPhoneNumberLabel.setText("Numer telefonu");
+        addDoctorPane.getChildren().add(doctorPhoneNumberLabel);
+    }
+
     private void createDoctorAcademicTitleLabel() {
         doctorAcademicTitleLabel = new Label();
         doctorAcademicTitleLabel.setLayoutX(650.0);
-        doctorAcademicTitleLabel.setLayoutY(460.0);
+        doctorAcademicTitleLabel.setLayoutY(440.0);
         doctorAcademicTitleLabel.setText("Tytuł naukowy:");
         addDoctorPane.getChildren().add(doctorAcademicTitleLabel);
     }
@@ -341,7 +385,7 @@ public class BaseView {
     private void createChooseDoctorAcademicTitleComboBox() {
         chooseDoctorAcademicTitleComboBox = new ComboBox<>();
         chooseDoctorAcademicTitleComboBox.setLayoutX(650.0);
-        chooseDoctorAcademicTitleComboBox.setLayoutY(490.0);
+        chooseDoctorAcademicTitleComboBox.setLayoutY(470.0);
         chooseDoctorAcademicTitleComboBox.setPrefHeight(40.0);
         chooseDoctorAcademicTitleComboBox.setPrefWidth(300.0);
         chooseDoctorAcademicTitleComboBox.setPromptText("Wybierz tytuł naukowy");
@@ -370,20 +414,20 @@ public class BaseView {
     private void createDoctorPhoneNumberTextField() {
         doctorPhoneNumberTextField = new TextField();
         doctorPhoneNumberTextField.setLayoutX(650.0);
-        doctorPhoneNumberTextField.setLayoutY(250.0);
+        doctorPhoneNumberTextField.setLayoutY(270.0);
         doctorPhoneNumberTextField.setPrefHeight(40.0);
         doctorPhoneNumberTextField.setPrefWidth(300.0);
-        doctorPhoneNumberTextField.setPromptText("Numer telefonu");
+        doctorPhoneNumberTextField.setPromptText("Podaj numer");
         addDoctorPane.getChildren().add(doctorPhoneNumberTextField);
     }
 
     private void createDoctorLastNameTextField() {
         doctorLastNameTextField = new TextField();
         doctorLastNameTextField.setLayoutX(650.0);
-        doctorLastNameTextField.setLayoutY(150.0);
+        doctorLastNameTextField.setLayoutY(170.0);
         doctorLastNameTextField.setPrefHeight(40.0);
         doctorLastNameTextField.setPrefWidth(300.0);
-        doctorLastNameTextField.setPromptText("Nazwisko");
+        doctorLastNameTextField.setPromptText("Podaj nazwisko");
         addDoctorPane.getChildren().add(doctorLastNameTextField);
     }
 
@@ -400,10 +444,10 @@ public class BaseView {
     private void createDoctorFirstNameTextField() {
         doctorFirstNameTextField = new TextField();
         doctorFirstNameTextField.setLayoutX(650.0);
-        doctorFirstNameTextField.setLayoutY(50.0);
+        doctorFirstNameTextField.setLayoutY(70.0);
         doctorFirstNameTextField.setPrefHeight(40.0);
         doctorFirstNameTextField.setPrefWidth(300.0);
-        doctorFirstNameTextField.setPromptText("Imie");
+        doctorFirstNameTextField.setPromptText("Podaj imię");
         addDoctorPane.getChildren().add(doctorFirstNameTextField);
     }
 
@@ -437,22 +481,114 @@ public class BaseView {
         addPatientPane = new AnchorPane();
         addPatientPane.setPrefHeight(180.0);
         addPatientPane.setPrefWidth(200.0);
+        createBackgroundImage(addPatientPane);
         createPatientFirstNameTextField();
+        createPatientFirstNameLabel();
         createPatientLastNameTextField();
+        createPatientLastNameLabel();
         createPatientBirthDateDatePicker();
+        createPatientBirthDateLabel();
         createChoosePatientSexComboBox();
         createChoosePatientBloodTypeComboBox();
         createPatientStreetNameTextField();
+        createPatientStreetNameLabel();
         createPatientHouseNumberTextField();
+        createPatientHouseNumberLabel();
         createPatientZipCodeTextField();
+        createPatientZipCodeLabel();
         createPatientCityTextField();
+        createPatientCityLabel();
         createPatientPeselTextField();
+        createPatientPeselLabel();
         createPatientPhoneNumberTextField();
+        createPatientPhoneNumberLabel();
         createAddPatientButton();
         createPatientSexLabel();
         createPatientBloodTypeLabel();
         addPatientTab.setContent(addPatientPane);
         patientsPane.getTabs().add(addPatientTab);
+    }
+
+    private void createBackgroundImage(AnchorPane backgroundPane) {
+        backgroundImage = new ImageView(new Image(this.getClass().getResourceAsStream("/images/logo.png")));
+        backgroundImage.setLayoutX(50);
+        backgroundImage.setLayoutY(150);
+        backgroundImage.setFitHeight(350);
+        backgroundImage.setFitWidth(1500);
+        backgroundImage.setOpacity(0.3);
+        backgroundPane.getChildren().add(backgroundImage);
+    }
+
+    private void createPatientFirstNameLabel() {
+        patientFirstNameLabel = new Label();
+        patientFirstNameLabel.setLayoutX(350.0);
+        patientFirstNameLabel.setLayoutY(20.0);
+        patientFirstNameLabel.setText("Imię");
+        addPatientPane.getChildren().add(patientFirstNameLabel);
+    }
+
+    private void createPatientLastNameLabel() {
+        patientLastNameLabel = new Label();
+        patientLastNameLabel.setLayoutX(350.0);
+        patientLastNameLabel.setLayoutY(100.0);
+        patientLastNameLabel.setText("Nazwisko");
+        addPatientPane.getChildren().add(patientLastNameLabel);
+    }
+
+    private void createPatientBirthDateLabel() {
+        patientBirthDateLabel = new Label();
+        patientBirthDateLabel.setLayoutX(350.0);
+        patientBirthDateLabel.setLayoutY(180.0);
+        patientBirthDateLabel.setText("Data urodzenia");
+        addPatientPane.getChildren().add(patientBirthDateLabel);
+    }
+
+    private void createPatientPhoneNumberLabel() {
+        patientPhoneNumberLabel = new Label();
+        patientPhoneNumberLabel.setLayoutX(350.0);
+        patientPhoneNumberLabel.setLayoutY(420.0);
+        patientPhoneNumberLabel.setText("Numer telefonu");
+        addPatientPane.getChildren().add(patientPhoneNumberLabel);
+    }
+
+    private void createPatientStreetNameLabel() {
+        patientStreetNameLabel = new Label();
+        patientStreetNameLabel.setLayoutX(950.0);
+        patientStreetNameLabel.setLayoutY(20.0);
+        patientStreetNameLabel.setText("Ulica");
+        addPatientPane.getChildren().add(patientStreetNameLabel);
+    }
+
+    private void createPatientHouseNumberLabel() {
+        patientHouseNumberLabel = new Label();
+        patientHouseNumberLabel.setLayoutX(950.0);
+        patientHouseNumberLabel.setLayoutY(100.0);
+        patientHouseNumberLabel.setText("Numer domu");
+        addPatientPane.getChildren().add(patientHouseNumberLabel);
+    }
+
+    private void createPatientZipCodeLabel() {
+        patientZipCodeLabel = new Label();
+        patientZipCodeLabel.setLayoutX(950.0);
+        patientZipCodeLabel.setLayoutY(180.0);
+        patientZipCodeLabel.setText("Kod pocztowy");
+        addPatientPane.getChildren().add(patientZipCodeLabel);
+    }
+
+    private void createPatientCityLabel() {
+        patientCityLabel = new Label();
+        patientCityLabel.setLayoutX(950.0);
+        patientCityLabel.setLayoutY(260.0);
+        patientCityLabel.setText("Miejscowość");
+        addPatientPane.getChildren().add(patientCityLabel);
+    }
+
+    private void createPatientPeselLabel() {
+        patientPeselLabel = new Label();
+        patientPeselLabel.setLayoutX(950.0);
+        patientPeselLabel.setLayoutY(340.0);
+        patientPeselLabel.setText("PESEL");
+        addPatientPane.getChildren().add(patientPeselLabel);
     }
 
     private void createPatientBloodTypeLabel() {
@@ -474,7 +610,7 @@ public class BaseView {
     private void createAddPatientButton() {
         addPatientButton = new Button();
         addPatientButton.setLayoutX(700.0);
-        addPatientButton.setLayoutY(630.0);
+        addPatientButton.setLayoutY(580.0);
         addPatientButton.setMnemonicParsing(false);
         addPatientButton.setPrefHeight(45.0);
         addPatientButton.setPrefWidth(200.0);
@@ -489,17 +625,17 @@ public class BaseView {
         patientPhoneNumberTextField.setLayoutY(450.0);
         patientPhoneNumberTextField.setPrefHeight(40.0);
         patientPhoneNumberTextField.setPrefWidth(300.0);
-        patientPhoneNumberTextField.setPromptText("Numer Telefonu");
+        patientPhoneNumberTextField.setPromptText("Podaj numer");
         addPatientPane.getChildren().add(patientPhoneNumberTextField);
     }
 
     private void createPatientPeselTextField() {
         patientPeselTextField = new TextField();
         patientPeselTextField.setLayoutX(950.0);
-        patientPeselTextField.setLayoutY(450.0);
+        patientPeselTextField.setLayoutY(370.0);
         patientPeselTextField.setPrefHeight(40.0);
         patientPeselTextField.setPrefWidth(300.0);
-        patientPeselTextField.setPromptText("PESEL");
+        patientPeselTextField.setPromptText("Podaj PESEL");
         addPatientPane.getChildren().add(patientPeselTextField);
     }
 
@@ -509,7 +645,7 @@ public class BaseView {
         patientCityTextField.setLayoutY(290.0);
         patientCityTextField.setPrefHeight(40.0);
         patientCityTextField.setPrefWidth(300.0);
-        patientCityTextField.setPromptText("Miejscowość");
+        patientCityTextField.setPromptText("Podaj miejscowość");
         addPatientPane.getChildren().add(patientCityTextField);
     }
 
@@ -519,7 +655,7 @@ public class BaseView {
         patientZipCodeTextField.setLayoutY(210.0);
         patientZipCodeTextField.setPrefHeight(40.0);
         patientZipCodeTextField.setPrefWidth(300.0);
-        patientZipCodeTextField.setPromptText("Kod pocztowy");
+        patientZipCodeTextField.setPromptText("Podaj kod pocztowy");
         addPatientPane.getChildren().add(patientZipCodeTextField);
     }
 
@@ -529,7 +665,7 @@ public class BaseView {
         patientHouseNumberTextField.setLayoutY(130.0);
         patientHouseNumberTextField.setPrefHeight(40.0);
         patientHouseNumberTextField.setPrefWidth(300.0);
-        patientHouseNumberTextField.setPromptText("Numer domu");
+        patientHouseNumberTextField.setPromptText("Podaj numer domu");
         addPatientPane.getChildren().add(patientHouseNumberTextField);
     }
 
@@ -539,7 +675,7 @@ public class BaseView {
         patientStreetNameTextField.setLayoutY(50.0);
         patientStreetNameTextField.setPrefHeight(40.0);
         patientStreetNameTextField.setPrefWidth(300.0);
-        patientStreetNameTextField.setPromptText("Ulica");
+        patientStreetNameTextField.setPromptText("Podaj ulicę");
         addPatientPane.getChildren().add(patientStreetNameTextField);
     }
 
@@ -577,7 +713,7 @@ public class BaseView {
         patientBirthDateDatePicker.setLayoutY(210.0);
         patientBirthDateDatePicker.setPrefHeight(40.0);
         patientBirthDateDatePicker.setPrefWidth(300.0);
-        patientBirthDateDatePicker.setPromptText("Data urodzenia");
+        patientBirthDateDatePicker.setPromptText("Zaznacz datę urodzenia");
         patientBirthDateDatePicker.setConverter(new DefaultDatePickerConverter());
         addPatientPane.getChildren().add(patientBirthDateDatePicker);
     }
@@ -588,7 +724,7 @@ public class BaseView {
         patientLastNameTextField.setLayoutY(130.0);
         patientLastNameTextField.setPrefHeight(40.0);
         patientLastNameTextField.setPrefWidth(300.0);
-        patientLastNameTextField.setPromptText("Nazwisko");
+        patientLastNameTextField.setPromptText("Podaj nazwisko");
         addPatientPane.getChildren().add(patientLastNameTextField);
     }
 
@@ -598,7 +734,7 @@ public class BaseView {
         patientFirstNameTextField.setLayoutY(50.0);
         patientFirstNameTextField.setPrefHeight(40.0);
         patientFirstNameTextField.setPrefWidth(300.0);
-        patientFirstNameTextField.setPromptText("Imie");
+        patientFirstNameTextField.setPromptText("Podaj imię");
         addPatientPane.getChildren().add(patientFirstNameTextField);
     }
 
@@ -886,6 +1022,7 @@ public class BaseView {
         addDoctorButton.setOnMouseClicked(e -> addDoctor());
         addPatientButton.setOnMouseClicked(e -> addPatient());
         patientsTable.setRowFactory(tv -> setPatientsTableRowFactory());
+        doctorsTable.setRowFactory(tv -> setDoctorsTableRowFactory());
     }
 
     private void setTextFieldsLimit() {
@@ -934,6 +1071,17 @@ public class BaseView {
             if (event.getClickCount() == 2 && !row.isEmpty()) {
                 PersonTableRecord record = patientsTable.getItems().get(row.getIndex());
                 openPatientScene(record.getId());
+            }
+        });
+        return row;
+    }
+
+    private TableRow<PersonTableRecord> setDoctorsTableRowFactory() {
+        TableRow<PersonTableRecord> row = new TableRow<>();
+        row.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2 && !row.isEmpty()) {
+                PersonTableRecord record = doctorsTable.getItems().get(row.getIndex());
+                openDoctorScene(record.getId());
             }
         });
         return row;
@@ -1106,6 +1254,23 @@ public class BaseView {
                 updatePatientsTablePageData();
                 serviceStore.cancelAllPatientServices();
             });
+            subStage.show();
+        });
+    }
+
+    private void openDoctorScene(Integer doctorId) {
+        Scene scene = new Scene(new DoctorView(doctorId).asParent(), 900, 600);
+        Platform.runLater(() -> {
+            Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+            Stage subStage = new Stage();
+            subStage.setScene(scene);
+            subStage.setX((screenBounds.getWidth() - scene.getWidth()) / 2);
+            subStage.setY((screenBounds.getHeight() - scene.getHeight()) / 2);
+            subStage.setTitle("Panel lekarza");
+            subStage.getIcons().add(new Image(this.getClass().getResourceAsStream("/images/favicon.png")));
+            subStage.initOwner(currentStage());
+            subStage.initModality(WINDOW_MODAL);
+            subStage.setOnHidden(e -> updateDoctorsTablePageData());
             subStage.show();
         });
     }

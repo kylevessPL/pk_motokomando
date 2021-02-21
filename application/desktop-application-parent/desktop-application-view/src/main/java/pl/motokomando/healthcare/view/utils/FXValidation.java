@@ -1,4 +1,4 @@
-package utils;
+package pl.motokomando.healthcare.view.utils;
 
 import org.controlsfx.validation.Validator;
 
@@ -7,7 +7,7 @@ import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 import static org.controlsfx.validation.Severity.ERROR;
-import static utils.DateConstraints.FUTURE;
+import static pl.motokomando.healthcare.view.utils.DateConstraints.FUTURE;
 
 public final class FXValidation {
 
