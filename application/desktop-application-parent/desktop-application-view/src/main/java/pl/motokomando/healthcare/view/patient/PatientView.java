@@ -419,11 +419,11 @@ public class PatientView {
 
     private void createUpdatePatientDetailsButton() {
         updatePatientDetailsButton = new Button();
+        updatePatientDetailsButton.setDisable(true);
         updatePatientDetailsButton.setLayoutX(360.0);
         updatePatientDetailsButton.setLayoutY(480.0);
         updatePatientDetailsButton.setMnemonicParsing(false);
         updatePatientDetailsButton.setText("Zaktualizuj");
-        updatePatientDetailsButton.setDisable(true);
         patientDetailsPane.getChildren().add(updatePatientDetailsButton);
     }
 

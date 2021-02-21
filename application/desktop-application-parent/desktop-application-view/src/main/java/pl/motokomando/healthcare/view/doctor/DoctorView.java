@@ -1,6 +1,10 @@
 package pl.motokomando.healthcare.view.doctor;
 
+import javafx.application.Platform;
+import javafx.collections.ListChangeListener;
+import javafx.concurrent.Task;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -9,14 +13,32 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import lombok.SneakyThrows;
+import org.controlsfx.control.CheckComboBox;
+import org.controlsfx.tools.ValueExtractor;
 import org.controlsfx.validation.ValidationSupport;
+import org.controlsfx.validation.Validator;
 import pl.motokomando.healthcare.controller.doctor.DoctorController;
 import pl.motokomando.healthcare.model.base.utils.AcademicTitle;
+import pl.motokomando.healthcare.model.base.utils.DoctorDetails;
 import pl.motokomando.healthcare.model.base.utils.MedicalSpecialty;
 import pl.motokomando.healthcare.model.doctor.DoctorModel;
+import pl.motokomando.healthcare.view.utils.FXAlert;
+import pl.motokomando.healthcare.view.utils.FXTasks;
+import pl.motokomando.healthcare.view.utils.FXValidation;
+import pl.motokomando.healthcare.view.utils.TextFieldLimiter;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import static javafx.scene.control.Alert.AlertType.CONFIRMATION;
+import static javafx.scene.control.Alert.AlertType.ERROR;
+import static javafx.scene.control.Alert.AlertType.INFORMATION;
+import static javafx.scene.control.ButtonType.OK;
 
 public class DoctorView {
 
@@ -35,7 +57,7 @@ public class DoctorView {
     private Label doctorPhoneNumberLabel;
     private ComboBox<String> chooseDoctorAcademicTitleComboBox;
     private Label doctorAcademicTitleLabel;
-    private ComboBox<String> chooseDoctorMedicalSpecialtyComboBox;
+    private CheckComboBox<String> chooseDoctorSpecialtyComboBox;
     private Label doctorMedicalSpecialtyLabel;
     private Button unlockUpdateDoctorDetailsButton;
     private Button updateDoctorDetailsButton;
@@ -45,6 +67,9 @@ public class DoctorView {
         initModel(doctorId);
         setController();
         addContent();
+        setupValidation();
+        delegateEventHandlers();
+        observeModelAndUpdate();
     }
 
     public Parent asParent() {
@@ -65,6 +90,7 @@ public class DoctorView {
 
     private void addContent() {
         createDoctorDetailsPane();
+        getDoctorDetails();
     }
 
     private void createDoctorDetailsPane() {
@@ -77,7 +103,7 @@ public class DoctorView {
         createDoctorLastNameTextField();
         createChooseDoctorAcademicTitleComboBox();
         createDoctorAcademicTitleLabel();
-        createChooseDoctorMedicalSpecialtyComboBox();
+        createChooseDoctorSpecialtyComboBox();
         createDoctorMedicalSpecialtyLabel();
         createDoctorFirstNameLabel();
         createDoctorLastNameLabel();
@@ -107,6 +133,7 @@ public class DoctorView {
 
     private void createUpdateDoctorDetailsButton() {
         updateDoctorDetailsButton = new Button();
+        updateDoctorDetailsButton.setDisable(true);
         updateDoctorDetailsButton.setLayoutX(360.0);
         updateDoctorDetailsButton.setLayoutY(436.0);
         updateDoctorDetailsButton.setMnemonicParsing(false);
@@ -123,18 +150,19 @@ public class DoctorView {
         doctorDetailsPane.getChildren().add(doctorMedicalSpecialtyLabel);
     }
 
-    private void createChooseDoctorMedicalSpecialtyComboBox() {
-        chooseDoctorMedicalSpecialtyComboBox = new ComboBox<>();
-        chooseDoctorMedicalSpecialtyComboBox.setLayoutX(550.0);
-        chooseDoctorMedicalSpecialtyComboBox.setLayoutY(185.0);
-        chooseDoctorMedicalSpecialtyComboBox.setPrefHeight(30.0);
-        chooseDoctorMedicalSpecialtyComboBox.setPrefWidth(200.0);
-        chooseDoctorMedicalSpecialtyComboBox.setPromptText("Wybierz specjalizację");
-        chooseDoctorMedicalSpecialtyComboBox.getItems().setAll(Arrays
+    private void createChooseDoctorSpecialtyComboBox() {
+        chooseDoctorSpecialtyComboBox = new CheckComboBox<>();
+        chooseDoctorSpecialtyComboBox.setLayoutX(550.0);
+        chooseDoctorSpecialtyComboBox.setLayoutY(185.0);
+        chooseDoctorSpecialtyComboBox.setPrefHeight(30.0);
+        chooseDoctorSpecialtyComboBox.setPrefWidth(200.0);
+        chooseDoctorSpecialtyComboBox.setTitle("Wybrano");
+        chooseDoctorSpecialtyComboBox.setShowCheckedCount(true);
+        chooseDoctorSpecialtyComboBox.getItems().setAll(Arrays
                 .stream(MedicalSpecialty.values())
                 .map(MedicalSpecialty::getName)
                 .collect(Collectors.toList()));
-        doctorDetailsPane.getChildren().add(chooseDoctorMedicalSpecialtyComboBox);
+        doctorDetailsPane.getChildren().add(chooseDoctorSpecialtyComboBox);
     }
 
     private void createDoctorAcademicTitleLabel() {
@@ -211,6 +239,193 @@ public class DoctorView {
         doctorFirstNameTextField.setPrefWidth(200.0);
         doctorFirstNameTextField.setPromptText("Podaj imię");
         doctorDetailsPane.getChildren().add(doctorFirstNameTextField);
+    }
+
+    private void setupValidation() {
+        setDoctorFirstNameTextFieldValidator();
+        setDoctorLastNameTextFieldValidator();
+        setDoctorPhoneNumberTextFieldValidator();
+        setDoctorAcademicTitleComboBoxValidator();
+        setDoctorSpecialtyComboBoxValidator();
+        updateDoctorDetailsValidationSupport.getRegisteredControls().forEach(c -> c.setDisable(true));
+    }
+
+    private void setDoctorFirstNameTextFieldValidator() {
+        final String fieldName = "imię";
+        Validator<String> emptyValidator = FXValidation.createEmptyValidator(fieldName);
+        Validator<String> rangeValidator = FXValidation.createMinLengthValidator(fieldName, 2);
+        updateDoctorDetailsValidationSupport.registerValidator(
+                doctorFirstNameTextField,
+                true,
+                Validator.combine(emptyValidator, rangeValidator));
+    }
+
+    private void setDoctorLastNameTextFieldValidator() {
+        final String fieldName = "nazwisko";
+        Validator<String> emptyValidator = FXValidation.createEmptyValidator(fieldName);
+        Validator<String> rangeValidator = FXValidation.createMinLengthValidator(fieldName, 2);
+        updateDoctorDetailsValidationSupport.registerValidator(
+                doctorLastNameTextField,
+                true,
+                Validator.combine(emptyValidator, rangeValidator));
+    }
+
+    private void setDoctorPhoneNumberTextFieldValidator() {
+        final String fieldName = "nr telefonu";
+        Validator<String> emptyValidator = FXValidation.createEmptyValidator(fieldName);
+        Validator<String> regexValidator = FXValidation.createRegexValidator(fieldName, Pattern.compile("^[0-9]+$"));
+        Validator<String> rangeValidator = FXValidation.createMinLengthValidator(fieldName, 7);
+        updateDoctorDetailsValidationSupport.registerValidator(
+                doctorPhoneNumberTextField,
+                true,
+                Validator.combine(emptyValidator, regexValidator, rangeValidator));
+    }
+
+    private void setDoctorAcademicTitleComboBoxValidator() {
+        final String fieldName = "tytuł naukowy";
+        Validator<String> emptyValidator = FXValidation.createEmptyValidator(fieldName);
+        updateDoctorDetailsValidationSupport.registerValidator(chooseDoctorAcademicTitleComboBox, true, emptyValidator);
+    }
+
+    private void setDoctorSpecialtyComboBoxValidator() {
+        final String fieldName = "specjalizacja";
+        ValueExtractor.addObservableValueExtractor(c -> c == chooseDoctorSpecialtyComboBox,
+                c -> model.doctorSpecialtyComboBoxCheckedItemsNumber());
+        Validator<Integer> checkComboBoxBoxValidator = FXValidation.createCheckComboBoxValidator(fieldName);
+        updateDoctorDetailsValidationSupport.registerValidator(chooseDoctorSpecialtyComboBox, true, checkComboBoxBoxValidator);
+    }
+
+    private void setTextFieldsLimit() {
+        doctorFirstNameTextField.textProperty().addListener(new TextFieldLimiter(30));
+        doctorLastNameTextField.textProperty().addListener(new TextFieldLimiter(30));
+        doctorPhoneNumberTextField.textProperty().addListener(new TextFieldLimiter(15));
+    }
+
+    private void observeModelAndUpdate() {
+        model.doctorDetails().addListener((obs, oldValue, newValue) -> Platform.runLater(this::setDoctorDetailsFields));
+    }
+
+    private void delegateEventHandlers() {
+        setTextFieldsLimit();
+        chooseDoctorSpecialtyComboBox.getCheckModel().getCheckedItems().addListener((ListChangeListener<String>) c ->
+                controller.handleDoctorSpecialtyComboBoxCheckedItemsChanged(c.getList()));
+        updateDoctorDetailsValidationSupport.validationResultProperty().addListener((obs, oldValue, newValue) ->
+                Platform.runLater(this::switchUpdateDoctorDetailsButtonState));
+        unlockUpdateDoctorDetailsButton.setOnMouseClicked(e ->
+                Platform.runLater(this::switchUnlockUpdateDoctorDetailsButtonsState));
+        updateDoctorDetailsButton.setOnMouseClicked(e -> updateDoctorDetails());
+    }
+
+    private void switchUnlockUpdateDoctorDetailsButtonsState() {
+        setDoctorDetailsFields();
+        updateDoctorDetailsValidationSupport.getRegisteredControls().forEach(c -> c.setDisable(!c.isDisabled()));
+        unlockUpdateDoctorDetailsButton.setText(unlockUpdateDoctorDetailsButton.getText().equals("Edytuj") ?
+                "Zablokuj" : "Edytuj");
+        switchUpdateDoctorDetailsButtonState();
+    }
+
+    private void setDoctorDetailsFields() {
+        DoctorDetails doctorDetails = model.getDoctorDetails();
+        doctorFirstNameTextField.setText(doctorDetails.getFirstName());
+        doctorLastNameTextField.setText(doctorDetails.getLastName());
+        chooseDoctorAcademicTitleComboBox.getSelectionModel().select(doctorDetails.getAcademicTitle().getName());
+        doctorDetails.getSpecialties().forEach(e -> chooseDoctorSpecialtyComboBox.getCheckModel().check(e.getName()));
+        doctorPhoneNumberTextField.setText(doctorDetails.getPhoneNumber());
+    }
+
+    private void switchUpdateDoctorDetailsButtonState() {
+        updateDoctorDetailsButton.setDisable(unlockUpdateDoctorDetailsButton.getText().equals("Edytuj") ||
+                updateDoctorDetailsValidationSupport.isInvalid() || !isDoctorDetailsFieldsChanged());
+    }
+
+    private boolean isDoctorDetailsFieldsChanged() {
+        DoctorDetails doctorDetails = createDoctorDetails();
+        return getDoctorDetailsDiff(doctorDetails).isPresent();
+    }
+
+    private DoctorDetails createDoctorDetails() {
+        String firstName = doctorFirstNameTextField.getText();
+        String lastName = doctorLastNameTextField.getText();
+        AcademicTitle academicTitle = AcademicTitle.findByName(
+                chooseDoctorAcademicTitleComboBox.getSelectionModel().getSelectedItem());
+        List<MedicalSpecialty> specialties = chooseDoctorSpecialtyComboBox.getCheckModel().getCheckedItems()
+                .stream()
+                .map(MedicalSpecialty::findByName)
+                .collect(Collectors.toList());
+        String phoneNumber = doctorPhoneNumberTextField.getText();
+        return new DoctorDetails(firstName, lastName, academicTitle, specialties, phoneNumber);
+    }
+
+    @SneakyThrows
+    private Optional<Map<String, String>> getDoctorDetailsDiff(DoctorDetails doctorDetails) {
+        Map<String, String> objectsDiff = FXTasks.getObjectsDiff(model.getDoctorDetails(), doctorDetails);
+        return Optional.of(objectsDiff).filter(e -> !e.isEmpty());
+    }
+
+    private void getDoctorDetails() {
+        Task<Void> task = FXTasks.createTask(() -> controller.getDoctorDetails());
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
+        task.setOnFailed(e -> getDoctorDetailsFailureResult(task.getException().getMessage()));
+    }
+
+    private void getDoctorDetailsFailureResult(String errorMessage) {
+        Alert alert = FXAlert.builder()
+                .alertType(ERROR)
+                .alertTitle("Nie udało się pobrać danych lekarza")
+                .contentText(errorMessage)
+                .owner(currentStage())
+                .build();
+        Platform.runLater(() -> alert.showAndWait()
+                .filter(OK::equals)
+                .ifPresent(e -> currentStage().close()));
+    }
+
+    private void updateDoctorDetails() {
+        Alert alert = FXAlert.builder()
+                .alertType(CONFIRMATION)
+                .contentText("Czy na pewno zaktualizować dane tego lekarza?")
+                .alertTitle("Aktualizacja danych lekarza")
+                .owner(currentStage())
+                .build();
+        Platform.runLater(() -> alert.showAndWait()
+                .filter(OK::equals)
+                .ifPresent(e -> processDoctorDetailsUpdate()));
+    }
+
+    private void processDoctorDetailsUpdate() {
+        Platform.runLater(() -> updateDoctorDetailsButton.setDisable(true));
+        DoctorDetails doctorDetails = createDoctorDetails();
+        Task<Void> task = FXTasks.createTask(() -> controller.handleUpdateDoctorDetailsButtonClicked(doctorDetails));
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
+        task.setOnSucceeded(e -> processUpdateDoctorDetailsSuccessResult());
+        task.setOnFailed(e -> {
+            Platform.runLater(() -> updateDoctorDetailsButton.setDisable(false));
+            processUpdateDoctorDetailsFailureResult(task.getException().getMessage());
+        });
+    }
+
+    private void processUpdateDoctorDetailsSuccessResult() {
+        Alert alert = FXAlert.builder()
+                .alertType(INFORMATION)
+                .alertTitle("Operacja ukończona pomyślnie")
+                .contentText("Pomyślnie zaktualizowano dane lekarza")
+                .owner(currentStage())
+                .build();
+        Platform.runLater(alert::showAndWait);
+    }
+
+    private void processUpdateDoctorDetailsFailureResult(String errorMessage) {
+        Alert alert = FXAlert.builder()
+                .alertType(ERROR)
+                .alertTitle("Nie udało się zaktualizować danych lekarza")
+                .contentText(errorMessage)
+                .owner(currentStage())
+                .build();
+        Platform.runLater(alert::showAndWait);
     }
 
 }
