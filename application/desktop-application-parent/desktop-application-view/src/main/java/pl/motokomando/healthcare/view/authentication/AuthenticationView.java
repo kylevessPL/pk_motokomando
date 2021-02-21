@@ -37,7 +37,7 @@ public class AuthenticationView {
     private Button loginButton;
     private Label authenticationStatusLabel;
     private ProgressIndicator progressIndicator;
-    private ImageView imageViewLogo;
+    private ImageView backgroundImage;
 
     public AuthenticationView() {
         initModel();
@@ -67,18 +67,17 @@ public class AuthenticationView {
     private void createContent() {
         createLoginButton();
         createAuthenticationStatusLabel();
-        createLogoImage();
+        createBackgroundImage();
         createProgressIndicator();
     }
 
-    private void createLogoImage() {
-        Image logoImage = new Image(this.getClass().getResourceAsStream("/images/logo.png"));
-        imageViewLogo = new ImageView(logoImage);
-        imageViewLogo.setLayoutX(10);
-        imageViewLogo.setLayoutY(50);
-        imageViewLogo.setFitHeight(160);
-        imageViewLogo.setFitWidth(680);
-        authenticationPane.getChildren().add(imageViewLogo);
+    private void createBackgroundImage() {
+        backgroundImage = new ImageView(new Image(this.getClass().getResourceAsStream("/images/logo.png")));
+        backgroundImage.setLayoutX(10);
+        backgroundImage.setLayoutY(50);
+        backgroundImage.setFitHeight(160);
+        backgroundImage.setFitWidth(680);
+        authenticationPane.getChildren().add(backgroundImage);
     }
 
     private void createPane() {

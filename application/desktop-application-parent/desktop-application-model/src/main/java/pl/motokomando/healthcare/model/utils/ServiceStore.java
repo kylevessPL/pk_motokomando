@@ -15,7 +15,6 @@ public final class ServiceStore {
 
     private final Set<Service<?>> baseServiceSet = new HashSet<>();
     private final Set<Service<?>> patientServiceSet = new HashSet<>();
-    private final Set<Service<?>> appointmentServiceSet = new HashSet<>();
 
     public static ServiceStore getInstance() {
         return INSTANCE;
@@ -29,10 +28,6 @@ public final class ServiceStore {
         patientServiceSet.add(service);
     }
 
-    public void addAppointmentService(Service<?> service) {
-        appointmentServiceSet.add(service);
-    }
-
     public void cancelAllBaseServices() {
         baseServiceSet.forEach(Service::cancel);
         baseServiceSet.clear();
@@ -41,11 +36,6 @@ public final class ServiceStore {
     public void cancelAllPatientServices() {
         patientServiceSet.forEach(Service::cancel);
         patientServiceSet.clear();
-    }
-
-    public void cancelAllAppointmentServices() {
-        appointmentServiceSet.forEach(Service::cancel);
-        appointmentServiceSet.clear();
     }
 
 }

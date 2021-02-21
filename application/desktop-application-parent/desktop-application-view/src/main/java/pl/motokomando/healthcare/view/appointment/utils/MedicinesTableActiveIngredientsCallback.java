@@ -10,7 +10,7 @@ import javafx.util.Callback;
 import lombok.RequiredArgsConstructor;
 import pl.motokomando.healthcare.model.appointment.utils.ActiveIngredient;
 import pl.motokomando.healthcare.model.appointment.utils.MedicinesTableRecord;
-import utils.FXAlert;
+import pl.motokomando.healthcare.view.utils.FXAlert;
 
 import java.util.List;
 import java.util.stream.Collectors;

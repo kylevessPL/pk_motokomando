@@ -8,7 +8,8 @@ import lombok.RequiredArgsConstructor;
 public enum ProductType {
 
     PRESCRIPTION ("Lek na receptę"),
-    OTC("Lek bez recepty");
+    OTC("Lek bez recepty"),
+    PROCESSING("Lek do przetwarzania");
 
     private final String name;
 

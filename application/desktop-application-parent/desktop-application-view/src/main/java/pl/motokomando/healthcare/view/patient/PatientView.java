@@ -26,6 +26,7 @@ import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Screen;
@@ -45,10 +46,11 @@ import pl.motokomando.healthcare.model.utils.DoctorBasic;
 import pl.motokomando.healthcare.model.utils.ServiceStore;
 import pl.motokomando.healthcare.view.appointment.AppointmentView;
 import pl.motokomando.healthcare.view.patient.utils.ChooseDoctorComboBoxConverter;
-import utils.FXAlert;
-import utils.FXTasks;
-import utils.FXValidation;
-import utils.TextFieldLimiter;
+import pl.motokomando.healthcare.view.utils.DefaultDatePickerConverter;
+import pl.motokomando.healthcare.view.utils.FXAlert;
+import pl.motokomando.healthcare.view.utils.FXTasks;
+import pl.motokomando.healthcare.view.utils.FXValidation;
+import pl.motokomando.healthcare.view.utils.TextFieldLimiter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -76,7 +78,7 @@ import static javafx.scene.control.TabPane.TabClosingPolicy.UNAVAILABLE;
 import static javafx.scene.layout.Region.USE_PREF_SIZE;
 import static javafx.stage.Modality.WINDOW_MODAL;
 import static pl.motokomando.healthcare.model.patient.utils.AppointmentStatus.CANCELLED;
-import static utils.DateConstraints.PAST;
+import static pl.motokomando.healthcare.view.utils.DateConstraints.PAST;
 
 public class PatientView {
 
@@ -119,7 +121,17 @@ public class PatientView {
     private ComboBox<DoctorBasic> chooseDoctorComboBox;
     private Button scheduleAppointmentButton;
     private Button updatePatientDetailsButton;
-    private Label scheduleAppointmentDoctorLabel;
+    private Label patientFirstNameLabel;
+    private Label patientLastNameLabel;
+    private Label patientPhoneNumberLabel;
+    private Label patientZipCodeLabel;
+    private Label patientStreetNameLabel;
+    private Label patientCityLabel;
+    private Label patientBirthDateLabel;
+    private Label patientHouseNumberLabel;
+    private Label patientPeselLabel;
+    private Button cancelAppointmentButton;
+    private ImageView backgroundLogo;
     private WeekPage appointmentsCalendar;
 
     private Pagination patientAppointmentsTablePagination;
@@ -186,8 +198,19 @@ public class PatientView {
         patientAppointmentsPane.setPrefHeight(180.0);
         patientAppointmentsPane.setPrefWidth(200.0);
         createPatientAppointmentsTable();
+        createCancelAppointmentButton();
         patientAppointmentsTab.setContent(patientAppointmentsPane);
         patientPane.getTabs().add(patientAppointmentsTab);
+    }
+
+    private void createCancelAppointmentButton() {
+        cancelAppointmentButton = new Button();
+        cancelAppointmentButton.setDisable(true);
+        cancelAppointmentButton.setLayoutX(785.0);
+        cancelAppointmentButton.setLayoutY(15.0);
+        cancelAppointmentButton.setMnemonicParsing(false);
+        cancelAppointmentButton.setText("Anuluj");
+        patientAppointmentsPane.getChildren().add(cancelAppointmentButton);
     }
 
     private void createScheduleAppointmentTab() {
@@ -198,7 +221,6 @@ public class PatientView {
         scheduleAppointmentPane.setPrefWidth(200.0);
         createChooseDoctorComboBox();
         createScheduleAppointmentButton();
-        createScheduleAppointmentDoctorLabel();
         createAppointmentDateChoiceTextField();
         createAppointmentDateCalendar();
         scheduleAppointmentTab.setContent(scheduleAppointmentPane);
@@ -245,14 +267,6 @@ public class PatientView {
         scheduleAppointmentPane.getChildren().add(appointmentsCalendar);
     }
 
-    private void createScheduleAppointmentDoctorLabel() {
-        scheduleAppointmentDoctorLabel = new Label();
-        scheduleAppointmentDoctorLabel.setLayoutX(300.0);
-        scheduleAppointmentDoctorLabel.setLayoutY(50.0);
-        scheduleAppointmentDoctorLabel.setText("Lekarz");
-        scheduleAppointmentPane.getChildren().add(scheduleAppointmentDoctorLabel);
-    }
-
     private void createScheduleAppointmentButton() {
         scheduleAppointmentButton = new Button();
         scheduleAppointmentButton.setDisable(true);
@@ -280,19 +294,29 @@ public class PatientView {
         patientDetailsPane = new AnchorPane();
         patientDetailsPane.setPrefHeight(180.0);
         patientDetailsPane.setPrefWidth(200.0);
+        createBackgroundImage();
         createPatientFirstNameTextField();
+        createPatientFirstNameLabel();
         createPatientPhoneNumberTextField();
+        createPatientPhoneNumberLabel();
         createPatientPeselTextField();
+        createPatientPeselLabel();
         createPatientLastNameTextField();
+        createPatientLastNameLabel();
         createPatientZipCodeTextField();
+        createPatientZipCodeLabel();
         createPatientStreetNameTextField();
+        createPatientStreetNameLabel();
         createPatientCityTextField();
+        createPatientCityLabel();
         createChoosePatientSexComboBox();
         createPatientSexLabel();
         createChoosePatientBloodTypeComboBox();
         createPatientBloodTypeLabel();
         createPatientBirthDateDatePicker();
+        createPatientBirthDateLabel();
         createPatientHouseNumberTextField();
+        createPatientHouseNumberLabel();
         createPatientRegistrationInfoTextField();
         createPatientRegistrationDateLabel();
         createUpdatePatientDetailsButton();
@@ -302,10 +326,92 @@ public class PatientView {
         patientPane.getTabs().add(patientDetailsTab);
     }
 
+    private void createBackgroundImage() {
+        backgroundLogo = new ImageView(new Image(this.getClass().getResourceAsStream("/images/logo.png")));
+        backgroundLogo.setLayoutX(50);
+        backgroundLogo.setLayoutY(330);
+        backgroundLogo.setFitHeight(200);
+        backgroundLogo.setFitWidth(800);
+        backgroundLogo.setOpacity(0.3);
+        patientDetailsPane.getChildren().add(backgroundLogo);
+    }
+
+    private void createPatientFirstNameLabel() {
+        patientFirstNameLabel = new Label();
+        patientFirstNameLabel.setLayoutX(50.0);
+        patientFirstNameLabel.setLayoutY(30.0);
+        patientFirstNameLabel.setText("Imię");
+        patientDetailsPane.getChildren().add(patientFirstNameLabel);
+    }
+
+    private void createPatientLastNameLabel() {
+        patientLastNameLabel = new Label();
+        patientLastNameLabel.setLayoutX(50.0);
+        patientLastNameLabel.setLayoutY(110.0);
+        patientLastNameLabel.setText("Nazwisko");
+        patientDetailsPane.getChildren().add(patientLastNameLabel);
+    }
+
+    private void createPatientBirthDateLabel() {
+        patientBirthDateLabel = new Label();
+        patientBirthDateLabel.setLayoutX(50.0);
+        patientBirthDateLabel.setLayoutY(270.0);
+        patientBirthDateLabel.setText("Data urodzenia");
+        patientDetailsPane.getChildren().add(patientBirthDateLabel);
+    }
+
+    private void createPatientZipCodeLabel() {
+        patientZipCodeLabel = new Label();
+        patientZipCodeLabel.setLayoutX(350.0);
+        patientZipCodeLabel.setLayoutY(270.0);
+        patientZipCodeLabel.setText("Kod pocztowy");
+        patientDetailsPane.getChildren().add(patientZipCodeLabel);
+    }
+
+    private void createPatientStreetNameLabel() {
+        patientStreetNameLabel = new Label();
+        patientStreetNameLabel.setLayoutX(350.0);
+        patientStreetNameLabel.setLayoutY(30.0);
+        patientStreetNameLabel.setText("Ulica");
+        patientDetailsPane.getChildren().add(patientStreetNameLabel);
+    }
+
+    private void createPatientHouseNumberLabel() {
+        patientHouseNumberLabel = new Label();
+        patientHouseNumberLabel.setLayoutX(350.0);
+        patientHouseNumberLabel.setLayoutY(110.0);
+        patientHouseNumberLabel.setText("Numer domu");
+        patientDetailsPane.getChildren().add(patientHouseNumberLabel);
+    }
+
+    private void createPatientCityLabel() {
+        patientCityLabel = new Label();
+        patientCityLabel.setLayoutX(350.0);
+        patientCityLabel.setLayoutY(190.0);
+        patientCityLabel.setText("Miejscowość");
+        patientDetailsPane.getChildren().add(patientCityLabel);
+    }
+
+    private void createPatientPeselLabel() {
+        patientPeselLabel = new Label();
+        patientPeselLabel.setLayoutX(650.0);
+        patientPeselLabel.setLayoutY(110.0);
+        patientPeselLabel.setText("PESEL");
+        patientDetailsPane.getChildren().add(patientPeselLabel);
+    }
+
+    private void createPatientPhoneNumberLabel() {
+        patientPhoneNumberLabel = new Label();
+        patientPhoneNumberLabel.setLayoutX(650.0);
+        patientPhoneNumberLabel.setLayoutY(30.0);
+        patientPhoneNumberLabel.setText("Numer telefonu");
+        patientDetailsPane.getChildren().add(patientPhoneNumberLabel);
+    }
+
     private void createUnlockUpdatePatientDetailsButton() {
         unlockUpdatePatientDetailsButton = new Button();
         unlockUpdatePatientDetailsButton.setLayoutX(480.0);
-        unlockUpdatePatientDetailsButton.setLayoutY(436.0);
+        unlockUpdatePatientDetailsButton.setLayoutY(480.0);
         unlockUpdatePatientDetailsButton.setMnemonicParsing(false);
         unlockUpdatePatientDetailsButton.setText("Edytuj");
         patientDetailsPane.getChildren().add(unlockUpdatePatientDetailsButton);
@@ -313,11 +419,11 @@ public class PatientView {
 
     private void createUpdatePatientDetailsButton() {
         updatePatientDetailsButton = new Button();
+        updatePatientDetailsButton.setDisable(true);
         updatePatientDetailsButton.setLayoutX(360.0);
-        updatePatientDetailsButton.setLayoutY(436.0);
+        updatePatientDetailsButton.setLayoutY(480.0);
         updatePatientDetailsButton.setMnemonicParsing(false);
         updatePatientDetailsButton.setText("Zaktualizuj");
-        updatePatientDetailsButton.setDisable(true);
         patientDetailsPane.getChildren().add(updatePatientDetailsButton);
     }
 
@@ -327,7 +433,7 @@ public class PatientView {
         patientHouseNumberTextField.setLayoutY(140.0);
         patientHouseNumberTextField.setPrefHeight(30.0);
         patientHouseNumberTextField.setPrefWidth(200.0);
-        patientHouseNumberTextField.setPromptText("Numer domu");
+        patientHouseNumberTextField.setPromptText("Podaj numer domu");
         patientDetailsPane.getChildren().add(patientHouseNumberTextField);
     }
 
@@ -338,13 +444,14 @@ public class PatientView {
         patientBirthDateDatePicker.setPrefHeight(30.0);
         patientBirthDateDatePicker.setPrefWidth(200.0);
         patientBirthDateDatePicker.setPromptText("Data urodzenia");
+        patientBirthDateDatePicker.setConverter(new DefaultDatePickerConverter());
         patientDetailsPane.getChildren().add(patientBirthDateDatePicker);
     }
 
     private void createPatientBloodTypeLabel() {
         patientBloodTypeLabel = new Label();
         patientBloodTypeLabel.setLayoutX(650.0);
-        patientBloodTypeLabel.setLayoutY(200.0);
+        patientBloodTypeLabel.setLayoutY(190.0);
         patientBloodTypeLabel.setText("Grupa krwi");
         patientDetailsPane.getChildren().add(patientBloodTypeLabel);
     }
@@ -352,7 +459,7 @@ public class PatientView {
     private void createPatientRegistrationDateLabel() {
         patientRegistrationDateLabel = new Label();
         patientRegistrationDateLabel.setLayoutX(650.0);
-        patientRegistrationDateLabel.setLayoutY(280.0);
+        patientRegistrationDateLabel.setLayoutY(270.0);
         patientRegistrationDateLabel.setText("Data rejestracji");
         patientDetailsPane.getChildren().add(patientRegistrationDateLabel);
     }
@@ -374,7 +481,7 @@ public class PatientView {
     private void createPatientSexLabel() {
         patientSexLabel = new Label();
         patientSexLabel.setLayoutX(50.0);
-        patientSexLabel.setLayoutY(200.0);
+        patientSexLabel.setLayoutY(190.0);
         patientSexLabel.setText("Płeć");
         patientDetailsPane.getChildren().add(patientSexLabel);
     }
@@ -399,7 +506,7 @@ public class PatientView {
         patientCityTextField.setLayoutY(220.0);
         patientCityTextField.setPrefHeight(30.0);
         patientCityTextField.setPrefWidth(200.0);
-        patientCityTextField.setPromptText("Miejscowość");
+        patientCityTextField.setPromptText("Podaj miejscowość");
         patientDetailsPane.getChildren().add(patientCityTextField);
     }
 
@@ -409,7 +516,7 @@ public class PatientView {
         patientStreetNameTextField.setLayoutY(60.0);
         patientStreetNameTextField.setPrefHeight(30.0);
         patientStreetNameTextField.setPrefWidth(200.0);
-        patientStreetNameTextField.setPromptText("Ulica");
+        patientStreetNameTextField.setPromptText("Podaj ulicę");
         patientDetailsPane.getChildren().add(patientStreetNameTextField);
     }
 
@@ -419,7 +526,7 @@ public class PatientView {
         patientZipCodeTextField.setLayoutY(300.0);
         patientZipCodeTextField.setPrefHeight(30.0);
         patientZipCodeTextField.setPrefWidth(200.0);
-        patientZipCodeTextField.setPromptText("Kod pocztowy");
+        patientZipCodeTextField.setPromptText("Podaj kod pocztowy");
         patientDetailsPane.getChildren().add(patientZipCodeTextField);
     }
 
@@ -429,7 +536,7 @@ public class PatientView {
         patientLastNameTextField.setLayoutY(140.0);
         patientLastNameTextField.setPrefHeight(30.0);
         patientLastNameTextField.setPrefWidth(200.0);
-        patientLastNameTextField.setPromptText("Nazwisko");
+        patientLastNameTextField.setPromptText("Podaj nazwisko");
         patientDetailsPane.getChildren().add(patientLastNameTextField);
     }
 
@@ -439,7 +546,7 @@ public class PatientView {
         patientPeselTextField.setLayoutY(140.0);
         patientPeselTextField.setPrefHeight(30.0);
         patientPeselTextField.setPrefWidth(200.0);
-        patientPeselTextField.setPromptText("PESEL");
+        patientPeselTextField.setPromptText("Podaj PESEL");
         patientDetailsPane.getChildren().add(patientPeselTextField);
     }
 
@@ -461,7 +568,7 @@ public class PatientView {
         patientPhoneNumberTextField.setLayoutY(60.0);
         patientPhoneNumberTextField.setPrefHeight(30.0);
         patientPhoneNumberTextField.setPrefWidth(200.0);
-        patientPhoneNumberTextField.setPromptText("Numer telefonu");
+        patientPhoneNumberTextField.setPromptText("Podaj numer");
         patientDetailsPane.getChildren().add(patientPhoneNumberTextField);
     }
 
@@ -471,7 +578,7 @@ public class PatientView {
         patientFirstNameTextField.setLayoutY(60.0);
         patientFirstNameTextField.setPrefHeight(30.0);
         patientFirstNameTextField.setPrefWidth(200.0);
-        patientFirstNameTextField.setPromptText("Imię");
+        patientFirstNameTextField.setPromptText("Podaj imię");
         patientDetailsPane.getChildren().add(patientFirstNameTextField);
     }
 
@@ -507,6 +614,7 @@ public class PatientView {
         Thread thread = new Thread(task);
         thread.setDaemon(true);
         thread.start();
+        task.setOnSucceeded(e -> Platform.runLater(() -> cancelAppointmentButton.setDisable(true)));
         task.setOnFailed(e -> processGeneralFailureResult(task.getException().getMessage()));
     }
 
@@ -681,7 +789,15 @@ public class PatientView {
                 updateAppointmentsCalendarData());
         appointmentsCalendar.getSelections().addListener((SetChangeListener<Entry<?>>) change ->
                 setAppointmentDateChoice());
+        patientAppointmentsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) ->
+                Platform.runLater(() -> switchCancelAppointmentButtonState(newValue)));
+        cancelAppointmentButton.setOnMouseClicked(e -> cancelAppointment());
         patientAppointmentsTable.setRowFactory(tv -> setPatientAppointmentsTableRowFactory());
+    }
+
+    private void switchCancelAppointmentButtonState(PatientAppointmentsTableRecord record) {
+        Optional.ofNullable(record).ifPresent(e ->
+                cancelAppointmentButton.setDisable(e.appointmentStatus().get().equals(CANCELLED.getName())));
     }
 
     private TableRow<PatientAppointmentsTableRecord> setPatientAppointmentsTableRowFactory() {
@@ -693,7 +809,7 @@ public class PatientView {
                     Alert alert = FXAlert.builder()
                             .alertType(WARNING)
                             .alertTitle("Informacja o wizycie")
-                            .contentText("Wizyta została anulowana")
+                            .contentText("Wizyta została już anulowana!")
                             .owner(currentStage())
                             .build();
                     Platform.runLater(alert::showAndWait);
@@ -743,6 +859,29 @@ public class PatientView {
         task.setOnFailed(e -> processScheduleAppointmentFailureResult(task.getException().getMessage()));
     }
 
+    private void cancelAppointment() {
+        Integer appointmentId = patientAppointmentsTable.getSelectionModel().getSelectedItem().getId();
+        Alert alert = FXAlert.builder()
+                .alertType(CONFIRMATION)
+                .contentText("Czy na pewno chcesz anulowac tę wizytę?")
+                .alertTitle("Anulowanie wizyty")
+                .owner(currentStage())
+                .build();
+        Platform.runLater(() -> alert.showAndWait()
+                .filter(OK::equals)
+                .ifPresent(e -> processCancelAppointment(appointmentId)));
+    }
+
+    private void processCancelAppointment(Integer appointmentId) {
+        Task<Void> task = FXTasks.createTask(() ->
+                controller.handleCancelAppointmentButtonClicked(appointmentId));
+        Thread thread = new Thread(task);
+        thread.setDaemon(true);
+        thread.start();
+        task.setOnSucceeded(e -> processScheduleAppointmentSuccessResult());
+        task.setOnFailed(e -> processCancelAppointmentFailureResult(task.getException().getMessage()));
+    }
+
     private void processScheduleAppointmentSuccessResult() {
         Alert alert = FXAlert.builder()
                 .alertType(INFORMATION)
@@ -756,6 +895,30 @@ public class PatientView {
             updatePatientAppointmentsTablePageData();
             alert.showAndWait();
         });
+    }
+
+    private void processCancelAppointmentSuccessResult() {
+        Alert alert = FXAlert.builder()
+                .alertType(INFORMATION)
+                .alertTitle("Operacja ukończona pomyślnie")
+                .contentText("Pomyślnie anulowano wizytę")
+                .owner(currentStage())
+                .build();
+        Platform.runLater(() -> {
+            updateAppointmentsCalendarData();
+            updatePatientAppointmentsTablePageData();
+            alert.showAndWait();
+        });
+    }
+
+    private void processCancelAppointmentFailureResult(String errorMessage) {
+        Alert alert = FXAlert.builder()
+                .alertType(ERROR)
+                .alertTitle("Nie udało się anulować wizyty")
+                .contentText(errorMessage)
+                .owner(currentStage())
+                .build();
+        Platform.runLater(alert::showAndWait);
     }
 
     private void processScheduleAppointmentFailureResult(String errorMessage) {
@@ -861,6 +1024,7 @@ public class PatientView {
         ScheduledService<Void> service = FXTasks.createService(() -> controller.updatePatientAppointmentsTablePageData());
         serviceStore.addPatientService(service);
         service.setPeriod(Duration.seconds(TABLE_REFRESH_RATE));
+        service.setOnSucceeded(e -> Platform.runLater(() -> cancelAppointmentButton.setDisable(true)));
         service.setOnFailed(e -> processGeneralFailureResult(service.getException().getMessage()));
         service.start();
     }
@@ -977,7 +1141,7 @@ public class PatientView {
 
     private void openAppointmentScene(Integer appointmentId) {
         Scene scene = new Scene(new AppointmentView(model.getPatientId(), appointmentId).asParent(),
-                1200, 700);
+                1400, 700);
         Platform.runLater(() -> {
             Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
             Stage subStage = new Stage();
@@ -988,10 +1152,7 @@ public class PatientView {
             subStage.getIcons().add(new Image(this.getClass().getResourceAsStream("/images/favicon.png")));
             subStage.initOwner(currentStage());
             subStage.initModality(WINDOW_MODAL);
-            subStage.setOnHidden(e -> {
-                updatePatientAppointmentsTablePageData();
-                serviceStore.cancelAllAppointmentServices();
-            });
+            subStage.setOnHidden(e -> updatePatientAppointmentsTablePageData());
             subStage.show();
         });
     }
