@@ -5,7 +5,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import lombok.Singular;
 import lombok.experimental.SuperBuilder;
-import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPatch;
@@ -39,7 +38,6 @@ public class PatchClient extends WebClient {
     public HttpResponse execute() throws URISyntaxException, IOException {
         HttpClient client = HttpClientBuilder.create().build();
         URI endpointURI = createEndpointURI();
-        Header[] headersArray = createHeadersArray();
         String body = createJsonPatchBody();
         HttpPatch patch = new HttpPatch(endpointURI);
         patch.addHeader(AUTHORIZATION, "Bearer " + Objects.requireNonNull(sessionStore.getToken()).getAccessToken());

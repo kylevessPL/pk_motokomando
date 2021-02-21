@@ -87,12 +87,9 @@ public class BaseView {
 
     private TabPane basePane;
 
-    private Tab doctorsTab;
     private TabPane doctorsPane;
-    private Tab findDoctorTab;
     private AnchorPane findDoctorPane;
     private TableView<PersonTableRecord> doctorsTable;
-    private Tab addDoctorTab;
     private AnchorPane addDoctorPane;
     private TextField doctorFirstNameTextField;
     private Button addDoctorButton;
@@ -100,14 +97,9 @@ public class BaseView {
     private TextField doctorPhoneNumberTextField;
     private CheckComboBox<String> chooseDoctorSpecialtyComboBox;
     private ComboBox<String> chooseDoctorAcademicTitleComboBox;
-    private Label doctorSpecialtyLabel;
-    private Label doctorAcademicTitleLabel;
-    private Tab patientsTab;
     private TabPane patientsPane;
-    private Tab findPatientTab;
     private AnchorPane findPatientPane;
     private TableView<PersonTableRecord> patientsTable;
-    private Tab addPatientTab;
     private AnchorPane addPatientPane;
     private TextField patientFirstNameTextField;
     private TextField patientLastNameTextField;
@@ -121,32 +113,12 @@ public class BaseView {
     private TextField patientPeselTextField;
     private TextField patientPhoneNumberTextField;
     private Button addPatientButton;
-    private Label patientSexLabel;
-    private Label patientBloodTypeLabel;
-    private Tab userInfoTab;
     private AnchorPane userInfoPane;
     private TextField userFirstNameTextField;
     private TextField userLastNameTextField;
     private TextField userUsernameTextField;
     private TextField userEmailTextField;
     private Button logoutButton;
-    private Label userFirstNameLabel;
-    private Label userLastNameLabel;
-    private Label userEmailLabel;
-    private Label userUsernameLabel;
-    private Label doctorFirstNameLabel;
-    private Label doctorLastNameLabel;
-    private Label doctorPhoneNumberLabel;
-    private Label patientFirstNameLabel;
-    private Label patientLastNameLabel;
-    private Label patientBirthDateLabel;
-    private Label patientPhoneNumberLabel;
-    private Label patientStreetNameLabel;
-    private Label patientHouseNumberLabel;
-    private Label patientZipCodeLabel;
-    private Label patientCityLabel;
-    private Label patientPeselLabel;
-    private ImageView backgroundImage;
 
     private Pagination patientsTablePagination;
     private Pagination doctorsTablePagination;
@@ -195,7 +167,7 @@ public class BaseView {
     }
 
     private void createUserInfoTab() {
-        userInfoTab = new Tab();
+        Tab userInfoTab = new Tab();
         userInfoTab.setText("Konto");
         userInfoPane = new AnchorPane();
         createBackgroundImage(userInfoPane);
@@ -222,7 +194,7 @@ public class BaseView {
     }
 
     private void createUserFirstNameLabel() {
-        userFirstNameLabel = new Label();
+        Label userFirstNameLabel = new Label();
         userFirstNameLabel.setText("Imię");
         userFirstNameLabel.setLayoutX(650);
         userFirstNameLabel.setLayoutY(70);
@@ -230,7 +202,7 @@ public class BaseView {
     }
 
     private void createUserLastNameLabel() {
-        userLastNameLabel = new Label();
+        Label userLastNameLabel = new Label();
         userLastNameLabel.setText("Nazwisko");
         userLastNameLabel.setLayoutX(650);
         userLastNameLabel.setLayoutY(170);
@@ -238,7 +210,7 @@ public class BaseView {
     }
 
     private void createUserUsernameLabel() {
-        userUsernameLabel = new Label();
+        Label userUsernameLabel = new Label();
         userUsernameLabel.setText("Nazwa użytkownika");
         userUsernameLabel.setLayoutX(650);
         userUsernameLabel.setLayoutY(270);
@@ -246,7 +218,7 @@ public class BaseView {
     }
 
     private void createUserEmailLabel() {
-        userEmailLabel = new Label();
+        Label userEmailLabel = new Label();
         userEmailLabel.setText("Email");
         userEmailLabel.setLayoutX(650);
         userEmailLabel.setLayoutY(370);
@@ -310,7 +282,7 @@ public class BaseView {
     }
 
     private void createDoctorsTab() {
-        doctorsTab = new Tab();
+        Tab doctorsTab = new Tab();
         doctorsTab.setText("Lekarze");
         doctorsPane = new TabPane();
         doctorsPane.setTabClosingPolicy(UNAVAILABLE);
@@ -321,7 +293,7 @@ public class BaseView {
     }
 
     private void createAddDoctorTab() {
-        addDoctorTab = new Tab();
+        Tab addDoctorTab = new Tab();
         addDoctorTab.setText("Dodaj lekarza");
         addDoctorPane = new AnchorPane();
         addDoctorPane.setPrefHeight(800.0);
@@ -343,7 +315,7 @@ public class BaseView {
     }
 
     private void createDoctorFirstNameLabel() {
-        doctorFirstNameLabel = new Label();
+        Label doctorFirstNameLabel = new Label();
         doctorFirstNameLabel.setLayoutX(650.0);
         doctorFirstNameLabel.setLayoutY(40.0);
         doctorFirstNameLabel.setText("Imię");
@@ -351,7 +323,7 @@ public class BaseView {
     }
 
     private void createDoctorLastNameLabel() {
-        doctorLastNameLabel = new Label();
+        Label doctorLastNameLabel = new Label();
         doctorLastNameLabel.setLayoutX(650.0);
         doctorLastNameLabel.setLayoutY(140.0);
         doctorLastNameLabel.setText("Nazwisko");
@@ -359,7 +331,7 @@ public class BaseView {
     }
 
     private void createDoctorPhoneNumberLabel() {
-        doctorPhoneNumberLabel = new Label();
+        Label doctorPhoneNumberLabel = new Label();
         doctorPhoneNumberLabel.setLayoutX(650.0);
         doctorPhoneNumberLabel.setLayoutY(240.0);
         doctorPhoneNumberLabel.setText("Numer telefonu");
@@ -367,7 +339,7 @@ public class BaseView {
     }
 
     private void createDoctorAcademicTitleLabel() {
-        doctorAcademicTitleLabel = new Label();
+        Label doctorAcademicTitleLabel = new Label();
         doctorAcademicTitleLabel.setLayoutX(650.0);
         doctorAcademicTitleLabel.setLayoutY(440.0);
         doctorAcademicTitleLabel.setText("Tytuł naukowy:");
@@ -375,7 +347,7 @@ public class BaseView {
     }
 
     private void createDoctorSpecialtyLabel() {
-        doctorSpecialtyLabel = new Label();
+        Label doctorSpecialtyLabel = new Label();
         doctorSpecialtyLabel.setLayoutX(650.0);
         doctorSpecialtyLabel.setLayoutY(340.0);
         doctorSpecialtyLabel.setText("Specjalizacja:");
@@ -452,7 +424,7 @@ public class BaseView {
     }
 
     private void createFindDoctorTab() {
-        findDoctorTab = new Tab();
+        Tab findDoctorTab = new Tab();
         findDoctorTab.setText("Znajdź lekarza");
         findDoctorPane = new AnchorPane();
         findDoctorPane.setMinHeight(0.0);
@@ -465,7 +437,7 @@ public class BaseView {
     }
 
     private void createPatientsTab() {
-        patientsTab = new Tab();
+        Tab patientsTab = new Tab();
         patientsTab.setText("Pacjenci");
         patientsPane = new TabPane();
         createFindPatientTab();
@@ -475,7 +447,7 @@ public class BaseView {
     }
 
     private void createAddPatientTab() {
-        addPatientTab = new Tab();
+        Tab addPatientTab = new Tab();
         addPatientTab.setClosable(false);
         addPatientTab.setText("Dodaj pacjenta");
         addPatientPane = new AnchorPane();
@@ -510,7 +482,7 @@ public class BaseView {
     }
 
     private void createBackgroundImage(AnchorPane backgroundPane) {
-        backgroundImage = new ImageView(new Image(this.getClass().getResourceAsStream("/images/logo.png")));
+        ImageView backgroundImage = new ImageView(new Image(this.getClass().getResourceAsStream("/images/logo.png")));
         backgroundImage.setLayoutX(50);
         backgroundImage.setLayoutY(150);
         backgroundImage.setFitHeight(350);
@@ -520,7 +492,7 @@ public class BaseView {
     }
 
     private void createPatientFirstNameLabel() {
-        patientFirstNameLabel = new Label();
+        Label patientFirstNameLabel = new Label();
         patientFirstNameLabel.setLayoutX(350.0);
         patientFirstNameLabel.setLayoutY(20.0);
         patientFirstNameLabel.setText("Imię");
@@ -528,7 +500,7 @@ public class BaseView {
     }
 
     private void createPatientLastNameLabel() {
-        patientLastNameLabel = new Label();
+        Label patientLastNameLabel = new Label();
         patientLastNameLabel.setLayoutX(350.0);
         patientLastNameLabel.setLayoutY(100.0);
         patientLastNameLabel.setText("Nazwisko");
@@ -536,7 +508,7 @@ public class BaseView {
     }
 
     private void createPatientBirthDateLabel() {
-        patientBirthDateLabel = new Label();
+        Label patientBirthDateLabel = new Label();
         patientBirthDateLabel.setLayoutX(350.0);
         patientBirthDateLabel.setLayoutY(180.0);
         patientBirthDateLabel.setText("Data urodzenia");
@@ -544,7 +516,7 @@ public class BaseView {
     }
 
     private void createPatientPhoneNumberLabel() {
-        patientPhoneNumberLabel = new Label();
+        Label patientPhoneNumberLabel = new Label();
         patientPhoneNumberLabel.setLayoutX(350.0);
         patientPhoneNumberLabel.setLayoutY(420.0);
         patientPhoneNumberLabel.setText("Numer telefonu");
@@ -552,7 +524,7 @@ public class BaseView {
     }
 
     private void createPatientStreetNameLabel() {
-        patientStreetNameLabel = new Label();
+        Label patientStreetNameLabel = new Label();
         patientStreetNameLabel.setLayoutX(950.0);
         patientStreetNameLabel.setLayoutY(20.0);
         patientStreetNameLabel.setText("Ulica");
@@ -560,7 +532,7 @@ public class BaseView {
     }
 
     private void createPatientHouseNumberLabel() {
-        patientHouseNumberLabel = new Label();
+        Label patientHouseNumberLabel = new Label();
         patientHouseNumberLabel.setLayoutX(950.0);
         patientHouseNumberLabel.setLayoutY(100.0);
         patientHouseNumberLabel.setText("Numer domu");
@@ -568,7 +540,7 @@ public class BaseView {
     }
 
     private void createPatientZipCodeLabel() {
-        patientZipCodeLabel = new Label();
+        Label patientZipCodeLabel = new Label();
         patientZipCodeLabel.setLayoutX(950.0);
         patientZipCodeLabel.setLayoutY(180.0);
         patientZipCodeLabel.setText("Kod pocztowy");
@@ -576,7 +548,7 @@ public class BaseView {
     }
 
     private void createPatientCityLabel() {
-        patientCityLabel = new Label();
+        Label patientCityLabel = new Label();
         patientCityLabel.setLayoutX(950.0);
         patientCityLabel.setLayoutY(260.0);
         patientCityLabel.setText("Miejscowość");
@@ -584,7 +556,7 @@ public class BaseView {
     }
 
     private void createPatientPeselLabel() {
-        patientPeselLabel = new Label();
+        Label patientPeselLabel = new Label();
         patientPeselLabel.setLayoutX(950.0);
         patientPeselLabel.setLayoutY(340.0);
         patientPeselLabel.setText("PESEL");
@@ -592,7 +564,7 @@ public class BaseView {
     }
 
     private void createPatientBloodTypeLabel() {
-        patientBloodTypeLabel = new Label();
+        Label patientBloodTypeLabel = new Label();
         patientBloodTypeLabel.setLayoutX(350.0);
         patientBloodTypeLabel.setLayoutY(340.0);
         patientBloodTypeLabel.setText("Grupa krwi:");
@@ -600,7 +572,7 @@ public class BaseView {
     }
 
     private void createPatientSexLabel() {
-        patientSexLabel = new Label();
+        Label patientSexLabel = new Label();
         patientSexLabel.setLayoutX(350.0);
         patientSexLabel.setLayoutY(260.0);
         patientSexLabel.setText("Płeć:");
@@ -739,7 +711,7 @@ public class BaseView {
     }
 
     private void createFindPatientTab() {
-        findPatientTab = new Tab();
+        Tab findPatientTab = new Tab();
         findPatientTab.setClosable(false);
         findPatientTab.setText("Wyszukaj pacjenta");
         findPatientPane = new AnchorPane();

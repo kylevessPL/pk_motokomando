@@ -6,7 +6,6 @@ import javafx.concurrent.Task;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
@@ -71,33 +70,20 @@ public class AppointmentView {
     private TabPane appointmentPane;
 
     private TabPane prescriptionPane;
-    private Tab prescriptionTab;
-    private Tab prescriptionMedicinesTab;
-    private Tab addPrescriptionMedicineTab;
-    private Tab billTab;
-    private Tab prescriptionNotesTab;
     private AnchorPane billPane;
     private AnchorPane prescriptionNotesPane;
-    private AnchorPane doctorPane;
     private AnchorPane prescriptionMedicinesPane;
     private AnchorPane addPrescriptionMedicinePane;
     private TableView<MedicinesTableRecord> medicinesTable;
     private TableView<PrescriptionMedicinesTableRecord> prescriptionMedicinesTable;
     private TextField medicineSearchQueryTextField;
     private Button searchMedicineSearchQueryButton;
-    private ComboBox<String> chooseDoctorComboBox;
-    private Label chooseDoctorLabel;
-    private Button saveDoctorDetailsButton;
     private TextField billAmountTextField;
-    private Label billAmountLabel;
     private Button saveBillAmountButton;
     private Button saveNotesButton;
     private TextArea notesTextArea;
-    private ImageView backgroundImage;
     private TextField prescriptionExpirationDateTextField;
     private TextField prescriptionIssueDateTextField;
-    private Label prescriptionExpirationDateLabel;
-    private Label prescriptionIssueDateLabel;
 
     public AppointmentView(Integer patientId, Integer appointmentId) {
         initModel(patientId, appointmentId);
@@ -144,7 +130,7 @@ public class AppointmentView {
     }
 
     private void createBillTab() {
-        billTab = new Tab();
+        Tab billTab = new Tab();
         billTab.setText("Rachunek");
         billPane = new AnchorPane();
         billPane.setPrefHeight(200.0);
@@ -158,7 +144,7 @@ public class AppointmentView {
     }
 
     private void createBackgroundImage(AnchorPane backgroundPane) {
-        backgroundImage = new ImageView(new Image(this.getClass().getResourceAsStream("/images/logo.png")));
+        ImageView backgroundImage = new ImageView(new Image(this.getClass().getResourceAsStream("/images/logo.png")));
         backgroundImage.setLayoutX(50);
         backgroundImage.setLayoutY(160);
         backgroundImage.setFitHeight(325);
@@ -179,7 +165,7 @@ public class AppointmentView {
     }
 
     private void createBillAmountLabel() {
-        billAmountLabel = new Label();
+        Label billAmountLabel = new Label();
         billAmountLabel.setLayoutX(600.0);
         billAmountLabel.setLayoutY(160.0);
         billAmountLabel.setText("Kwota (PLN):");
@@ -197,7 +183,7 @@ public class AppointmentView {
     }
 
     private void createPrescriptionNotesTab() {
-        prescriptionNotesTab = new Tab();
+        Tab prescriptionNotesTab = new Tab();
         prescriptionNotesTab.setText("Notatki");
         prescriptionNotesPane = new AnchorPane();
         prescriptionNotesPane.setPrefHeight(200.0);
@@ -230,7 +216,7 @@ public class AppointmentView {
     }
 
     private void createPrescriptionTab() {
-        prescriptionTab = new Tab();
+        Tab prescriptionTab = new Tab();
         prescriptionTab.setText("Recepta");
         prescriptionPane = new TabPane();
         createPrescriptionMedicinesTab();
@@ -240,7 +226,7 @@ public class AppointmentView {
     }
 
     private void createPrescriptionMedicinesTab() {
-        prescriptionMedicinesTab = new Tab();
+        Tab prescriptionMedicinesTab = new Tab();
         prescriptionMedicinesTab.setClosable(false);
         prescriptionMedicinesTab.setText("Leki na recepcie");
         prescriptionMedicinesPane = new AnchorPane();
@@ -256,7 +242,7 @@ public class AppointmentView {
     }
 
     private void createPrescriptionExpirationDateLabel() {
-        prescriptionExpirationDateLabel = new Label();
+        Label prescriptionExpirationDateLabel = new Label();
         prescriptionExpirationDateLabel.setLayoutX(996.0);
         prescriptionExpirationDateLabel.setLayoutY(540.0);
         prescriptionExpirationDateLabel.setText("Data ważności");
@@ -264,7 +250,7 @@ public class AppointmentView {
     }
 
     private void createPrescriptionIssueDateLabel() {
-        prescriptionIssueDateLabel = new Label();
+        Label prescriptionIssueDateLabel = new Label();
         prescriptionIssueDateLabel.setLayoutX(1196.0);
         prescriptionIssueDateLabel.setLayoutY(540.0);
         prescriptionIssueDateLabel.setText("Data wystawienia");
@@ -305,7 +291,7 @@ public class AppointmentView {
     }
 
     private void createAddPrescriptionMedicineTab() {
-        addPrescriptionMedicineTab = new Tab();
+        Tab addPrescriptionMedicineTab = new Tab();
         addPrescriptionMedicineTab.setClosable(false);
         addPrescriptionMedicineTab.setText("Dodaj lek");
         addPrescriptionMedicinePane = new AnchorPane();

@@ -37,7 +37,6 @@ public class AuthenticationView {
     private Button loginButton;
     private Label authenticationStatusLabel;
     private ProgressIndicator progressIndicator;
-    private ImageView backgroundImage;
 
     public AuthenticationView() {
         initModel();
@@ -72,7 +71,7 @@ public class AuthenticationView {
     }
 
     private void createBackgroundImage() {
-        backgroundImage = new ImageView(new Image(this.getClass().getResourceAsStream("/images/logo.png")));
+        ImageView backgroundImage = new ImageView(new Image(this.getClass().getResourceAsStream("/images/logo.png")));
         backgroundImage.setLayoutX(10);
         backgroundImage.setLayoutY(50);
         backgroundImage.setFitHeight(160);
