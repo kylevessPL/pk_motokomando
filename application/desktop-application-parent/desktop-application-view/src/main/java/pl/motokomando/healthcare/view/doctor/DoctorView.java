@@ -52,16 +52,10 @@ public class DoctorView {
     private TextField doctorFirstNameTextField;
     private TextField doctorLastNameTextField;
     private TextField doctorPhoneNumberTextField;
-    private Label doctorFirstNameLabel;
-    private Label doctorLastNameLabel;
-    private Label doctorPhoneNumberLabel;
     private ComboBox<String> chooseDoctorAcademicTitleComboBox;
-    private Label doctorAcademicTitleLabel;
     private CheckComboBox<String> chooseDoctorSpecialtyComboBox;
-    private Label doctorMedicalSpecialtyLabel;
     private Button unlockUpdateDoctorDetailsButton;
     private Button updateDoctorDetailsButton;
-    private ImageView backgroundImage;
 
     public DoctorView(Integer doctorId) {
         initModel(doctorId);
@@ -113,7 +107,7 @@ public class DoctorView {
     }
 
     private void createBackgroundImage() {
-        backgroundImage = new ImageView(new Image(this.getClass().getResourceAsStream("/images/logo.png")));
+        ImageView backgroundImage = new ImageView(new Image(this.getClass().getResourceAsStream("/images/logo.png")));
         backgroundImage.setLayoutX(50);
         backgroundImage.setLayoutY(200);
         backgroundImage.setFitHeight(200);
@@ -143,7 +137,7 @@ public class DoctorView {
     }
 
     private void createDoctorMedicalSpecialtyLabel() {
-        doctorMedicalSpecialtyLabel = new Label();
+        Label doctorMedicalSpecialtyLabel = new Label();
         doctorMedicalSpecialtyLabel.setLayoutX(550.0);
         doctorMedicalSpecialtyLabel.setLayoutY(155.0);
         doctorMedicalSpecialtyLabel.setText("Specjalizacja");
@@ -166,7 +160,7 @@ public class DoctorView {
     }
 
     private void createDoctorAcademicTitleLabel() {
-        doctorAcademicTitleLabel = new Label();
+        Label doctorAcademicTitleLabel = new Label();
         doctorAcademicTitleLabel.setLayoutX(150.0);
         doctorAcademicTitleLabel.setLayoutY(190.0);
         doctorAcademicTitleLabel.setText("Tytuł naukowy");
@@ -174,7 +168,7 @@ public class DoctorView {
     }
 
     private void createDoctorFirstNameLabel() {
-        doctorFirstNameLabel = new Label();
+        Label doctorFirstNameLabel = new Label();
         doctorFirstNameLabel.setLayoutX(150.0);
         doctorFirstNameLabel.setLayoutY(30.0);
         doctorFirstNameLabel.setText("Imię");
@@ -182,7 +176,7 @@ public class DoctorView {
     }
 
     private void createDoctorLastNameLabel() {
-        doctorLastNameLabel = new Label();
+        Label doctorLastNameLabel = new Label();
         doctorLastNameLabel.setLayoutX(150.0);
         doctorLastNameLabel.setLayoutY(110.0);
         doctorLastNameLabel.setText("Nazwisko");
@@ -190,7 +184,7 @@ public class DoctorView {
     }
 
     private void createDoctorPhoneNumberLabel() {
-        doctorPhoneNumberLabel = new Label();
+        Label doctorPhoneNumberLabel = new Label();
         doctorPhoneNumberLabel.setLayoutX(550.0);
         doctorPhoneNumberLabel.setLayoutY(65.0);
         doctorPhoneNumberLabel.setText("Numer telefonu");

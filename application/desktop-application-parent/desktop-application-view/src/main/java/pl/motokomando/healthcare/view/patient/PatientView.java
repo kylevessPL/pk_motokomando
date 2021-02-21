@@ -94,7 +94,6 @@ public class PatientView {
 
     private TabPane patientPane;
 
-    private Tab patientDetailsTab;
     private AnchorPane patientDetailsPane;
     private TextField patientFirstNameTextField;
     private TextField patientLastNameTextField;
@@ -103,37 +102,21 @@ public class PatientView {
     private TextField patientStreetNameTextField;
     private TextField patientCityTextField;
     private ComboBox<String> choosePatientSexComboBox;
-    private Label patientSexLabel;
     private ComboBox<String> choosePatientBloodTypeComboBox;
-    private Label patientBloodTypeLabel;
-    private Label patientRegistrationDateLabel;
     private DatePicker patientBirthDateDatePicker;
     private TextField patientHouseNumberTextField;
     private TextField patientPeselTextField;
     private TextField patientRegistrationTextField;
     private Button unlockUpdatePatientDetailsButton;
-    private Tab patientAppointmentsTab;
     private AnchorPane patientAppointmentsPane;
     private TableView<PatientAppointmentsTableRecord> patientAppointmentsTable;
-    private Tab scheduleAppointmentTab;
     private TextField appointmentDateChoiceTextField;
     private AnchorPane scheduleAppointmentPane;
     private ComboBox<DoctorBasic> chooseDoctorComboBox;
     private Button scheduleAppointmentButton;
     private Button updatePatientDetailsButton;
-    private Label patientFirstNameLabel;
-    private Label patientLastNameLabel;
-    private Label patientPhoneNumberLabel;
-    private Label patientZipCodeLabel;
-    private Label patientStreetNameLabel;
-    private Label patientCityLabel;
-    private Label patientBirthDateLabel;
-    private Label patientHouseNumberLabel;
-    private Label patientPeselLabel;
     private Button cancelAppointmentButton;
-    private ImageView backgroundLogo;
     private WeekPage appointmentsCalendar;
-    private Label appointmentDateChoiceLabel;
 
     private Pagination patientAppointmentsTablePagination;
 
@@ -193,7 +176,7 @@ public class PatientView {
     }
 
     private void createPatientAppointmentsTab() {
-        patientAppointmentsTab = new Tab();
+        Tab patientAppointmentsTab = new Tab();
         patientAppointmentsTab.setText("Wizyty");
         patientAppointmentsPane = new AnchorPane();
         patientAppointmentsPane.setPrefHeight(180.0);
@@ -215,7 +198,7 @@ public class PatientView {
     }
 
     private void createScheduleAppointmentTab() {
-        scheduleAppointmentTab = new Tab();
+        Tab scheduleAppointmentTab = new Tab();
         scheduleAppointmentTab.setText("Zarezerwuj wizytę");
         scheduleAppointmentPane = new AnchorPane();
         scheduleAppointmentPane.setPrefHeight(180.0);
@@ -223,6 +206,7 @@ public class PatientView {
         createChooseDoctorComboBox();
         createScheduleAppointmentButton();
         createAppointmentDateChoiceTextField();
+        createScheduleAppointmentDoctorLabel();
         createAppointmentDateChoiceLabel();
         createAppointmentDateCalendar();
         scheduleAppointmentTab.setContent(scheduleAppointmentPane);
@@ -270,7 +254,7 @@ public class PatientView {
     }
 
     private void createScheduleAppointmentDoctorLabel() {
-        scheduleAppointmentDoctorLabel = new Label();
+        Label scheduleAppointmentDoctorLabel = new Label();
         scheduleAppointmentDoctorLabel.setLayoutX(565.0);
         scheduleAppointmentDoctorLabel.setLayoutY(130.0);
         scheduleAppointmentDoctorLabel.setText("Lekarz");
@@ -278,7 +262,7 @@ public class PatientView {
     }
 
     private void createAppointmentDateChoiceLabel() {
-        appointmentDateChoiceLabel = new Label();
+        Label appointmentDateChoiceLabel = new Label();
         appointmentDateChoiceLabel.setLayoutX(565.0);
         appointmentDateChoiceLabel.setLayoutY(250.0);
         appointmentDateChoiceLabel.setText("Wybrana data");
@@ -307,7 +291,7 @@ public class PatientView {
     }
 
     private void createPatientDetailsTab() {
-        patientDetailsTab = new Tab();
+        Tab patientDetailsTab = new Tab();
         patientDetailsTab.setText("Pacjent");
         patientDetailsPane = new AnchorPane();
         patientDetailsPane.setPrefHeight(180.0);
@@ -345,7 +329,7 @@ public class PatientView {
     }
 
     private void createBackgroundImage() {
-        backgroundLogo = new ImageView(new Image(this.getClass().getResourceAsStream("/images/logo.png")));
+        ImageView backgroundLogo = new ImageView(new Image(this.getClass().getResourceAsStream("/images/logo.png")));
         backgroundLogo.setLayoutX(50);
         backgroundLogo.setLayoutY(330);
         backgroundLogo.setFitHeight(200);
@@ -355,7 +339,7 @@ public class PatientView {
     }
 
     private void createPatientFirstNameLabel() {
-        patientFirstNameLabel = new Label();
+        Label patientFirstNameLabel = new Label();
         patientFirstNameLabel.setLayoutX(50.0);
         patientFirstNameLabel.setLayoutY(30.0);
         patientFirstNameLabel.setText("Imię");
@@ -363,7 +347,7 @@ public class PatientView {
     }
 
     private void createPatientLastNameLabel() {
-        patientLastNameLabel = new Label();
+        Label patientLastNameLabel = new Label();
         patientLastNameLabel.setLayoutX(50.0);
         patientLastNameLabel.setLayoutY(110.0);
         patientLastNameLabel.setText("Nazwisko");
@@ -371,7 +355,7 @@ public class PatientView {
     }
 
     private void createPatientBirthDateLabel() {
-        patientBirthDateLabel = new Label();
+        Label patientBirthDateLabel = new Label();
         patientBirthDateLabel.setLayoutX(50.0);
         patientBirthDateLabel.setLayoutY(270.0);
         patientBirthDateLabel.setText("Data urodzenia");
@@ -379,7 +363,7 @@ public class PatientView {
     }
 
     private void createPatientZipCodeLabel() {
-        patientZipCodeLabel = new Label();
+        Label patientZipCodeLabel = new Label();
         patientZipCodeLabel.setLayoutX(350.0);
         patientZipCodeLabel.setLayoutY(270.0);
         patientZipCodeLabel.setText("Kod pocztowy");
@@ -387,7 +371,7 @@ public class PatientView {
     }
 
     private void createPatientStreetNameLabel() {
-        patientStreetNameLabel = new Label();
+        Label patientStreetNameLabel = new Label();
         patientStreetNameLabel.setLayoutX(350.0);
         patientStreetNameLabel.setLayoutY(30.0);
         patientStreetNameLabel.setText("Ulica");
@@ -395,7 +379,7 @@ public class PatientView {
     }
 
     private void createPatientHouseNumberLabel() {
-        patientHouseNumberLabel = new Label();
+        Label patientHouseNumberLabel = new Label();
         patientHouseNumberLabel.setLayoutX(350.0);
         patientHouseNumberLabel.setLayoutY(110.0);
         patientHouseNumberLabel.setText("Numer domu");
@@ -403,7 +387,7 @@ public class PatientView {
     }
 
     private void createPatientCityLabel() {
-        patientCityLabel = new Label();
+        Label patientCityLabel = new Label();
         patientCityLabel.setLayoutX(350.0);
         patientCityLabel.setLayoutY(190.0);
         patientCityLabel.setText("Miejscowość");
@@ -411,7 +395,7 @@ public class PatientView {
     }
 
     private void createPatientPeselLabel() {
-        patientPeselLabel = new Label();
+        Label patientPeselLabel = new Label();
         patientPeselLabel.setLayoutX(650.0);
         patientPeselLabel.setLayoutY(110.0);
         patientPeselLabel.setText("PESEL");
@@ -419,7 +403,7 @@ public class PatientView {
     }
 
     private void createPatientPhoneNumberLabel() {
-        patientPhoneNumberLabel = new Label();
+        Label patientPhoneNumberLabel = new Label();
         patientPhoneNumberLabel.setLayoutX(650.0);
         patientPhoneNumberLabel.setLayoutY(30.0);
         patientPhoneNumberLabel.setText("Numer telefonu");
@@ -467,7 +451,7 @@ public class PatientView {
     }
 
     private void createPatientBloodTypeLabel() {
-        patientBloodTypeLabel = new Label();
+        Label patientBloodTypeLabel = new Label();
         patientBloodTypeLabel.setLayoutX(650.0);
         patientBloodTypeLabel.setLayoutY(190.0);
         patientBloodTypeLabel.setText("Grupa krwi");
@@ -475,7 +459,7 @@ public class PatientView {
     }
 
     private void createPatientRegistrationDateLabel() {
-        patientRegistrationDateLabel = new Label();
+        Label patientRegistrationDateLabel = new Label();
         patientRegistrationDateLabel.setLayoutX(650.0);
         patientRegistrationDateLabel.setLayoutY(270.0);
         patientRegistrationDateLabel.setText("Data rejestracji");
@@ -497,7 +481,7 @@ public class PatientView {
     }
 
     private void createPatientSexLabel() {
-        patientSexLabel = new Label();
+        Label patientSexLabel = new Label();
         patientSexLabel.setLayoutX(50.0);
         patientSexLabel.setLayoutY(190.0);
         patientSexLabel.setText("Płeć");
@@ -896,7 +880,7 @@ public class PatientView {
         Thread thread = new Thread(task);
         thread.setDaemon(true);
         thread.start();
-        task.setOnSucceeded(e -> processScheduleAppointmentSuccessResult());
+        task.setOnSucceeded(e -> processCancelAppointmentSuccessResult());
         task.setOnFailed(e -> processCancelAppointmentFailureResult(task.getException().getMessage()));
     }
 
