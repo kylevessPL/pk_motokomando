@@ -10,24 +10,21 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import org.controlsfx.validation.ValidationSupport;
-import pl.motokomando.healthcare.controller.patient.PatientController;
+import pl.motokomando.healthcare.controller.doctor.DoctorController;
 import pl.motokomando.healthcare.model.base.utils.AcademicTitle;
 import pl.motokomando.healthcare.model.base.utils.MedicalSpecialty;
-import pl.motokomando.healthcare.model.patient.PatientModel;
-import pl.motokomando.healthcare.model.utils.ServiceStore;
+import pl.motokomando.healthcare.model.doctor.DoctorModel;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
 public class DoctorView {
 
-    private final ServiceStore serviceStore = ServiceStore.getInstance();
+    private final ValidationSupport updateDoctorDetailsValidationSupport = new ValidationSupport();
 
-    private final ValidationSupport updatePatientDetailsValidationSupport = new ValidationSupport();
+    private DoctorController controller;
 
-    private PatientController controller;
-
-    private PatientModel model;
+    private DoctorModel model;
 
     private AnchorPane doctorDetailsPane;
     private TextField doctorFirstNameTextField;
@@ -40,12 +37,12 @@ public class DoctorView {
     private Label doctorAcademicTitleLabel;
     private ComboBox<String> chooseDoctorMedicalSpecialtyComboBox;
     private Label doctorMedicalSpecialtyLabel;
-    private Button unlockUpdatePatientDetailsButton;
-    private Button updatePatientDetailsButton;
-    private ImageView imageViewLogo;
+    private Button unlockUpdateDoctorDetailsButton;
+    private Button updateDoctorDetailsButton;
+    private ImageView backgroundImage;
 
-    public DoctorView() {
-        //initModel(patientId);
+    public DoctorView(Integer doctorId) {
+        initModel(doctorId);
         setController();
         addContent();
     }
@@ -58,23 +55,23 @@ public class DoctorView {
         return (Stage) doctorDetailsPane.getScene().getWindow();
     }
 
-    private void initModel(Integer patientId) {
-        model = new PatientModel(patientId);
+    private void initModel(Integer doctorId) {
+        model = new DoctorModel(doctorId);
     }
 
     private void setController() {
-        controller = new PatientController(model);
+        controller = new DoctorController(model);
     }
 
     private void addContent() {
-        createDoctorDetailsAnchorPane();
+        createDoctorDetailsPane();
     }
 
-    private void createDoctorDetailsAnchorPane() {
+    private void createDoctorDetailsPane() {
         doctorDetailsPane = new AnchorPane();
         doctorDetailsPane.setPrefHeight(600.0);
         doctorDetailsPane.setPrefWidth(900.0);
-        createLogoImage();
+        createBackgroundImage();
         createDoctorFirstNameTextField();
         createDoctorPhoneNumberTextField();
         createDoctorLastNameTextField();
@@ -89,34 +86,33 @@ public class DoctorView {
         createUnlockUpdateDoctorDetailsButton();
     }
 
-    private void createLogoImage() {
-        Image logoImage = new Image(this.getClass().getResourceAsStream("/images/logo.png"));
-        imageViewLogo = new ImageView(logoImage);
-        imageViewLogo.setLayoutX(50);
-        imageViewLogo.setLayoutY(200);
-        imageViewLogo.setFitHeight(200);
-        imageViewLogo.setFitWidth(800);
-        imageViewLogo.setOpacity(0.3);
-        doctorDetailsPane.getChildren().add(imageViewLogo);
+    private void createBackgroundImage() {
+        backgroundImage = new ImageView(new Image(this.getClass().getResourceAsStream("/images/logo.png")));
+        backgroundImage.setLayoutX(50);
+        backgroundImage.setLayoutY(200);
+        backgroundImage.setFitHeight(200);
+        backgroundImage.setFitWidth(800);
+        backgroundImage.setOpacity(0.3);
+        doctorDetailsPane.getChildren().add(backgroundImage);
     }
 
     private void createUnlockUpdateDoctorDetailsButton() {
-        unlockUpdatePatientDetailsButton = new Button();
-        unlockUpdatePatientDetailsButton.setLayoutX(480.0);
-        unlockUpdatePatientDetailsButton.setLayoutY(436.0);
-        unlockUpdatePatientDetailsButton.setMnemonicParsing(false);
-        unlockUpdatePatientDetailsButton.setText("Edytuj");
-        doctorDetailsPane.getChildren().add(unlockUpdatePatientDetailsButton);
+        unlockUpdateDoctorDetailsButton = new Button();
+        unlockUpdateDoctorDetailsButton.setLayoutX(480.0);
+        unlockUpdateDoctorDetailsButton.setLayoutY(436.0);
+        unlockUpdateDoctorDetailsButton.setMnemonicParsing(false);
+        unlockUpdateDoctorDetailsButton.setText("Edytuj");
+        doctorDetailsPane.getChildren().add(unlockUpdateDoctorDetailsButton);
     }
 
     private void createUpdateDoctorDetailsButton() {
-        updatePatientDetailsButton = new Button();
-        updatePatientDetailsButton.setLayoutX(360.0);
-        updatePatientDetailsButton.setLayoutY(436.0);
-        updatePatientDetailsButton.setMnemonicParsing(false);
-        updatePatientDetailsButton.setText("Zaktualizuj");
-        updatePatientDetailsButton.setDisable(true);
-        doctorDetailsPane.getChildren().add(updatePatientDetailsButton);
+        updateDoctorDetailsButton = new Button();
+        updateDoctorDetailsButton.setLayoutX(360.0);
+        updateDoctorDetailsButton.setLayoutY(436.0);
+        updateDoctorDetailsButton.setMnemonicParsing(false);
+        updateDoctorDetailsButton.setText("Zaktualizuj");
+        updateDoctorDetailsButton.setDisable(true);
+        doctorDetailsPane.getChildren().add(updateDoctorDetailsButton);
     }
 
     private void createDoctorMedicalSpecialtyLabel() {
@@ -164,6 +160,7 @@ public class DoctorView {
         doctorLastNameLabel.setText("Nazwisko");
         doctorDetailsPane.getChildren().add(doctorLastNameLabel);
     }
+
     private void createDoctorPhoneNumberLabel() {
         doctorPhoneNumberLabel = new Label();
         doctorPhoneNumberLabel.setLayoutX(550.0);
@@ -215,4 +212,5 @@ public class DoctorView {
         doctorFirstNameTextField.setPromptText("Podaj imię");
         doctorDetailsPane.getChildren().add(doctorFirstNameTextField);
     }
+
 }

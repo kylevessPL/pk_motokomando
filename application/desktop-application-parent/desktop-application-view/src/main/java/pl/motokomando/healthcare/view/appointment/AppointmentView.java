@@ -72,7 +72,6 @@ public class AppointmentView {
 
     private TabPane prescriptionPane;
     private Tab prescriptionTab;
-    private Tab doctorTab;
     private Tab prescriptionMedicinesTab;
     private Tab addPrescriptionMedicineTab;
     private Tab billTab;
@@ -139,7 +138,6 @@ public class AppointmentView {
 
     private void addContent() {
         createPrescriptionTab();
-        createDoctorTab();
         createPrescriptionNotesTab();
         createBillTab();
         getAppointmentDetails();
@@ -229,48 +227,6 @@ public class AppointmentView {
         notesTextArea.setPrefWidth(1300.0);
         notesTextArea.setPromptText("Dolegliwości, badania, zalecenia");
         prescriptionNotesPane.getChildren().add(notesTextArea);
-    }
-
-    private void createDoctorTab() {
-        doctorTab = new Tab();
-        doctorTab.setText("Lekarz");
-        doctorPane = new AnchorPane();
-        doctorPane.setPrefHeight(180.0);
-        doctorPane.setPrefWidth(200.0);
-        createBackgroundImage(doctorPane);
-        createChooseDoctorComboBox();
-        createChooseDoctorLabel();
-        createSaveDoctorDetailsButton();
-        doctorTab.setContent(doctorPane);
-        appointmentPane.getTabs().add(doctorTab);
-    }
-
-    private void createSaveDoctorDetailsButton() {
-        saveDoctorDetailsButton = new Button();
-        saveDoctorDetailsButton.setLayoutX(655.0);
-        saveDoctorDetailsButton.setLayoutY(400.0);
-        saveDoctorDetailsButton.setMnemonicParsing(false);
-        saveDoctorDetailsButton.setText("Zatwierdź");
-        saveDoctorDetailsButton.setFont(new Font(16.0));
-        doctorPane.getChildren().add(saveDoctorDetailsButton);
-    }
-
-    private void createChooseDoctorLabel() {
-        chooseDoctorLabel = new Label();
-        chooseDoctorLabel.setLayoutX(550.0);
-        chooseDoctorLabel.setLayoutY(160.0);
-        chooseDoctorLabel.setText("Wybierz lekarza:");
-        chooseDoctorLabel.setFont(new Font(16.0));
-        doctorPane.getChildren().add(chooseDoctorLabel);
-    }
-
-    private void createChooseDoctorComboBox() {
-        chooseDoctorComboBox = new ComboBox<>();
-        chooseDoctorComboBox.setLayoutX(550.0);
-        chooseDoctorComboBox.setLayoutY(190.0);
-        chooseDoctorComboBox.setPrefHeight(40.0);
-        chooseDoctorComboBox.setPrefWidth(300.0);
-        doctorPane.getChildren().add(chooseDoctorComboBox);
     }
 
     private void createPrescriptionTab() {

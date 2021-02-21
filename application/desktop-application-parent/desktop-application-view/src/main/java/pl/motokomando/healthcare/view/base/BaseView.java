@@ -44,6 +44,7 @@ import pl.motokomando.healthcare.model.utils.ServiceStore;
 import pl.motokomando.healthcare.model.utils.SessionStore;
 import pl.motokomando.healthcare.model.utils.UserInfo;
 import pl.motokomando.healthcare.view.authentication.AuthenticationView;
+import pl.motokomando.healthcare.view.doctor.DoctorView;
 import pl.motokomando.healthcare.view.patient.PatientView;
 import pl.motokomando.healthcare.view.utils.DefaultDatePickerConverter;
 import pl.motokomando.healthcare.view.utils.FXAlert;
@@ -1021,6 +1022,7 @@ public class BaseView {
         addDoctorButton.setOnMouseClicked(e -> addDoctor());
         addPatientButton.setOnMouseClicked(e -> addPatient());
         patientsTable.setRowFactory(tv -> setPatientsTableRowFactory());
+        doctorsTable.setRowFactory(tv -> setDoctorsTableRowFactory());
     }
 
     private void setTextFieldsLimit() {
@@ -1069,6 +1071,17 @@ public class BaseView {
             if (event.getClickCount() == 2 && !row.isEmpty()) {
                 PersonTableRecord record = patientsTable.getItems().get(row.getIndex());
                 openPatientScene(record.getId());
+            }
+        });
+        return row;
+    }
+
+    private TableRow<PersonTableRecord> setDoctorsTableRowFactory() {
+        TableRow<PersonTableRecord> row = new TableRow<>();
+        row.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2 && !row.isEmpty()) {
+                PersonTableRecord record = doctorsTable.getItems().get(row.getIndex());
+                openDoctorScene(record.getId());
             }
         });
         return row;
@@ -1241,6 +1254,23 @@ public class BaseView {
                 updatePatientsTablePageData();
                 serviceStore.cancelAllPatientServices();
             });
+            subStage.show();
+        });
+    }
+
+    private void openDoctorScene(Integer doctorId) {
+        Scene scene = new Scene(new DoctorView(doctorId).asParent(), 900, 600);
+        Platform.runLater(() -> {
+            Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+            Stage subStage = new Stage();
+            subStage.setScene(scene);
+            subStage.setX((screenBounds.getWidth() - scene.getWidth()) / 2);
+            subStage.setY((screenBounds.getHeight() - scene.getHeight()) / 2);
+            subStage.setTitle("Panel lekarza");
+            subStage.getIcons().add(new Image(this.getClass().getResourceAsStream("/images/favicon.png")));
+            subStage.initOwner(currentStage());
+            subStage.initModality(WINDOW_MODAL);
+            subStage.setOnHidden(e -> updateDoctorsTablePageData());
             subStage.show();
         });
     }

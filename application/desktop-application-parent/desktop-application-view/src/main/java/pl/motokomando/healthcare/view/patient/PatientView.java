@@ -1152,10 +1152,7 @@ public class PatientView {
             subStage.getIcons().add(new Image(this.getClass().getResourceAsStream("/images/favicon.png")));
             subStage.initOwner(currentStage());
             subStage.initModality(WINDOW_MODAL);
-            subStage.setOnHidden(e -> {
-                updatePatientAppointmentsTablePageData();
-                serviceStore.cancelAllAppointmentServices();
-            });
+            subStage.setOnHidden(e -> updatePatientAppointmentsTablePageData());
             subStage.show();
         });
     }
