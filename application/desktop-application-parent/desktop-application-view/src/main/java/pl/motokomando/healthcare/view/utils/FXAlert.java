@@ -1,4 +1,4 @@
-package utils;
+package pl.motokomando.healthcare.view.utils;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;

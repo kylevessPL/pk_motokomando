@@ -11,8 +11,10 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
 import pl.motokomando.healthcare.controller.utils.GetClient;
+import pl.motokomando.healthcare.controller.utils.JsonPatchOperation;
 import pl.motokomando.healthcare.controller.utils.LocalDateAdapter;
 import pl.motokomando.healthcare.controller.utils.LocalDateTimeAdapter;
+import pl.motokomando.healthcare.controller.utils.PatchClient;
 import pl.motokomando.healthcare.controller.utils.PostClient;
 import pl.motokomando.healthcare.controller.utils.WebClient;
 import pl.motokomando.healthcare.controller.utils.WebUtils;
@@ -38,6 +40,7 @@ import static java.lang.Integer.MAX_VALUE;
 import static java.time.format.DateTimeFormatter.ISO_DATE;
 import static java.time.format.DateTimeFormatter.ISO_DATE_TIME;
 import static org.apache.http.HttpStatus.SC_CREATED;
+import static org.apache.http.HttpStatus.SC_NO_CONTENT;
 import static org.apache.http.HttpStatus.SC_OK;
 import static pl.motokomando.healthcare.controller.utils.ResponseHeaders.CURRENT_PAGE;
 import static pl.motokomando.healthcare.controller.utils.ResponseHeaders.TOTAL_PAGES;
@@ -45,6 +48,7 @@ import static pl.motokomando.healthcare.controller.utils.WellKnownEndpoints.DOCT
 import static pl.motokomando.healthcare.controller.utils.WellKnownEndpoints.DOCTOR_APPOINTMENTS;
 import static pl.motokomando.healthcare.controller.utils.WellKnownEndpoints.PATIENT;
 import static pl.motokomando.healthcare.controller.utils.WellKnownEndpoints.PATIENTS;
+import static pl.motokomando.healthcare.controller.utils.WellKnownEndpoints.PATIENT_APPOINTMENT;
 import static pl.motokomando.healthcare.controller.utils.WellKnownEndpoints.PATIENT_APPOINTMENTS;
 import static pl.motokomando.healthcare.model.patient.utils.AppointmentStatus.CANCELLED;
 
@@ -83,6 +87,28 @@ public class PatientController {
         }
         patientModel.setDoctorBasicList(doctorBasicList);
         return null;
+    }
+
+    public Void handleCancelAppointmentButtonClicked(Integer appointmentId) throws Exception {
+        Map<JsonPatchOperation, Map.Entry<String, Optional<String>>> operationsMap =
+                WebUtils.createAddOperationsMap(Collections.singletonMap("appointmentStatus", CANCELLED.name()));
+        sendCancelAppointmentRequest(appointmentId, operationsMap);
+        return null;
+    }
+
+    private void sendCancelAppointmentRequest(Integer appointmentId,
+            Map<JsonPatchOperation, Map.Entry<String, Optional<String>>> operationsMap) throws Exception {
+        WebClient client = PatchClient.builder()
+                .path(PATIENT_APPOINTMENT)
+                .pathVariable("patientId", String.valueOf(patientModel.getPatientId()))
+                .pathVariable("appointmentId", String.valueOf(appointmentId))
+                .operations(operationsMap)
+                .build();
+        HttpResponse response = client.execute();
+        int statusCode = response.getStatusLine().getStatusCode();
+        if (statusCode != SC_NO_CONTENT) {
+            WebUtils.mapErrorResponseAsException(response);
+        }
     }
 
     public Optional<List<DoctorAppointment>> getDoctorScheduledAppointments(Integer doctorId, LocalDate startDate, LocalDate endDate) throws Exception {

@@ -1,4 +1,4 @@
-package utils;
+package pl.motokomando.healthcare.view.utils;
 
 import javafx.concurrent.ScheduledService;
 import javafx.concurrent.Task;

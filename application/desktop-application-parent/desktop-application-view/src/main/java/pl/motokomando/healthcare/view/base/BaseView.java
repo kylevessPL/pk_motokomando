@@ -45,11 +45,11 @@ import pl.motokomando.healthcare.model.utils.SessionStore;
 import pl.motokomando.healthcare.model.utils.UserInfo;
 import pl.motokomando.healthcare.view.authentication.AuthenticationView;
 import pl.motokomando.healthcare.view.patient.PatientView;
-import utils.DefaultDatePickerConverter;
-import utils.FXAlert;
-import utils.FXTasks;
-import utils.FXValidation;
-import utils.TextFieldLimiter;
+import pl.motokomando.healthcare.view.utils.DefaultDatePickerConverter;
+import pl.motokomando.healthcare.view.utils.FXAlert;
+import pl.motokomando.healthcare.view.utils.FXTasks;
+import pl.motokomando.healthcare.view.utils.FXValidation;
+import pl.motokomando.healthcare.view.utils.TextFieldLimiter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -68,7 +68,7 @@ import static javafx.scene.control.ButtonType.OK;
 import static javafx.scene.control.TabPane.TabClosingPolicy.UNAVAILABLE;
 import static javafx.scene.layout.Region.USE_PREF_SIZE;
 import static javafx.stage.Modality.WINDOW_MODAL;
-import static utils.DateConstraints.PAST;
+import static pl.motokomando.healthcare.view.utils.DateConstraints.PAST;
 
 public class BaseView {
 
@@ -145,7 +145,7 @@ public class BaseView {
     private Label patientZipCodeLabel;
     private Label patientCityLabel;
     private Label patientPeselLabel;
-    private ImageView imageViewLogo;
+    private ImageView backgroundImage;
 
     private Pagination patientsTablePagination;
     private Pagination doctorsTablePagination;
@@ -197,7 +197,7 @@ public class BaseView {
         userInfoTab = new Tab();
         userInfoTab.setText("Konto");
         userInfoPane = new AnchorPane();
-        createLogoImage(userInfoPane);
+        createBackgroundImage(userInfoPane);
         createUserFirstNameLabel();
         createUserFirstNameTextField();
         createUserLastNameLabel();
@@ -325,7 +325,7 @@ public class BaseView {
         addDoctorPane = new AnchorPane();
         addDoctorPane.setPrefHeight(800.0);
         addDoctorPane.setPrefWidth(1600.0);
-        createLogoImage(addDoctorPane);
+        createBackgroundImage(addDoctorPane);
         createDoctorFirstNameTextField();
         createDoctorFirstNameLabel();
         createDoctorLastNameTextField();
@@ -341,7 +341,7 @@ public class BaseView {
         doctorsPane.getTabs().add(addDoctorTab);
     }
 
-    private void createDoctorFirstNameLabel(){
+    private void createDoctorFirstNameLabel() {
         doctorFirstNameLabel = new Label();
         doctorFirstNameLabel.setLayoutX(650.0);
         doctorFirstNameLabel.setLayoutY(40.0);
@@ -349,7 +349,7 @@ public class BaseView {
         addDoctorPane.getChildren().add(doctorFirstNameLabel);
     }
 
-    private void createDoctorLastNameLabel(){
+    private void createDoctorLastNameLabel() {
         doctorLastNameLabel = new Label();
         doctorLastNameLabel.setLayoutX(650.0);
         doctorLastNameLabel.setLayoutY(140.0);
@@ -357,7 +357,7 @@ public class BaseView {
         addDoctorPane.getChildren().add(doctorLastNameLabel);
     }
 
-    private void createDoctorPhoneNumberLabel(){
+    private void createDoctorPhoneNumberLabel() {
         doctorPhoneNumberLabel = new Label();
         doctorPhoneNumberLabel.setLayoutX(650.0);
         doctorPhoneNumberLabel.setLayoutY(240.0);
@@ -480,7 +480,7 @@ public class BaseView {
         addPatientPane = new AnchorPane();
         addPatientPane.setPrefHeight(180.0);
         addPatientPane.setPrefWidth(200.0);
-        createLogoImage(addPatientPane);
+        createBackgroundImage(addPatientPane);
         createPatientFirstNameTextField();
         createPatientFirstNameLabel();
         createPatientLastNameTextField();
@@ -508,18 +508,17 @@ public class BaseView {
         patientsPane.getTabs().add(addPatientTab);
     }
 
-    private void createLogoImage(AnchorPane backgroundPane) {
-        Image logoImage = new Image(this.getClass().getResourceAsStream("/images/logo.png"));
-        imageViewLogo = new ImageView(logoImage);
-        imageViewLogo.setLayoutX(50);
-        imageViewLogo.setLayoutY(150);
-        imageViewLogo.setFitHeight(350);
-        imageViewLogo.setFitWidth(1500);
-        imageViewLogo.setOpacity(0.3);
-        backgroundPane.getChildren().add(imageViewLogo);
+    private void createBackgroundImage(AnchorPane backgroundPane) {
+        backgroundImage = new ImageView(new Image(this.getClass().getResourceAsStream("/images/logo.png")));
+        backgroundImage.setLayoutX(50);
+        backgroundImage.setLayoutY(150);
+        backgroundImage.setFitHeight(350);
+        backgroundImage.setFitWidth(1500);
+        backgroundImage.setOpacity(0.3);
+        backgroundPane.getChildren().add(backgroundImage);
     }
 
-    private void createPatientFirstNameLabel(){
+    private void createPatientFirstNameLabel() {
         patientFirstNameLabel = new Label();
         patientFirstNameLabel.setLayoutX(350.0);
         patientFirstNameLabel.setLayoutY(20.0);
@@ -527,7 +526,7 @@ public class BaseView {
         addPatientPane.getChildren().add(patientFirstNameLabel);
     }
 
-    private void createPatientLastNameLabel(){
+    private void createPatientLastNameLabel() {
         patientLastNameLabel = new Label();
         patientLastNameLabel.setLayoutX(350.0);
         patientLastNameLabel.setLayoutY(100.0);
@@ -535,7 +534,7 @@ public class BaseView {
         addPatientPane.getChildren().add(patientLastNameLabel);
     }
 
-    private void createPatientBirthDateLabel(){
+    private void createPatientBirthDateLabel() {
         patientBirthDateLabel = new Label();
         patientBirthDateLabel.setLayoutX(350.0);
         patientBirthDateLabel.setLayoutY(180.0);
@@ -543,7 +542,7 @@ public class BaseView {
         addPatientPane.getChildren().add(patientBirthDateLabel);
     }
 
-    private void createPatientPhoneNumberLabel(){
+    private void createPatientPhoneNumberLabel() {
         patientPhoneNumberLabel = new Label();
         patientPhoneNumberLabel.setLayoutX(350.0);
         patientPhoneNumberLabel.setLayoutY(420.0);
@@ -551,7 +550,7 @@ public class BaseView {
         addPatientPane.getChildren().add(patientPhoneNumberLabel);
     }
 
-    private void createPatientStreetNameLabel(){
+    private void createPatientStreetNameLabel() {
         patientStreetNameLabel = new Label();
         patientStreetNameLabel.setLayoutX(950.0);
         patientStreetNameLabel.setLayoutY(20.0);
@@ -559,7 +558,7 @@ public class BaseView {
         addPatientPane.getChildren().add(patientStreetNameLabel);
     }
 
-    private void createPatientHouseNumberLabel(){
+    private void createPatientHouseNumberLabel() {
         patientHouseNumberLabel = new Label();
         patientHouseNumberLabel.setLayoutX(950.0);
         patientHouseNumberLabel.setLayoutY(100.0);
@@ -567,7 +566,7 @@ public class BaseView {
         addPatientPane.getChildren().add(patientHouseNumberLabel);
     }
 
-    private void createPatientZipCodeLabel(){
+    private void createPatientZipCodeLabel() {
         patientZipCodeLabel = new Label();
         patientZipCodeLabel.setLayoutX(950.0);
         patientZipCodeLabel.setLayoutY(180.0);
@@ -575,7 +574,7 @@ public class BaseView {
         addPatientPane.getChildren().add(patientZipCodeLabel);
     }
 
-    private void createPatientCityLabel(){
+    private void createPatientCityLabel() {
         patientCityLabel = new Label();
         patientCityLabel.setLayoutX(950.0);
         patientCityLabel.setLayoutY(260.0);
@@ -583,7 +582,7 @@ public class BaseView {
         addPatientPane.getChildren().add(patientCityLabel);
     }
 
-    private void createPatientPeselLabel(){
+    private void createPatientPeselLabel() {
         patientPeselLabel = new Label();
         patientPeselLabel.setLayoutX(950.0);
         patientPeselLabel.setLayoutY(340.0);

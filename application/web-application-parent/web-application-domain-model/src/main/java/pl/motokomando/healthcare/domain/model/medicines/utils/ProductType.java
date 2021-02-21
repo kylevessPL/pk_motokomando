@@ -7,6 +7,8 @@ public enum ProductType {
     @JsonProperty("HUMAN PRESCRIPTION DRUG")
     PRESCRIPTION,
     @JsonProperty("HUMAN OTC DRUG")
-    OTC
+    OTC,
+    @JsonProperty("DRUG FOR FURTHER PROCESSING")
+    PROCESSING
 
 }

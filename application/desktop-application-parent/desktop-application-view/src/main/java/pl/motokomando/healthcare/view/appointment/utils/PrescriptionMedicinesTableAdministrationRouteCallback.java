@@ -9,7 +9,7 @@ import javafx.scene.control.TableColumn;
 import javafx.util.Callback;
 import lombok.RequiredArgsConstructor;
 import pl.motokomando.healthcare.model.appointment.utils.PrescriptionMedicinesTableRecord;
-import utils.FXAlert;
+import pl.motokomando.healthcare.view.utils.FXAlert;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;

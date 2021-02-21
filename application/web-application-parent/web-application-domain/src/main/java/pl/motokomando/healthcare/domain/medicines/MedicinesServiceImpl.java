@@ -68,16 +68,21 @@ public class MedicinesServiceImpl implements MedicinesService {
     }
 
     private Medicine medicineToReadable(Medicine medicine) {
-        medicine.setManufacturer(textToReadable(medicine.getManufacturer(), true));
-        medicine.setProductName(textToReadable(medicine.getProductName(), true));
-        medicine.setGenericName(textToReadable(medicine.getGenericName(), true));
-        medicine.setActiveIngredients(medicine.getActiveIngredients()
-                .stream()
-                .map(this::ingredientToReadable)
-                .collect(Collectors.toList()));
-        medicine.setPackagingVariants(Arrays.stream(medicine.getPackagingVariants())
-                .map(e -> textToReadable(e, false))
-                .toArray(String[]::new));
+        Optional.ofNullable(medicine.getManufacturer())
+                .ifPresent(e -> medicine.setManufacturer(textToReadable(e, true)));
+        Optional.ofNullable(medicine.getProductName())
+                .ifPresent(e -> medicine.setProductName(textToReadable(e, true)));
+        Optional.ofNullable(medicine.getGenericName())
+                .ifPresent(e -> medicine.setGenericName(textToReadable(e, true)));
+        Optional.ofNullable(medicine.getActiveIngredients())
+                .ifPresent(e -> medicine.setActiveIngredients(e
+                        .stream()
+                        .map(this::ingredientToReadable)
+                        .collect(Collectors.toList())));
+        Optional.ofNullable(medicine.getPackagingVariants())
+                .ifPresent(e -> medicine.setPackagingVariants(Arrays.stream(e)
+                        .map(v -> textToReadable(v, false))
+                        .toArray(String[]::new)));
         return medicine;
     }
 

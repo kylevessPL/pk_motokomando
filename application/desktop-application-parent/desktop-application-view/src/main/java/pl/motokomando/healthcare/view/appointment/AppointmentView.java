@@ -18,9 +18,9 @@ import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -31,20 +31,20 @@ import pl.motokomando.healthcare.model.appointment.AppointmentModel;
 import pl.motokomando.healthcare.model.appointment.utils.MedicinesTableRecord;
 import pl.motokomando.healthcare.model.appointment.utils.PrescriptionMedicinesTableRecord;
 import pl.motokomando.healthcare.model.appointment.utils.ProductType;
-import pl.motokomando.healthcare.model.utils.ServiceStore;
 import pl.motokomando.healthcare.view.appointment.utils.MedicinesTableActiveIngredientsCallback;
 import pl.motokomando.healthcare.view.appointment.utils.MedicinesTableAdministrationRouteCallback;
 import pl.motokomando.healthcare.view.appointment.utils.MedicinesTablePackagingVariantsCallback;
 import pl.motokomando.healthcare.view.appointment.utils.PrescriptionMedicinesTableActiveIngredientsCallback;
 import pl.motokomando.healthcare.view.appointment.utils.PrescriptionMedicinesTableAdministrationRouteCallback;
 import pl.motokomando.healthcare.view.appointment.utils.PrescriptionMedicinesTablePackagingVariantsCallback;
-import utils.FXAlert;
-import utils.FXTasks;
-import utils.FXValidation;
-import utils.TextAreaLimiter;
-import utils.TextFieldLimiter;
+import pl.motokomando.healthcare.view.utils.FXAlert;
+import pl.motokomando.healthcare.view.utils.FXTasks;
+import pl.motokomando.healthcare.view.utils.FXValidation;
+import pl.motokomando.healthcare.view.utils.TextAreaLimiter;
+import pl.motokomando.healthcare.view.utils.TextFieldLimiter;
 
 import java.math.BigDecimal;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -60,8 +60,6 @@ import static javafx.scene.input.KeyCode.ENTER;
 import static javafx.scene.layout.Region.USE_PREF_SIZE;
 
 public class AppointmentView {
-
-    private final ServiceStore serviceStore = ServiceStore.getInstance();
 
     private final ValidationSupport notesValidationSupport = new ValidationSupport();
     private final ValidationSupport billAmountValidationSupport = new ValidationSupport();
@@ -87,7 +85,7 @@ public class AppointmentView {
     private TableView<MedicinesTableRecord> medicinesTable;
     private TableView<PrescriptionMedicinesTableRecord> prescriptionMedicinesTable;
     private TextField medicineSearchQueryTextField;
-    private Button searchMedicineToPrescriptionButton;
+    private Button searchMedicineSearchQueryButton;
     private ComboBox<String> chooseDoctorComboBox;
     private Label chooseDoctorLabel;
     private Button saveDoctorDetailsButton;
@@ -96,11 +94,11 @@ public class AppointmentView {
     private Button saveBillAmountButton;
     private Button saveNotesButton;
     private TextArea notesTextArea;
-    private ImageView imageViewLogo;
-    private TextField medicineExpiryDateTextField;
-    private TextField medicineDateOfIssueTextField;
-    private Label medicineExpiryDateLabel;
-    private Label medicineDateOfIssueLabel;
+    private ImageView backgroundImage;
+    private TextField prescriptionExpirationDateTextField;
+    private TextField prescriptionIssueDateTextField;
+    private Label prescriptionExpirationDateLabel;
+    private Label prescriptionIssueDateLabel;
 
     public AppointmentView(Integer patientId, Integer appointmentId) {
         initModel(patientId, appointmentId);
@@ -153,7 +151,7 @@ public class AppointmentView {
         billPane = new AnchorPane();
         billPane.setPrefHeight(200.0);
         billPane.setPrefWidth(200.0);
-        createLogoImage(billPane);
+        createBackgroundImage(billPane);
         createBillAmountTextField();
         createBillAmountLabel();
         createSaveBillDetailsButton();
@@ -161,15 +159,14 @@ public class AppointmentView {
         appointmentPane.getTabs().add(billTab);
     }
 
-    private void createLogoImage(AnchorPane backgroundPane) {
-        Image logoImage = new Image(this.getClass().getResourceAsStream("/images/logo.png"));
-        imageViewLogo = new ImageView(logoImage);
-        imageViewLogo.setLayoutX(50);
-        imageViewLogo.setLayoutY(160);
-        imageViewLogo.setFitHeight(325);
-        imageViewLogo.setFitWidth(1300);
-        imageViewLogo.setOpacity(0.3);
-        backgroundPane.getChildren().add(imageViewLogo);
+    private void createBackgroundImage(AnchorPane backgroundPane) {
+        backgroundImage = new ImageView(new Image(this.getClass().getResourceAsStream("/images/logo.png")));
+        backgroundImage.setLayoutX(50);
+        backgroundImage.setLayoutY(160);
+        backgroundImage.setFitHeight(325);
+        backgroundImage.setFitWidth(1300);
+        backgroundImage.setOpacity(0.3);
+        backgroundPane.getChildren().add(backgroundImage);
     }
 
     private void createSaveBillDetailsButton() {
@@ -207,24 +204,24 @@ public class AppointmentView {
         prescriptionNotesPane = new AnchorPane();
         prescriptionNotesPane.setPrefHeight(200.0);
         prescriptionNotesPane.setPrefWidth(200.0);
-        createDiagnosisTextArea();
-        createDiagnosisButton();
+        createNotesTextArea();
+        createSaveNotesButton();
         prescriptionNotesTab.setContent(prescriptionNotesPane);
         appointmentPane.getTabs().add(prescriptionNotesTab);
     }
 
-    private void createDiagnosisButton() {
+    private void createSaveNotesButton() {
         saveNotesButton = new Button();
         saveNotesButton.setDisable(true);
-        saveNotesButton.setLayoutX(575.0);
-        saveNotesButton.setLayoutY(700.0);
+        saveNotesButton.setLayoutX(620.0);
+        saveNotesButton.setLayoutY(610.0);
         saveNotesButton.setMnemonicParsing(false);
         saveNotesButton.setText("Zapisz");
         saveNotesButton.setFont(new Font(16.0));
         prescriptionNotesPane.getChildren().add(saveNotesButton);
     }
 
-    private void createDiagnosisTextArea() {
+    private void createNotesTextArea() {
         notesTextArea = new TextArea();
         notesTextArea.setLayoutX(50.0);
         notesTextArea.setLayoutY(50.0);
@@ -240,7 +237,7 @@ public class AppointmentView {
         doctorPane = new AnchorPane();
         doctorPane.setPrefHeight(180.0);
         doctorPane.setPrefWidth(200.0);
-        createLogoImage(doctorPane);
+        createBackgroundImage(doctorPane);
         createChooseDoctorComboBox();
         createChooseDoctorLabel();
         createSaveDoctorDetailsButton();
@@ -294,48 +291,48 @@ public class AppointmentView {
         prescriptionMedicinesPane.setPrefHeight(200.0);
         prescriptionMedicinesPane.setPrefWidth(200.0);
         createPrescriptionMedicinesTable();
-        createMedicineExpiryDateTextField();
-        createMedicineExpiryDateLabel();
-        createMedicineDateOfIssueTextField();
-        createMedicineDateOfIssueLabel();
+        createPrescriptionExpirationDateTextField();
+        createPrescriptionExpirationDateLabel();
+        createPrescriptionIssueDateTextField();
+        createPrescriptionIssueDateLabel();
         prescriptionMedicinesTab.setContent(prescriptionMedicinesPane);
         prescriptionPane.getTabs().add(prescriptionMedicinesTab);
     }
 
-    private void createMedicineExpiryDateLabel() {
-        medicineExpiryDateLabel = new Label();
-        medicineExpiryDateLabel.setLayoutX(1000.0);
-        medicineExpiryDateLabel.setLayoutY(540.0);
-        medicineExpiryDateLabel.setText("Data ważności");
-        prescriptionMedicinesPane.getChildren().add(medicineExpiryDateLabel);
+    private void createPrescriptionExpirationDateLabel() {
+        prescriptionExpirationDateLabel = new Label();
+        prescriptionExpirationDateLabel.setLayoutX(996.0);
+        prescriptionExpirationDateLabel.setLayoutY(540.0);
+        prescriptionExpirationDateLabel.setText("Data ważności");
+        prescriptionMedicinesPane.getChildren().add(prescriptionExpirationDateLabel);
     }
 
-    private void createMedicineDateOfIssueLabel() {
-        medicineDateOfIssueLabel = new Label();
-        medicineDateOfIssueLabel.setLayoutX(1200.0);
-        medicineDateOfIssueLabel.setLayoutY(540.0);
-        medicineDateOfIssueLabel.setText("Data wystawienia");
-        prescriptionMedicinesPane.getChildren().add(medicineDateOfIssueLabel);
+    private void createPrescriptionIssueDateLabel() {
+        prescriptionIssueDateLabel = new Label();
+        prescriptionIssueDateLabel.setLayoutX(1196.0);
+        prescriptionIssueDateLabel.setLayoutY(540.0);
+        prescriptionIssueDateLabel.setText("Data wystawienia");
+        prescriptionMedicinesPane.getChildren().add(prescriptionIssueDateLabel);
     }
 
-    private void createMedicineExpiryDateTextField() {
-        medicineExpiryDateTextField = new TextField();
-        medicineExpiryDateTextField.setLayoutX(1000.0);
-        medicineExpiryDateTextField.setLayoutY(570.0);
-        medicineExpiryDateTextField.setPrefHeight(40.0);
-        medicineExpiryDateTextField.setPrefWidth(150.0);
-        medicineExpiryDateTextField.setPromptText("Data ważności");
-        prescriptionMedicinesPane.getChildren().add(medicineExpiryDateTextField);
+    private void createPrescriptionExpirationDateTextField() {
+        prescriptionExpirationDateTextField = new TextField();
+        prescriptionExpirationDateTextField.setLayoutX(996.0);
+        prescriptionExpirationDateTextField.setLayoutY(570.0);
+        prescriptionExpirationDateTextField.setPrefHeight(40.0);
+        prescriptionExpirationDateTextField.setPrefWidth(150.0);
+        prescriptionExpirationDateTextField.setPromptText("Data ważności");
+        prescriptionMedicinesPane.getChildren().add(prescriptionExpirationDateTextField);
     }
 
-    private void createMedicineDateOfIssueTextField() {
-        medicineDateOfIssueTextField = new TextField();
-        medicineDateOfIssueTextField.setLayoutX(1200.0);
-        medicineDateOfIssueTextField.setLayoutY(570.0);
-        medicineDateOfIssueTextField.setPrefHeight(40.0);
-        medicineDateOfIssueTextField.setPrefWidth(150.0);
-        medicineDateOfIssueTextField.setPromptText("Data wystawienia");
-        prescriptionMedicinesPane.getChildren().add(medicineDateOfIssueTextField);
+    private void createPrescriptionIssueDateTextField() {
+        prescriptionIssueDateTextField = new TextField();
+        prescriptionIssueDateTextField.setLayoutX(1196.0);
+        prescriptionIssueDateTextField.setLayoutY(570.0);
+        prescriptionIssueDateTextField.setPrefHeight(40.0);
+        prescriptionIssueDateTextField.setPrefWidth(150.0);
+        prescriptionIssueDateTextField.setPromptText("Data wystawienia");
+        prescriptionMedicinesPane.getChildren().add(prescriptionIssueDateTextField);
     }
 
     private void createMedicinesTable() {
@@ -343,7 +340,7 @@ public class AppointmentView {
         medicinesTable.setLayoutX(50.0);
         medicinesTable.setLayoutY(99.0);
         medicinesTable.setPrefHeight(450.0);
-        medicinesTable.setPrefWidth(1300.0);
+        medicinesTable.setPrefWidth(1296.0);
         medicinesTable.getSelectionModel().setSelectionMode(MULTIPLE);
         medicinesTable.setPlaceholder(new Label("Wprowadź zapytanie w polu wyszukiwania, aby znaleźć leki"));
         setMedicinesTableColumns(medicinesTable);
@@ -359,25 +356,25 @@ public class AppointmentView {
         addPrescriptionMedicinePane.setPrefHeight(200.0);
         addPrescriptionMedicinePane.setPrefWidth(200.0);
         createMedicinesTable();
-        createMedicineNameTextField();
-        createSearchMedicineToPrescriptionButton();
+        createMedicineSearchQueryTextField();
+        createSearchMedicineSearchQueryButton();
         addPrescriptionMedicineTab.setContent(addPrescriptionMedicinePane);
         prescriptionPane.getTabs().add(addPrescriptionMedicineTab);
     }
 
-    private void createSearchMedicineToPrescriptionButton(){
-        searchMedicineToPrescriptionButton = new Button();
-        searchMedicineToPrescriptionButton.setLayoutX(1280.0);
-        searchMedicineToPrescriptionButton.setLayoutY(40.0);
-        searchMedicineToPrescriptionButton.setMnemonicParsing(false);
-        searchMedicineToPrescriptionButton.setText("Szukaj");
-        searchMedicineToPrescriptionButton.setFont(new Font(16.0));
-        addPrescriptionMedicinePane.getChildren().add(searchMedicineToPrescriptionButton);
+    private void createSearchMedicineSearchQueryButton() {
+        searchMedicineSearchQueryButton = new Button();
+        searchMedicineSearchQueryButton.setLayoutX(1278.0);
+        searchMedicineSearchQueryButton.setLayoutY(41);
+        searchMedicineSearchQueryButton.setMnemonicParsing(false);
+        searchMedicineSearchQueryButton.setText("Szukaj");
+        searchMedicineSearchQueryButton.setFont(new Font(16.0));
+        addPrescriptionMedicinePane.getChildren().add(searchMedicineSearchQueryButton);
     }
 
-    private void createMedicineNameTextField() {
+    private void createMedicineSearchQueryTextField() {
         medicineSearchQueryTextField = new TextField();
-        medicineSearchQueryTextField.setLayoutX(50.0);
+        medicineSearchQueryTextField.setLayoutX(51.0);
         medicineSearchQueryTextField.setLayoutY(40.0);
         medicineSearchQueryTextField.setPrefHeight(40.0);
         medicineSearchQueryTextField.setPrefWidth(1220.0);
@@ -390,7 +387,7 @@ public class AppointmentView {
         prescriptionMedicinesTable.setLayoutX(50.0);
         prescriptionMedicinesTable.setLayoutY(50.0);
         prescriptionMedicinesTable.setPrefHeight(480);
-        prescriptionMedicinesTable.setPrefWidth(1300.0);
+        prescriptionMedicinesTable.setPrefWidth(1296.0);
         prescriptionMedicinesTable.getSelectionModel().setSelectionMode(MULTIPLE);
         prescriptionMedicinesTable.setPlaceholder(new Label("Brak leków powiązanych z receptą"));
         setPrescriptionMedicinesTableColumns(prescriptionMedicinesTable);
@@ -406,7 +403,7 @@ public class AppointmentView {
 
     private <T> TableColumn<PrescriptionMedicinesTableRecord, T> createPrescriptionMedicinesTableColumn() {
         TableColumn<PrescriptionMedicinesTableRecord, T> column = new TableColumn<>();
-        column.setPrefWidth(122.0);
+        column.setPrefWidth(144.0);
         return column;
     }
 
@@ -595,6 +592,10 @@ public class AppointmentView {
                 notesTextArea.setText(newValue)));
         model.billAmount().addListener((obs, oldValue, newValue) -> Platform.runLater(() ->
                 billAmountTextField.setText(newValue)));
+        model.prescriptionIssueDate().addListener((obs, oldValue, newValue) -> Platform.runLater(() ->
+                prescriptionIssueDateTextField.setText(newValue.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")))));
+        model.prescriptionExpirationDate().addListener((obs, oldValue, newValue) -> Platform.runLater(() ->
+                prescriptionExpirationDateTextField.setText(newValue.format(DateTimeFormatter.ofPattern("dd-MM-yyyy")))));
     }
 
     private void delegateEventHandlers() {
@@ -604,6 +605,7 @@ public class AppointmentView {
         billAmountValidationSupport.validationResultProperty().addListener((obs, oldValue, newValue) ->
                 Platform.runLater(this::switchSaveBillAmountButtonState));
         medicineSearchQueryTextField.setOnKeyPressed(this::medicineSearchQueryTextFieldEnterPressed);
+        searchMedicineSearchQueryButton.setOnMouseClicked(e -> searchMedicine());
         medicinesTable.setRowFactory(param -> createMedicinesTableContextMenu());
         prescriptionMedicinesTable.setRowFactory(param -> createPrescriptionMedicinesTableContextMenu());
         saveNotesButton.setOnMouseClicked(e -> updateNotes());

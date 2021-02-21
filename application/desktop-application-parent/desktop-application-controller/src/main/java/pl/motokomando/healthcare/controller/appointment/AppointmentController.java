@@ -233,7 +233,7 @@ public class AppointmentController {
             return;
         }
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("expirationDate", LocalDate.now().plusDays(30).format(ISO_DATE));
+        jsonObject.addProperty("expirationDate", LocalDate.now().plusMonths(1).format(ISO_DATE));
         String body = new Gson().toJson(jsonObject);
         HttpResponse response = sendCreateResourceRequest(PRESCRIPTIONS, body);
         Integer prescriptionId = WebUtils.extractHeaderResourceId(response);
@@ -414,7 +414,8 @@ public class AppointmentController {
                 new SimpleStringProperty(response.getProductName()),
                 new SimpleStringProperty(response.getGenericName()),
                 new SimpleObjectProperty<>(response.getProductType()),
-                new SimpleListProperty<>(FXCollections.observableArrayList(response.getActiveIngredients())),
+                new SimpleListProperty<>(FXCollections.observableArrayList(
+                        Optional.ofNullable(response.getActiveIngredients()).orElse(Collections.emptyList()))),
                 new SimpleObjectProperty<>(response.getAdministrationRoute()),
                 new SimpleStringProperty(response.getDosageForm()),
                 new SimpleObjectProperty<>(response.getPackagingVariants()));
