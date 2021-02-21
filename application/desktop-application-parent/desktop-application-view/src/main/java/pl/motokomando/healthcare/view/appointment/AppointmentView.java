@@ -197,8 +197,8 @@ public class AppointmentView {
     private void createSaveNotesButton() {
         saveNotesButton = new Button();
         saveNotesButton.setDisable(true);
-        saveNotesButton.setLayoutX(620.0);
-        saveNotesButton.setLayoutY(610.0);
+        saveNotesButton.setLayoutX(680.0);
+        saveNotesButton.setLayoutY(590.0);
         saveNotesButton.setMnemonicParsing(false);
         saveNotesButton.setText("Zapisz");
         saveNotesButton.setFont(new Font(16.0));
