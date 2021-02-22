@@ -233,7 +233,8 @@ public class AppointmentController {
             return;
         }
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("expirationDate", LocalDate.now().plusMonths(1).format(ISO_DATE));
+        LocalDate expirationDate = LocalDate.now().plusMonths(1);
+        jsonObject.addProperty("expirationDate", expirationDate.format(ISO_DATE));
         String body = new Gson().toJson(jsonObject);
         HttpResponse response = sendCreateResourceRequest(PRESCRIPTIONS, body);
         Integer prescriptionId = WebUtils.extractHeaderResourceId(response);
@@ -241,6 +242,8 @@ public class AppointmentController {
                 WebUtils.createAddOperationsMap(Collections.singletonMap("prescriptionId", String.valueOf(prescriptionId)));
         sendUpdateAppointmentRequest(operationsMap);
         appointmentModel.setPrescriptionId(prescriptionId);
+        appointmentModel.setPrescriptionIssueDate(LocalDateTime.now());
+        appointmentModel.setPrescriptionExpirationDate(expirationDate);
     }
 
     private void checkBillExistence() throws Exception {
